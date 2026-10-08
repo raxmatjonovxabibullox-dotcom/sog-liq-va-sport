@@ -1,7 +1,19 @@
 <!doctype html>
-<html lang="uz" class="dark">
+<html lang="uz">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('sport_theme');
+          if (t === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M6.5 6.5h11v2h-11zm0 9h11v2h-11zM2 9.5h3v5H2zm17 0h3v5h-3zM7 9.5h10v5H7z'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sog'liq va Sport — Sport Gipermarketi, Fitnes Dasturlari va Sog'lom Hayot</title>
