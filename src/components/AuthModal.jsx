@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { X, User, Phone, Lock, ShieldCheck, ArrowRight } from "lucide-react";
+import { formatUzbekPhone, handlePhoneKeyDown } from "../utils/phoneFormatter";
 
 export const AuthModal = () => {
   const { authModalOpen, setAuthModalOpen, loginUser, registerUser, t } = useApp();
@@ -148,7 +149,15 @@ export const AuthModal = () => {
               <input
                 type={authMethod === "username" ? "text" : "tel"}
                 value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
+                onKeyDown={authMethod === "phone" ? handlePhoneKeyDown : undefined}
+                onChange={(e) => {
+                  if (authMethod === "phone") {
+                    setIdentifier(formatUzbekPhone(e.target.value));
+                  } else {
+                    setIdentifier(e.target.value);
+                  }
+                }}
+                maxLength={authMethod === "phone" ? 17 : 40}
                 placeholder={authMethod === "username" ? "sportchi_2026" : "+998 90 123 45 67"}
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
               />

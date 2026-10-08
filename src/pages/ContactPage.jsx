@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
+import { formatUzbekPhone, handlePhoneKeyDown } from "../utils/phoneFormatter";
 
 export const ContactPage = () => {
   const { t, sendTelegramMessage, showToast } = useApp();
@@ -177,8 +178,10 @@ export const ContactPage = () => {
                 <input
                   type="tel"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onKeyDown={handlePhoneKeyDown}
+                  onChange={(e) => setPhone(formatUzbekPhone(e.target.value))}
                   placeholder="+998 90 123 45 67"
+                  maxLength={17}
                   required
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />

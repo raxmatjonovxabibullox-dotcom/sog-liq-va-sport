@@ -14,6 +14,7 @@ import {
   Send,
   X,
 } from "lucide-react";
+import { formatUzbekPhone, handlePhoneKeyDown } from "../utils/phoneFormatter";
 
 export const CartPage = () => {
   const {
@@ -319,8 +320,10 @@ export const CartPage = () => {
               <input
                 type="tel"
                 value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
+                onKeyDown={handlePhoneKeyDown}
+                onChange={(e) => setCustomerPhone(formatUzbekPhone(e.target.value))}
                 required
+                maxLength={17}
                 placeholder="+998 90 123 45 67"
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
