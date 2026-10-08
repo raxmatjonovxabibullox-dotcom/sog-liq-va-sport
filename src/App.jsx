@@ -30,10 +30,13 @@ const ScrollToTop = () => {
 };
 
 export function AppContent() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-emerald-500 selection:text-white transition-colors duration-200">
       <ScrollToTop />
-      <Navbar />
+      {!isAdminRoute && <Navbar />}
 
       <main className="flex-1">
         <Routes>
@@ -50,7 +53,7 @@ export function AppContent() {
         </Routes>
       </main>
 
-      <Footer />
+      {!isAdminRoute && <Footer />}
       <Toast />
       <AuthModal />
       <QuickViewModal />
