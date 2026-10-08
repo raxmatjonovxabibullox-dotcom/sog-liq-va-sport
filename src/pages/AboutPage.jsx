@@ -108,6 +108,80 @@ export const AboutPage = () => {
         </div>
       </section>
 
+      {/* Professional Trainers Team */}
+      <section className="space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+            Bizning Jamoa
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+            Professional Murabbiylar va Nutrisiologlar
+          </h2>
+          <p className="text-xs text-slate-500">
+            Sizga to'g'ri ozuqa va mashg'ulot tanlashda bepul maslahat beruvchi ekspertlar
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm text-center space-y-3 group hover:border-emerald-500/40 transition">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
+              alt="Rustam Qosimov"
+              className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-emerald-500/20 group-hover:border-emerald-500 transition"
+            />
+            <div>
+              <h4 className="font-black text-base text-slate-900 dark:text-white">
+                Rustam Qosimov
+              </h4>
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                Bosh Fitnes Murabbiy & Krossfit Atleti
+              </p>
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              9 yillik tajribaga ega xalqaro sertifikatli instruktor. 1,000 dan ortiq shogirdlarga kuch va chidamlilikni oshirishda yordam bergan.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm text-center space-y-3 group hover:border-emerald-500/40 transition">
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+              alt="Nilufar Karimova"
+              className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-emerald-500/20 group-hover:border-emerald-500 transition"
+            />
+            <div>
+              <h4 className="font-black text-base text-slate-900 dark:text-white">
+                Nilufar Karimova
+              </h4>
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                Yetakchi Nutrisiolog & Ayollar Fitnesi
+              </p>
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Sog'lom vazn tashlash, gormonal balans va to'g'ri ratsion tuzish bo'yicha 7 yillik amaliy tajribaga ega ekspert.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm text-center space-y-3 group hover:border-emerald-500/40 transition">
+            <img
+              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80"
+              alt="Jasur Saidov"
+              className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-emerald-500/20 group-hover:border-emerald-500 transition"
+            />
+            <div>
+              <h4 className="font-black text-base text-slate-900 dark:text-white">
+                Jasur Saidov
+              </h4>
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                Sport Reabilitatsiyasi & Fizioterapevt
+              </p>
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Jarohatlardan keyin tiklanish, bo'g'imlar salomatligi va to'g'ri mashq biomexanikasi bo'yicha 11 yillik shifokorlik tajribasi.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Physical Store Location with Interactive Map */}
       <section className="space-y-6">
         <div className="text-center max-w-2xl mx-auto space-y-2">

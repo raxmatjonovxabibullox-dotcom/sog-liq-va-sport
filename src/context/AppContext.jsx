@@ -35,7 +35,7 @@ export const AppProvider = ({ children }) => {
 
   // 3. Products State (CRUD with LocalStorage)
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem("sport_products");
+    const saved = localStorage.getItem("sport_products_v2");
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -47,7 +47,7 @@ export const AppProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem("sport_products", JSON.stringify(products));
+    localStorage.setItem("sport_products_v2", JSON.stringify(products));
   }, [products]);
 
   const addProduct = (newProd) => {
