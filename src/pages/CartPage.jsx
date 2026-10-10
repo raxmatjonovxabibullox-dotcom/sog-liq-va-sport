@@ -128,10 +128,29 @@ export const CartPage = () => {
           </div>
         </div>
 
-        <div className="pt-4">
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a
+            href={`https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(
+              `🏋️ YANGI SPORT BUYURTMASI #${completedOrder.id}\n\n` +
+              `👤 Mijoz: ${completedOrder.customerName}\n` +
+              `📞 Telefon: ${completedOrder.phone}\n` +
+              `📍 Manzil: ${completedOrder.address}\n\n` +
+              `📦 Mahsulotlar:\n` +
+              (completedOrder.items?.map((it, idx) => `  ${idx + 1}. ${it.name} x ${it.quantity} = ${((it.price) * it.quantity).toLocaleString()} so'm`).join("\n") || "") +
+              (completedOrder.discount > 0 ? `\n🏷 Chegirma: -${completedOrder.discount.toLocaleString()} so'm` : "") +
+              `\n💰 JAMI: ${completedOrder.total.toLocaleString()} so'm`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-xl shadow-sky-500/25 transition"
+          >
+            <Send className="w-4 h-4" />
+            <span>Telegram orqali yuborish</span>
+          </a>
+
           <Link
             to="/shop"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 transition"
           >
             <span>{t.cart.continueShopping}</span>
             <ArrowRight className="w-4 h-4" />
