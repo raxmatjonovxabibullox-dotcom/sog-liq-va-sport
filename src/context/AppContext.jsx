@@ -396,15 +396,24 @@ export const AppProvider = ({ children }) => {
   const DEFAULT_BOT_TOKEN = "8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8";
   const DEFAULT_CHAT_ID = "8170197389";
 
+  const isNumericChatId = (id) => {
+    if (!id) return false;
+    const str = String(id).trim();
+    if (str.startsWith("@")) return false; // Telegram API rejects usernames for direct chat messages!
+    if (str === "8823235791") return false; // This is the bot ID, not the user's chat ID
+    return /^-?\d{5,}$/.test(str);
+  };
+
   // 9. Telegram Bot Config
   const [telegramConfig, setTelegramConfig] = useState(() => {
     const saved = localStorage.getItem("sport_telegram_config");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        const validChat = isNumericChatId(parsed.chatId) ? String(parsed.chatId).trim() : DEFAULT_CHAT_ID;
         return {
           botToken: DEFAULT_BOT_TOKEN,
-          chatId: parsed.chatId && parsed.chatId !== "8823235791" ? parsed.chatId : DEFAULT_CHAT_ID,
+          chatId: validChat,
           botUsername: "@Kitobchalar_bot",
         };
       } catch (e) {
@@ -418,23 +427,57 @@ export const AppProvider = ({ children }) => {
     };
   });
 
+  // Automatically sanitize existing localStorage if it contains non-numeric chatId
   useEffect(() => {
-    localStorage.setItem("sport_telegram_config", JSON.stringify(telegramConfig));
+    const saved = localStorage.getItem("sport_telegram_config");
+    let needsReset = false;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (!isNumericChatId(parsed.chatId)) {
+          needsReset = true;
+        }
+      } catch {
+        needsReset = true;
+      }
+    }
+    if (needsReset || !saved) {
+      const clean = {
+        botToken: DEFAULT_BOT_TOKEN,
+        chatId: DEFAULT_CHAT_ID,
+        botUsername: "@Kitobchalar_bot",
+      };
+      localStorage.setItem("sport_telegram_config", JSON.stringify(clean));
+      setTelegramConfig(clean);
+    }
+  }, []);
+
+  useEffect(() => {
+    const safeChat = isNumericChatId(telegramConfig.chatId) ? String(telegramConfig.chatId).trim() : DEFAULT_CHAT_ID;
+    const clean = {
+      botToken: DEFAULT_BOT_TOKEN,
+      chatId: safeChat,
+      botUsername: "@Kitobchalar_bot",
+    };
+    localStorage.setItem("sport_telegram_config", JSON.stringify(clean));
   }, [telegramConfig]);
 
   const saveTelegramConfig = (cfg) => {
-    setTelegramConfig(cfg);
-    showToast("Telegram sozlamalari saqlandi!");
+    const cleanId = isNumericChatId(cfg?.chatId) ? String(cfg.chatId).trim() : DEFAULT_CHAT_ID;
+    const cleanCfg = {
+      botToken: DEFAULT_BOT_TOKEN,
+      chatId: cleanId,
+      botUsername: "@Kitobchalar_bot",
+    };
+    setTelegramConfig(cleanCfg);
+    showToast(`Telegram sozlamalari saqlandi! Chat ID: ${cleanId}`);
   };
 
   const sendTelegramMessage = async (text, imageUrl = null) => {
-    const token = telegramConfig.botToken || DEFAULT_BOT_TOKEN;
-    const targetChatId =
-      telegramConfig.chatId &&
-      telegramConfig.chatId !== "8823235791" &&
-      String(telegramConfig.chatId).trim().length > 3
-        ? telegramConfig.chatId
-        : DEFAULT_CHAT_ID;
+    const token = DEFAULT_BOT_TOKEN;
+    const targetChatId = isNumericChatId(telegramConfig.chatId)
+      ? String(telegramConfig.chatId).trim()
+      : DEFAULT_CHAT_ID;
 
     // 1. If image is provided, send via sendPhoto (with caption)
     if (imageUrl) {
