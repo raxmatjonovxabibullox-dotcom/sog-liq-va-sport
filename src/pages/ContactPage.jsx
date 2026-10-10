@@ -124,13 +124,13 @@ export const ContactPage = () => {
             {/* Direct Telegram Channel Link */}
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
               <a
-                href="https://t.me"
+                href="https://t.me/Kitobchalar_bot"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3 px-4 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25 transition"
+                className="w-full py-3 px-4 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25 transition cursor-pointer"
               >
                 <Send className="w-4 h-4" />
-                <span>Rasmiy Telegram Kanalimizga a'zo bo'ling</span>
+                <span>@Kitobchalar_bot ni ochish</span>
               </a>
             </div>
           </div>

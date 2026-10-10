@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Send,
   X,
+  ExternalLink,
 } from "lucide-react";
 import { formatUzbekPhone, handlePhoneKeyDown } from "../utils/phoneFormatter";
 
@@ -90,6 +91,15 @@ export const CartPage = () => {
 
   // If order successfully placed
   if (completedOrder) {
+    const handleOpenBot = (e) => {
+      const tgAppUrl = "tg://resolve?domain=Kitobchalar_bot";
+      const tgWebUrl = "https://t.me/Kitobchalar_bot";
+      window.open(tgWebUrl, "_blank", "noopener,noreferrer");
+      try {
+        window.location.href = tgAppUrl;
+      } catch {}
+    };
+
     return (
       <div className="max-w-3xl mx-auto px-4 py-16 text-center space-y-6">
         <div className="w-20 h-20 rounded-full bg-emerald-500/10 text-emerald-500 mx-auto flex items-center justify-center animate-bounce">
@@ -104,40 +114,53 @@ export const CartPage = () => {
           {t.cart.orderSuccessDesc}
         </p>
 
-        <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 text-xs font-semibold flex items-center justify-center gap-2 max-w-md mx-auto">
-          <Send className="w-4 h-4 text-emerald-500 animate-pulse" />
-          <span>Buyurtma qabul qilindi va @Kitobchalar_bot orqali Telegram'ingizga avtomatik yetkazildi!</span>
+        {/* Telegram Notice Banner with interactive link */}
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto shadow-sm">
+          <Send className="w-4 h-4 text-emerald-500 animate-pulse flex-shrink-0" />
+          <span>{t.cart.telegramNotice}</span>
+          <a
+            href="https://t.me/Kitobchalar_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleOpenBot}
+            className="px-2.5 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-extrabold inline-flex items-center gap-1.5 transition underline cursor-pointer"
+          >
+            <span>@Kitobchalar_bot</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
         </div>
 
-        <div className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left max-w-md mx-auto space-y-3">
-          <div className="flex justify-between text-xs font-bold text-slate-400">
-            <span>Buyurtma ID:</span>
-            <span className="text-emerald-500 font-black">#{completedOrder.id}</span>
+        {/* Receipt Card with full localization */}
+        <div className="p-6 sm:p-7 rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left max-w-md mx-auto space-y-3.5 shadow-md">
+          <div className="flex justify-between items-center text-xs font-bold text-slate-400">
+            <span>{t.cart.orderId}</span>
+            <span className="text-emerald-500 font-black text-sm">#{completedOrder.id}</span>
           </div>
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-500">Qabul qiluvchi:</span>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-500">{t.cart.recipient}</span>
             <span className="font-bold text-slate-900 dark:text-white">{completedOrder.customerName}</span>
           </div>
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-500">Telefon:</span>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-500">{t.cart.phoneLabel}</span>
             <span className="font-bold text-slate-900 dark:text-white">{completedOrder.phone}</span>
           </div>
-          <div className="flex justify-between text-xs">
-            <span className="text-slate-500">Manzil:</span>
-            <span className="font-bold text-slate-900 dark:text-white">{completedOrder.address}</span>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-slate-500">{t.cart.addressLabel}</span>
+            <span className="font-bold text-slate-900 dark:text-white text-right max-w-[220px] truncate">{completedOrder.address}</span>
           </div>
-          <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between font-black text-sm">
-            <span>To'lov summasi:</span>
-            <span className="text-emerald-600 dark:text-emerald-400">
-              {completedOrder.total.toLocaleString()} so'm
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center font-black text-sm">
+            <span>{t.cart.totalToPay}</span>
+            <span className="text-emerald-600 dark:text-emerald-400 text-base">
+              {completedOrder.total.toLocaleString()} {t.cart.currency}
             </span>
           </div>
         </div>
 
+        {/* Action Buttons */}
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             to="/shop"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 transition active:scale-95"
           >
             <span>{t.cart.continueShopping}</span>
             <ArrowRight className="w-4 h-4" />
@@ -147,10 +170,12 @@ export const CartPage = () => {
             href="https://t.me/Kitobchalar_bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm border border-slate-700 transition"
+            onClick={handleOpenBot}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-xl shadow-sky-500/25 transition active:scale-95 cursor-pointer"
           >
-            <Send className="w-4 h-4 text-sky-400" />
-            <span>@Kitobchalar_bot ni ochish</span>
+            <Send className="w-4 h-4" />
+            <span>{t.cart.openTelegramBot}</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-80" />
           </a>
         </div>
       </div>
@@ -192,7 +217,7 @@ export const CartPage = () => {
           className="text-xs font-bold text-rose-500 hover:underline flex items-center gap-1"
         >
           <Trash2 className="w-3.5 h-3.5" />
-          <span>Savatni tozalash</span>
+          <span>{t.cart.clearCart}</span>
         </button>
       </div>
 
@@ -218,7 +243,7 @@ export const CartPage = () => {
                   {item.product.name}
                 </h4>
                 <div className="text-sm font-extrabold text-slate-900 dark:text-white">
-                  {item.product.price.toLocaleString()} so'm
+                  {item.product.price.toLocaleString()} {t.cart.currency}
                 </div>
               </div>
 
@@ -246,7 +271,7 @@ export const CartPage = () => {
               {/* Total & Delete */}
               <div className="flex items-center gap-3">
                 <span className="text-sm font-black text-slate-900 dark:text-white min-w-[90px] text-right">
-                  {(item.product.price * item.quantity).toLocaleString()} so'm
+                  {(item.product.price * item.quantity).toLocaleString()} {t.cart.currency}
                 </span>
                 <button
                   onClick={() => removeFromCart(item.product.id)}
@@ -269,7 +294,7 @@ export const CartPage = () => {
             {promo ? (
               <div className="flex items-center justify-between p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
                 <span>
-                  Faol kod: <b>{promo.code}</b> ({promo.percent ? `-${promo.percent}%` : `-${promo.fixed.toLocaleString()} so'm`})
+                  {t.cart.activePromo}: <b>{promo.code}</b> ({promo.percent ? `-${promo.percent}%` : `-${promo.fixed.toLocaleString()} ${t.cart.currency}`})
                 </span>
                 <button
                   onClick={removePromo}
@@ -285,7 +310,7 @@ export const CartPage = () => {
                   type="text"
                   value={promoInput}
                   onChange={(e) => setPromoInput(e.target.value)}
-                  placeholder="Kupon kodi (Masalan: SPORT2026)"
+                  placeholder={t.cart.couponPlaceholder}
                   className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 uppercase"
                 />
                 <button
@@ -302,11 +327,11 @@ export const CartPage = () => {
             )}
 
             <div className="text-[11px] text-slate-400">
-              💡 Sinab ko'ring:{" "}
+              💡 {t.cart.tryPromo}:{" "}
               {promoCodesList && promoCodesList.length > 0 ? (
                 promoCodesList.slice(0, 4).map((pr, idx) => (
                   <span key={pr.code}>
-                    {idx > 0 && " yoki "}
+                    {idx > 0 && ` ${t.cart.or} `}
                     <button
                       type="button"
                       onClick={() => {
@@ -317,7 +342,7 @@ export const CartPage = () => {
                     >
                       {pr.code}
                     </button>
-                    <span className="text-slate-400"> ({pr.percent > 0 ? `${pr.percent}%` : `${(pr.fixed || 0).toLocaleString()} so'm`})</span>
+                    <span className="text-slate-400"> ({pr.percent > 0 ? `${pr.percent}%` : `${(pr.fixed || 0).toLocaleString()} ${t.cart.currency}`})</span>
                   </span>
                 ))
               ) : (
@@ -391,7 +416,7 @@ export const CartPage = () => {
                       : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
                     }`}
                 >
-                  Naqd / Yetkazganda
+                  {t.cart.cashOnDelivery}
                 </button>
                 <button
                   type="button"
@@ -401,7 +426,7 @@ export const CartPage = () => {
                       : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
                     }`}
                 >
-                  Payme / Click
+                  {t.cart.onlinePayment}
                 </button>
               </div>
             </div>
@@ -411,14 +436,14 @@ export const CartPage = () => {
               <div className="flex justify-between text-slate-600 dark:text-slate-400">
                 <span>{t.cart.subtotal}:</span>
                 <span className="font-bold text-slate-900 dark:text-white">
-                  {cartSubtotal.toLocaleString()} so'm
+                  {cartSubtotal.toLocaleString()} {t.cart.currency}
                 </span>
               </div>
 
               {discountAmount > 0 && (
                 <div className="flex justify-between text-rose-500 font-bold">
                   <span>{t.cart.discount}:</span>
-                  <span>-{discountAmount.toLocaleString()} so'm</span>
+                  <span>-{discountAmount.toLocaleString()} {t.cart.currency}</span>
                 </div>
               )}
 
@@ -432,7 +457,7 @@ export const CartPage = () => {
                   {t.cart.total}:
                 </span>
                 <span className="text-2xl font-black text-slate-900 dark:text-white">
-                  {cartTotal.toLocaleString()} <span className="text-xs font-bold text-emerald-500">so'm</span>
+                  {cartTotal.toLocaleString()} <span className="text-xs font-bold text-emerald-500">{t.cart.currency}</span>
                 </span>
               </div>
             </div>
@@ -443,7 +468,7 @@ export const CartPage = () => {
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
-              <span>{isSubmitting ? "Yuborilmoqda..." : t.cart.submitOrder}</span>
+              <span>{isSubmitting ? (t.cart.submitting || "Yuborilmoqda...") : t.cart.submitOrder}</span>
             </button>
           </form>
         </div>

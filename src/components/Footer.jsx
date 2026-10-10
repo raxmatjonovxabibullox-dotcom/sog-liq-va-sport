@@ -87,11 +87,11 @@ export const Footer = () => {
             </p>
             <div className="pt-2 flex items-center gap-3">
               <a
-                href="https://t.me"
+                href="https://t.me/Kitobchalar_bot"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-white hover:bg-emerald-500 dark:hover:bg-emerald-500 border border-slate-200 dark:border-slate-700 flex items-center justify-center transition shadow-sm"
-                title="Telegram Kanal"
+                className="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-white hover:bg-sky-500 dark:hover:bg-sky-500 border border-slate-200 dark:border-slate-700 flex items-center justify-center transition shadow-sm"
+                title="Telegram @Kitobchalar_bot"
               >
                 <Send className="w-4 h-4" />
               </a>
