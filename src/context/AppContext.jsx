@@ -35,22 +35,23 @@ export const AppProvider = ({ children }) => {
 
   // 3. Products State (CRUD with LocalStorage)
   const [products, setProducts] = useState(() => {
-    const savedV3 = localStorage.getItem("sport_products_v3");
-    if (savedV3) {
+    const savedV5 = localStorage.getItem("sport_products_v5");
+    if (savedV5) {
       try {
-        return JSON.parse(savedV3);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    const savedV2 = localStorage.getItem("sport_products_v2");
-    if (savedV2) {
-      try {
-        const parsed = JSON.parse(savedV2);
+        const parsed = JSON.parse(savedV5);
         return parsed.map((p) => {
           const init = initialProducts.find((i) => i.id === p.id);
-          if (init && (p.image?.includes("unsplash.com") || !p.image)) {
-            return { ...p, image: init.image };
+          if (init) {
+            return {
+              ...init,
+              ...p,
+              name: init.name,
+              image: init.image,
+              category: init.category,
+              categoryLabel: init.categoryLabel,
+              description: init.description,
+              specs: init.specs,
+            };
           }
           return p;
         });
@@ -58,11 +59,17 @@ export const AppProvider = ({ children }) => {
         console.error(e);
       }
     }
+    // Clean old caches
+    try {
+      localStorage.removeItem("sport_products_v3");
+      localStorage.removeItem("sport_products_v2");
+      localStorage.setItem("sport_products_v5", JSON.stringify(initialProducts));
+    } catch {}
     return initialProducts;
   });
 
   useEffect(() => {
-    localStorage.setItem("sport_products_v3", JSON.stringify(products));
+    localStorage.setItem("sport_products_v5", JSON.stringify(products));
   }, [products]);
 
   const addProduct = (newProd) => {
@@ -334,47 +341,47 @@ export const AppProvider = ({ children }) => {
     return [
       {
         id: "ORD-9481",
-        customerName: "Jasur Aliyev",
+        customerName: "Khabibullo Raxmatjonov",
         phone: "+998 90 987 65 43",
         address: "Toshkent sh., Yunusobod 14-mavze, 22-uy",
         items: [
           { name: "Optimum Nutrition Gold Standard Whey", quantity: 1, price: 980000 },
-          { name: "Pro Speed Sakrash Arqoni", quantity: 1, price: 95000 }
+          { name: "Rogue SR-1 Sakrash Arqoni", quantity: 1, price: 135000 }
         ],
-        subtotal: 1075000,
-        discount: 161250,
-        total: 913750,
+        subtotal: 1115000,
+        discount: 167250,
+        total: 947750,
         paymentMethod: "cash",
         status: "completed",
         date: "2026-10-07 14:32"
       },
       {
         id: "ORD-9482",
-        customerName: "Madina Karimova",
+        customerName: "Bahodir Jalolov",
         phone: "+998 97 123 45 67",
-        address: "Samarqand sh., Registon ko'chasi 18",
+        address: "Toshkent sh., Chilonzor 9, 18-uy",
         items: [
-          { name: "Ayollar High-Waist Fitnes Legginsi", quantity: 2, price: 240000 },
-          { name: "BlenderBottle Pro Shaker", quantity: 1, price: 110000 }
+          { name: "Under Armour Kompression Futbolka", quantity: 2, price: 245000 },
+          { name: "BlenderBottle Strada Shaker", quantity: 1, price: 145000 }
         ],
-        subtotal: 590000,
+        subtotal: 635000,
         discount: 0,
-        total: 590000,
+        total: 635000,
         paymentMethod: "online",
         status: "delivering",
         date: "2026-10-08 11:15"
       },
       {
         id: "ORD-9483",
-        customerName: "Sardor Rustamov",
+        customerName: "Diyora Keldiyorova",
         phone: "+998 93 555 44 33",
-        address: "Toshkent sh., Chilonzor 9, 4-kvartira",
+        address: "Samarqand sh., Registon ko'chasi 45",
         items: [
-          { name: "Sozlanuvchi Gantellar To'plami (2x10kg)", quantity: 1, price: 550000 }
+          { name: "Bowflex SelectTech 552 Sozlanuvchi Gantellar", quantity: 1, price: 1850000 }
         ],
-        subtotal: 550000,
-        discount: 55000,
-        total: 495000,
+        subtotal: 1850000,
+        discount: 185000,
+        total: 1665000,
         paymentMethod: "cash",
         status: "pending",
         date: "2026-10-08 17:50"

@@ -355,74 +355,74 @@ export const HomePage = () => {
             Fikr-Mulohazalar
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-            Professional Sportchilar va Mijozlarimiz E'tirofi
+            Professional Sportchilar va Olimpiada Chempionlari E'tirofi
           </h2>
           <p className="text-xs text-slate-500">
-            Minglab faol sportchilar va murabbiylar "Sog'liq va Sport" sifatiga ishonishadi
+            O'zbekistonning eng sara sportchilari va chempionlari "Sog'liq va Sport" sifatiga ishonishadi
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 hover:shadow-lg transition">
             <div className="flex items-center gap-3.5">
               <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
-                alt="Nilufar Karimova"
-                className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500"
+                src="/athletes/bahodir.jpg"
+                alt="Bahodir Jalolov"
+                className="w-14 h-14 rounded-full object-cover border-2 border-emerald-500 shadow-md"
               />
               <div>
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white">
-                  Nilufar Karimova
+                  Bahodir Jalolov
                 </h4>
                 <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                  Fitnes murabbiyi va Nutrisiolog
+                  2 karra Olimpiada & Jahon chempioni (Boks)
                 </p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic">
-              "Dymatize ISO100 proteini va Gymshark fitnes legginsi shunchaki ajoyib! 100% original sifat, shogirdlarimga ham faqat shu platformadan olishni tavsiya qilaman."
+              "Optimum Nutrition Gold Standard va Bowflex gantellarni xarid qildim. Yetkazib berish Toshkent ichida bir necha soatda amalga oshirildi, qadoqlari butun va 100% original."
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 hover:shadow-lg transition">
             <div className="flex items-center gap-3.5">
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
-                alt="Rustam Qosimov"
-                className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500"
+                src="/athletes/diyora.jpg"
+                alt="Diyora Keldiyorova"
+                className="w-14 h-14 rounded-full object-cover border-2 border-emerald-500 shadow-md"
               />
               <div>
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white">
-                  Rustam Qosimov
+                  Diyora Keldiyorova
                 </h4>
                 <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                  Krossfit & Kuch sporti atleti
+                  Parij-2024 Olimpiada chempioni (Dzyudo)
                 </p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic">
-              "Optimum Nutrition Gold Standard va Bowflex gantellarni xarid qildim. Yetkazib berish Toshkent ichida bir necha soatda amalga oshirildi, qadoqlari butun va sertifikatli."
+              "Dymatize ISO100 proteini va Gymshark fitnes kiyimlari juda sifatli va qulay! Mashg'ulotlar uchun faqat shu platformadan olishni tavsiya qilaman."
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 hover:shadow-lg transition">
             <div className="flex items-center gap-3.5">
               <img
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
-                alt="Bekzod Temirov"
-                className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500"
+                src="/athletes/ulugbek.jpg"
+                alt="Ulug'bek Rashitov"
+                className="w-14 h-14 rounded-full object-cover border-2 border-emerald-500 shadow-md"
               />
               <div>
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white">
-                  Bekzod Temirov
+                  Ulug'bek Rashitov
                 </h4>
                 <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                  Marafonchi va Triatlet
+                  2 karra Olimpiada chempioni (Taekvondo)
                 </p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic">
-              "Nike Pegasus 40 krossovkalari va Hydro Flask sport idishi musobaqalarda juda qo'l keldi. Promokod orqali 15% chegirma ham oldim, katta rahmat!"
+              "Nike Pegasus 40 krossovkalari va Hydro Flask sport idishi musobaqa hamda mashg'ulotlarda juda qo'l keldi. Sifatiga gap yo'q, barchaga tavsiya etaman!"
             </p>
           </div>
         </div>

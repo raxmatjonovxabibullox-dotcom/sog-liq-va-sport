@@ -75,13 +75,13 @@ export const WorkoutsPage = () => {
       </div>
 
       {/* Interactive Workout Timer Section */}
-      <section className="rounded-3xl bg-slate-900 text-white p-8 md:p-12 border border-slate-800 shadow-2xl relative overflow-hidden">
+      <section className="rounded-3xl bg-gradient-to-br from-emerald-50/60 via-white to-teal-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-white p-8 md:p-12 border border-slate-200 dark:border-slate-800 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-200">
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Timer Display */}
           <div className="lg:col-span-6 flex flex-col items-center justify-center text-center">
-            <span className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">
+            <span className="text-xs uppercase tracking-widest font-bold text-slate-500 dark:text-slate-400 mb-2">
               {t.workouts.timerTitle}
             </span>
 
@@ -89,29 +89,29 @@ export const WorkoutsPage = () => {
             <div
               className={`w-56 h-56 sm:w-64 sm:h-64 rounded-full border-8 flex flex-col items-center justify-center my-4 transition-colors duration-500 shadow-2xl ${
                 currentMode === "work"
-                  ? "border-emerald-500 bg-emerald-950/20 shadow-emerald-500/20"
-                  : "border-amber-500 bg-amber-950/20 shadow-amber-500/20"
+                  ? "border-emerald-500 bg-emerald-500/10 dark:bg-emerald-950/20 shadow-emerald-500/20"
+                  : "border-amber-500 bg-amber-500/10 dark:bg-amber-950/20 shadow-amber-500/20"
               }`}
             >
               <span
                 className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full mb-1 ${
                   currentMode === "work"
-                    ? "bg-emerald-500/20 text-emerald-400"
-                    : "bg-amber-500/20 text-amber-400"
+                    ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                    : "bg-amber-500/20 text-amber-600 dark:text-amber-400"
                 }`}
               >
                 {currentMode === "work" ? "🔥 Ishlash (Mashq)" : "☕ Dam olish"}
               </span>
-              <span className="text-6xl sm:text-7xl font-black tracking-tight">
+              <span className="text-6xl sm:text-7xl font-black tracking-tight text-slate-900 dark:text-white">
                 {timeLeft}
               </span>
-              <span className="text-xs text-slate-400 font-semibold">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
                 {t.workouts.seconds}
               </span>
             </div>
 
-            <div className="text-sm font-semibold text-slate-300 mb-4">
-              Bajarilgan raundlar: <b className="text-emerald-400">{roundsCompleted}</b>
+            <div className="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-4">
+              Bajarilgan raundlar: <b className="text-emerald-600 dark:text-emerald-400">{roundsCompleted}</b>
             </div>
 
             {/* Timer Controls */}
@@ -130,7 +130,7 @@ export const WorkoutsPage = () => {
 
               <button
                 onClick={resetTimer}
-                className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+                className="p-3.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm transition"
                 title={t.workouts.reset}
               >
                 <RotateCcw className="w-5 h-5" />
@@ -139,15 +139,15 @@ export const WorkoutsPage = () => {
           </div>
 
           {/* Timer Settings & Water Intake */}
-          <div className="lg:col-span-6 space-y-6 bg-slate-800/60 p-6 sm:p-8 rounded-3xl border border-slate-700/80">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Timer className="w-5 h-5 text-emerald-400" />
+          <div className="lg:col-span-6 space-y-6 bg-white/90 dark:bg-slate-800/60 p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-md dark:shadow-none">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Timer className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
               <span>Interval sozlamalari</span>
             </h3>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-slate-400 font-medium block mb-1">
+                <label className="text-xs text-slate-600 dark:text-slate-400 font-medium block mb-1">
                   Mashq vaqti (soniya)
                 </label>
                 <input
@@ -161,12 +161,12 @@ export const WorkoutsPage = () => {
                     setWorkSec(v);
                     if (currentMode === "work") setTimeLeft(v);
                   }}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-slate-400 font-medium block mb-1">
+                <label className="text-xs text-slate-600 dark:text-slate-400 font-medium block mb-1">
                   Dam olish (soniya)
                 </label>
                 <input
@@ -176,36 +176,36 @@ export const WorkoutsPage = () => {
                   value={restSec}
                   disabled={isActive}
                   onChange={(e) => setRestSec(Number(e.target.value))}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
             </div>
 
             {/* Daily Water Tracker */}
-            <div className="pt-6 border-t border-slate-700/80 space-y-3">
+            <div className="pt-6 border-t border-slate-200 dark:border-slate-700/80 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-bold text-cyan-400 flex items-center gap-1.5">
+                <span className="text-sm font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5">
                   <Droplet className="w-4 h-4" />
                   <span>{t.workouts.waterIntake}</span>
                 </span>
-                <span className="text-base font-black text-white">
+                <span className="text-base font-black text-slate-900 dark:text-white">
                   {recommendedWater} litr / kun
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.workouts.waterDesc}
               </p>
               <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-400">Vazningiz:</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">Vazningiz:</span>
                 <input
                   type="range"
                   min="40"
                   max="130"
                   value={personWeight}
                   onChange={(e) => setPersonWeight(Number(e.target.value))}
-                  className="flex-1 accent-cyan-400 cursor-pointer"
+                  className="flex-1 accent-cyan-500 dark:accent-cyan-400 cursor-pointer"
                 />
-                <span className="text-xs font-bold text-white w-12 text-right">
+                <span className="text-xs font-bold text-slate-900 dark:text-white w-12 text-right">
                   {personWeight} kg
                 </span>
               </div>
