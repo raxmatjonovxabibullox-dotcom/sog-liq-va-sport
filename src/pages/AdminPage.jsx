@@ -33,7 +33,28 @@ import {
   Copy,
   Terminal,
   Crown,
-  Globe
+  Globe,
+  Bell,
+  Menu,
+  ChevronDown,
+  ChevronRight,
+  Settings,
+  MoreVertical,
+  Activity,
+  FileText,
+  CheckCircle2,
+  ShoppingCart,
+  ShieldCheck,
+  Sparkles,
+  TrendingDown,
+  Grid,
+  Lock,
+  User,
+  CreditCard,
+  Sliders,
+  BarChart2,
+  Gift,
+  Home
 } from "lucide-react";
 
 // Synthesized Web Audio SFX for high-tech tactile response
@@ -108,6 +129,26 @@ export const AdminPage = () => {
   const [soundEnabled, setSoundEnabled] = useState(() => localStorage.getItem("sport_admin_sound") !== "false");
   const [accentColor, setAccentColor] = useState(() => localStorage.getItem("sport_admin_accent") || "emerald"); // emerald, cyan, violet, amber, rose
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Maxton Dashboard UI States
+  const [dashboardSubmenuOpen, setDashboardSubmenuOpen] = useState(true);
+  const [activeSubmenu, setActiveSubmenu] = useState("eCommerce");
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [cartDropdownOpen, setCartDropdownOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [hoveredMonth, setHoveredMonth] = useState(null);
+
+  const salesViewsData = useMemo(() => [
+    { month: "Jan", sales: 20, views: 18 },
+    { month: "Feb", sales: 6, views: 12 },
+    { month: "Mar", sales: 62, views: 44 },
+    { month: "Apr", sales: 14, views: 20 },
+    { month: "May", sales: 32, views: 25 },
+    { month: "Jun", sales: 20, views: 18 },
+    { month: "Jul", sales: 25, views: 40 },
+    { month: "Aug", sales: 16, views: 12 },
+    { month: "Sep", sales: 35, views: 48 },
+  ], []);
 
   // Real-time clock
   const [currentTime, setCurrentTime] = useState(() => new Date());
@@ -666,32 +707,51 @@ export const AdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0f1d] text-slate-100 flex font-sans antialiased relative selection:bg-emerald-500 selection:text-black">
-      {/* 1. LEFT EXECUTIVE SIDEBAR */}
+    <div className="min-h-screen bg-[#0f1422] text-slate-100 flex font-sans antialiased relative selection:bg-blue-500 selection:text-white">
+      {/* 1. LEFT MAXTON SIDEBAR */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 bg-[#0e1626] border-r border-slate-800/80 transition-all duration-300 md:sticky md:top-0 md:h-screen shrink-0 overflow-y-auto flex flex-col justify-between ${
+        className={`fixed inset-y-0 left-0 z-50 bg-[#111625] border-r border-[#1a2035] transition-all duration-300 md:sticky md:top-0 md:h-screen shrink-0 overflow-y-auto flex flex-col justify-between ${
           isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } ${isSidebarCollapsed ? "w-20" : "w-64"}`}
       >
-        <div className="p-4 space-y-6">
-          {/* Brand Logo & Collapse Toggle */}
-          <div className="flex items-center justify-between px-2 pt-1">
+        <div className="p-4 space-y-5">
+          {/* Brand Logo */}
+          <div className="flex items-center justify-between px-2 pt-1 pb-2 border-b border-[#1c2438]">
             <Link
               to="/admin"
               onClick={() => playSound("click", soundEnabled)}
               className="flex items-center gap-3 group"
             >
-              <div
-                className={`w-9 h-9 rounded-xl bg-gradient-to-tr ${activeAccent.primary} flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition`}
-              >
-                <Crown className="w-5 h-5" />
+              {/* Maxton Multi-Gradient Shape Logo */}
+              <div className="relative w-8 h-8 flex items-center justify-center flex-shrink-0">
+                <svg viewBox="0 0 40 40" className="w-8 h-8 drop-shadow-[0_0_12px_rgba(56,189,248,0.4)]">
+                  <defs>
+                    <linearGradient id="logoGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#00d2ff" />
+                      <stop offset="100%" stopColor="#3a7bd5" />
+                    </linearGradient>
+                    <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f355a4" />
+                      <stop offset="100%" stopColor="#7928ca" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M 12 8 C 18 4, 30 6, 32 16 C 34 26, 24 34, 16 32 C 8 30, 6 12, 12 8 Z"
+                    fill="url(#logoGrad1)"
+                    opacity="0.9"
+                  />
+                  <path
+                    d="M 24 14 C 30 18, 34 28, 26 34 C 18 40, 10 32, 14 24 C 18 16, 20 12, 24 14 Z"
+                    fill="url(#logoGrad2)"
+                    opacity="0.85"
+                  />
+                </svg>
               </div>
+
               {!isSidebarCollapsed && (
-                <div>
-                  <span className="font-black text-lg text-white tracking-tight">SPORT</span>
-                  <span className={`text-[10px] ${activeAccent.text} font-black uppercase ml-1.5 tracking-wider`}>
-                    STUDIO
-                  </span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-extrabold text-xl text-white tracking-tight">Maxton</span>
+                  <span className="text-[10px] text-blue-400 font-semibold tracking-wider uppercase">Sport</span>
                 </div>
               )}
             </Link>
@@ -701,397 +761,1009 @@ export const AdminPage = () => {
                 setIsSidebarCollapsed(!isSidebarCollapsed);
                 playSound("click", soundEnabled);
               }}
-              className="hidden md:flex text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition"
-              title="Sidebar kengaytirish"
+              className="hidden md:flex text-slate-400 hover:text-white p-1 rounded-lg hover:bg-[#1a2238] transition"
+              title="Sidebar"
             >
-              <ArrowLeft className={`w-4 h-4 transition-transform ${isSidebarCollapsed ? "rotate-180" : ""}`} />
+              <Menu className="w-4 h-4" />
             </button>
           </div>
 
           {/* Navigation Items */}
-          <nav className="space-y-1.5 text-xs font-semibold">
-            {/* Dashboard */}
-            <button
-              onClick={() => {
-                setActiveTab("dashboard");
-                playSound("click", soundEnabled);
-                setIsMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition ${
-                activeTab === "dashboard" ? activeAccent.activeTab : "text-slate-400 hover:text-white hover:bg-[#131d33]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <LayoutDashboard className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>{t.admin?.tabDashboard || "Dashboard & Analitika"}</span>}
-              </div>
-              {!isSidebarCollapsed && (
-                <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 font-extrabold">
-                  {t.admin?.liveBadge || "Live"}
-                </span>
-              )}
-            </button>
+          <nav className="space-y-4 text-xs font-medium">
+            {/* GROUP 1: DASHBOARD */}
+            <div>
+              <button
+                onClick={() => {
+                  setDashboardSubmenuOpen(!dashboardSubmenuOpen);
+                  setActiveTab("dashboard");
+                  playSound("click", soundEnabled);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition ${
+                  activeTab === "dashboard"
+                    ? "bg-[#182238] text-white"
+                    : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <LayoutDashboard className="w-4 h-4 text-blue-400" />
+                  {!isSidebarCollapsed && <span className="font-semibold text-white">Dashboard</span>}
+                </div>
+                {!isSidebarCollapsed && (
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform ${
+                      dashboardSubmenuOpen ? "" : "-rotate-90"
+                    }`}
+                  />
+                )}
+              </button>
 
-            {/* Products */}
-            <button
-              onClick={() => {
-                setActiveTab("products");
-                playSound("click", soundEnabled);
-                setIsMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition ${
-                activeTab === "products" ? activeAccent.activeTab : "text-slate-400 hover:text-white hover:bg-[#131d33]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Package className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>{t.admin?.tabProducts || "Mahsulotlar (CRUD)"}</span>}
-              </div>
-              {!isSidebarCollapsed && (
-                <span className="text-[11px] font-bold text-slate-400">{products.length}</span>
+              {/* Submenu for Dashboard */}
+              {!isSidebarCollapsed && dashboardSubmenuOpen && (
+                <div className="pl-9 pr-2 py-1 space-y-1">
+                  <button
+                    onClick={() => {
+                      setActiveSubmenu("analysis");
+                      setActiveTab("dashboard");
+                      playSound("click", soundEnabled);
+                    }}
+                    className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-2 ${
+                      activeSubmenu === "analysis" && activeTab === "dashboard"
+                        ? "text-blue-400 font-bold"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span className="text-[10px]">›</span>
+                    <span>Analysis</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setActiveSubmenu("eCommerce");
+                      setActiveTab("dashboard");
+                      playSound("click", soundEnabled);
+                    }}
+                    className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-2 ${
+                      activeSubmenu === "eCommerce" && activeTab === "dashboard"
+                        ? "bg-[#0d6efd] text-white font-bold shadow-md shadow-blue-500/20"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span className="text-[10px]">›</span>
+                    <span>eCommerce</span>
+                  </button>
+                </div>
               )}
-            </button>
 
-            {/* Orders */}
-            <button
-              onClick={() => {
-                setActiveTab("orders");
-                playSound("click", soundEnabled);
-                setIsMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition ${
-                activeTab === "orders" ? activeAccent.activeTab : "text-slate-400 hover:text-white hover:bg-[#131d33]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <ShoppingBag className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>{t.admin?.tabOrders || "Buyurtmalar"}</span>}
-              </div>
-              {!isSidebarCollapsed && (
-                <span className="text-[10px] px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-400 font-bold">
-                  {orders.length}
-                </span>
-              )}
-            </button>
+              {/* Widgets & Apps */}
+              <div className="mt-1 space-y-1">
+                <button
+                  onClick={() => {
+                    setActiveTab("system");
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "system" ? "bg-[#182238] text-white font-semibold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Grid className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Widgets</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
 
-            {/* Promocodes */}
-            <button
-              onClick={() => {
-                setActiveTab("promos");
-                playSound("click", soundEnabled);
-                setIsMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition ${
-                activeTab === "promos" ? activeAccent.activeTab : "text-slate-400 hover:text-white hover:bg-[#131d33]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Tag className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>{t.admin?.tabPromos || "Promokodlar"}</span>}
+                <button
+                  onClick={() => {
+                    setActiveTab("telegram");
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "telegram" ? "bg-[#182238] text-white font-semibold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Layers className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Apps</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
               </div>
-              {!isSidebarCollapsed && (
-                <span className="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 font-bold">
-                  {promoCodesList.length}
-                </span>
-              )}
-            </button>
+            </div>
 
-            {/* Customers (CRM) */}
-            <button
-              onClick={() => {
-                setActiveTab("customers");
-                playSound("click", soundEnabled);
-                setIsMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition ${
-                activeTab === "customers" ? activeAccent.activeTab : "text-slate-400 hover:text-white hover:bg-[#131d33]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Users className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>{t.admin?.tabCustomers || "Mijozlar (CRM)"}</span>}
-              </div>
+            {/* GROUP 2: UI ELEMENTS / MANAGEMENT */}
+            <div>
               {!isSidebarCollapsed && (
-                <span className="text-[11px] font-bold text-slate-400">{customersList.length}</span>
+                <div className="px-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                  UI ELEMENTS
+                </div>
               )}
-            </button>
+              <div className="space-y-1">
+                {/* Cards (Promocodes) */}
+                <button
+                  onClick={() => {
+                    setActiveTab("promos");
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "promos" ? "bg-[#182238] text-blue-400 font-bold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Cards</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
 
-            {/* Telegram Bot */}
-            <button
-              onClick={() => {
-                setActiveTab("telegram");
-                playSound("click", soundEnabled);
-                setIsMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition ${
-                activeTab === "telegram" ? activeAccent.activeTab : "text-slate-400 hover:text-white hover:bg-[#131d33]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Send className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>{t.admin?.tabTelegram || "Telegram Bot"}</span>}
-              </div>
-              {!isSidebarCollapsed && (
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              )}
-            </button>
+                {/* eCommerce (Products CRUD) */}
+                <button
+                  onClick={() => {
+                    setActiveTab("products");
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "products" ? "bg-[#182238] text-blue-400 font-bold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <ShoppingBag className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>eCommerce</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
 
-            {/* System / Server Monitor */}
-            <button
-              onClick={() => {
-                setActiveTab("system");
-                playSound("click", soundEnabled);
-                setIsMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition ${
-                activeTab === "system" ? activeAccent.activeTab : "text-slate-400 hover:text-white hover:bg-[#131d33]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Terminal className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>{t.admin?.tabSystem || "Server & Tizim"}</span>}
+                {/* Components (Orders) */}
+                <button
+                  onClick={() => {
+                    setActiveTab("orders");
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "orders" ? "bg-[#182238] text-blue-400 font-bold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Package className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Components</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
+
+                {/* Icons (Customers CRM) */}
+                <button
+                  onClick={() => {
+                    setActiveTab("customers");
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "customers" ? "bg-[#182238] text-blue-400 font-bold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Users className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Icons</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
               </div>
+            </div>
+
+            {/* GROUP 3: FORMS & TABLES */}
+            <div>
               {!isSidebarCollapsed && (
-                <span className="text-[10px] font-mono text-purple-400 font-bold">{serverPing}ms</span>
+                <div className="px-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                  FORMS & TABLES
+                </div>
               )}
-            </button>
+              <div className="space-y-1">
+                {/* Forms (Telegram Bot) */}
+                <button
+                  onClick={() => {
+                    setActiveTab("telegram");
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "telegram" ? "bg-[#182238] text-blue-400 font-bold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Forms</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
+
+                {/* Tables (System) */}
+                <button
+                  onClick={() => {
+                    setActiveTab("system");
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "system" ? "bg-[#182238] text-blue-400 font-bold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Terminal className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Tables</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
+              </div>
+            </div>
+
+            {/* GROUP 4: PAGES */}
+            <div>
+              {!isSidebarCollapsed && (
+                <div className="px-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                  PAGES
+                </div>
+              )}
+              <div className="space-y-1">
+                <button
+                  onClick={() => {
+                    showToast("Admin session: Active & Protected");
+                    playSound("click", soundEnabled);
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <Lock className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Authentication</span>}
+                  </div>
+                  {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
+                </button>
+
+                <button
+                  onClick={() => {
+                    showToast(`Admin: ${user?.name || "Khabibullo"} (${user?.username || "admin"})`);
+                    playSound("click", soundEnabled);
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <User className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>User Profile</span>}
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setActiveTab("system");
+                    playSound("click", soundEnabled);
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-4 h-4 text-slate-400" />
+                    {!isSidebarCollapsed && <span>Timeline</span>}
+                  </div>
+                </button>
+
+                <Link
+                  to="/"
+                  onClick={() => playSound("click", soundEnabled)}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <Home className="w-4 h-4 text-blue-400" />
+                    {!isSidebarCollapsed && <span>Pages (Store)</span>}
+                  </div>
+                </Link>
+              </div>
+            </div>
           </nav>
         </div>
 
-        {/* Sidebar Footer: Back to Store */}
-        <div className="p-4 border-t border-slate-800/80">
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t border-[#1a2035]">
           <Link
             to="/"
             onClick={() => playSound("click", soundEnabled)}
-            className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+            className="w-full py-2.5 px-3 rounded-xl bg-[#161d31] hover:bg-[#1d2742] text-white font-bold text-xs flex items-center justify-center gap-2 transition"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-3.5 h-3.5 text-blue-400" />
             {!isSidebarCollapsed && (
-              <span>{language === "ru" ? "Назад в магазин" : language === "en" ? "Back to shop" : "Do'konga qaytish"}</span>
+              <span>{language === "ru" ? "В магазин" : language === "en" ? "Back to shop" : "Do'konga qaytish"}</span>
             )}
           </Link>
         </div>
       </aside>
 
-      {/* 2. MAIN EXECUTIVE CONTENT AREA */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+      {/* 2. MAIN MAXTON CONTENT AREA */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-[#0e1322]">
         {/* TOPBAR */}
-        <header className="sticky top-0 z-30 h-16 bg-[#0e1626]/90 backdrop-blur-xl border-b border-slate-800/80 px-4 sm:px-6 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-30 h-16 bg-[#111625] border-b border-[#1c2438] px-4 sm:px-6 flex items-center justify-between gap-4">
+          {/* Left: Mobile hamburger & Search bar */}
+          <div className="flex items-center gap-3 flex-1 max-w-md">
             <button
-              onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-              className="md:hidden p-2 rounded-xl bg-slate-800 text-slate-300"
+              onClick={() => {
+                setIsMobileSidebarOpen(!isMobileSidebarOpen);
+                playSound("click", soundEnabled);
+              }}
+              className="p-2 rounded-xl bg-[#161d31] text-slate-300 md:hidden hover:text-white"
             >
-              <Layers className="w-5 h-5" />
+              <Menu className="w-5 h-5" />
             </button>
 
-            {/* Digital Clock */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0b1120] border border-slate-800 font-mono text-xs font-bold text-emerald-400">
-              <Clock className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{currentTime.toTimeString().slice(0, 8)}</span>
+            {/* Pill Search Input */}
+            <div className="relative w-full max-w-xs sm:max-w-sm">
+              <input
+                type="text"
+                placeholder="Search"
+                value={productSearch}
+                onChange={(e) => {
+                  setProductSearch(e.target.value);
+                  if (activeTab !== "products" && e.target.value.trim()) setActiveTab("products");
+                }}
+                className="w-full pl-9 pr-4 py-2 rounded-full bg-[#182035] border border-[#232c45] text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition"
+              />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
-          {/* Utilities: Language, Accent Color, Sound, Fullscreen, Profile */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Language Selector */}
-            <div className="flex items-center gap-1 px-1.5 py-1 rounded-xl bg-[#0b1120] border border-slate-800 text-xs font-bold">
-              <Globe className="w-3.5 h-3.5 text-emerald-400 ml-1" />
-              {["uz", "ru", "en"].map((lng) => (
-                <button
-                  key={lng}
-                  onClick={() => {
-                    setLanguage(lng);
-                    playSound("click", soundEnabled);
-                  }}
-                  className={`px-2 py-0.5 rounded-lg text-[11px] font-bold uppercase transition ${
-                    language === lng
-                      ? "bg-emerald-500 text-white shadow-sm"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                  title={lng === "uz" ? "O'zbekcha" : lng === "ru" ? "Русский" : "English"}
-                >
-                  {lng}
-                </button>
-              ))}
+          {/* Right Header Utilities: Flags, Check, Bell, Cart, Profile */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* Country Flags & Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  const nextLang = language === "uz" ? "ru" : language === "ru" ? "en" : "uz";
+                  setLanguage(nextLang);
+                  playSound("click", soundEnabled);
+                }}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#182035] border border-[#232c45] text-xs font-bold hover:border-slate-600 transition"
+                title="Tilni o'zgartirish"
+              >
+                <span className="text-base leading-none">
+                  {language === "ru" ? "🇷🇺" : language === "en" ? "🇬🇧" : "🇺🇿"}
+                </span>
+                <span className="text-[11px] font-bold uppercase text-slate-300 hidden sm:inline">{language}</span>
+              </button>
             </div>
 
-            {/* Color Accent Picker */}
-            <div className="hidden lg:flex items-center gap-1.5 px-2 py-1 rounded-xl bg-[#0b1120] border border-slate-800">
-              {Object.keys(accentStyles).map((col) => (
-                <button
-                  key={col}
-                  onClick={() => handleAccentChange(col)}
-                  className={`w-4 h-4 rounded-full transition-transform ${
-                    accentColor === col ? "scale-125 ring-2 ring-white" : "opacity-60 hover:opacity-100"
-                  }`}
-                  style={{ backgroundColor: accentStyles[col].hex }}
-                  title={`${col} accent`}
-                />
-              ))}
+            {/* Checkmark Icon */}
+            <div className="p-2 rounded-xl bg-[#182035] border border-[#232c45] text-emerald-400 hidden sm:flex items-center justify-center">
+              <CheckCircle2 className="w-4 h-4" />
             </div>
 
-            {/* Sound Toggle */}
-            <button
-              onClick={handleToggleSound}
-              className="p-2 rounded-xl bg-[#0b1120] border border-slate-800 text-slate-300 hover:text-white transition"
-              title={soundEnabled ? (language === "ru" ? "Выключить звук" : language === "en" ? "Mute sound" : "Ovozni o'chirish") : (language === "ru" ? "Включить звук" : language === "en" ? "Enable sound" : "Ovozni yoqish")}
-            >
-              {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
-            </button>
+            {/* Notification Bell with Red Badge */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setNotificationsOpen(!notificationsOpen);
+                  playSound("click", soundEnabled);
+                }}
+                className="p-2 rounded-xl bg-[#182035] border border-[#232c45] text-slate-300 hover:text-white transition relative"
+                title="Bildirishnomalar"
+              >
+                <Bell className="w-4 h-4" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#ef4444] text-white text-[10px] font-extrabold flex items-center justify-center shadow-md">
+                  5
+                </span>
+              </button>
 
-            {/* Fullscreen Toggle */}
-            <button
-              onClick={handleToggleFullscreen}
-              className="p-2 rounded-xl bg-[#0b1120] border border-slate-800 text-slate-300 hover:text-white transition"
-              title={language === "ru" ? "Полный экран" : language === "en" ? "Fullscreen" : "To'liq ekran"}
-            >
-              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-            </button>
+              {notificationsOpen && (
+                <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-[#151c2e] border border-[#242e47] shadow-2xl p-3 z-50 space-y-2 text-xs animate-in fade-in">
+                  <div className="font-bold text-white pb-2 border-b border-[#242e47] flex justify-between items-center">
+                    <span>Bildirishnomalar</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400">5 yangi</span>
+                  </div>
+                  <div className="space-y-1.5 max-h-56 overflow-y-auto">
+                    <div className="p-2 rounded-xl bg-[#1a233a] text-slate-300">
+                      <div className="font-bold text-emerald-400 text-[11px]">Yangi buyurtma #{orders[0]?.id || "2026"}</div>
+                      <div className="text-[10px] text-slate-400">{orders[0]?.customerName || "Javohir"} buyurtma berdi</div>
+                    </div>
+                    <div className="p-2 rounded-xl bg-[#1a233a] text-slate-300">
+                      <div className="font-bold text-amber-400 text-[11px]">Zaxira ogohlantirishi</div>
+                      <div className="text-[10px] text-slate-400">Optimum Nutrition zaxirasi oz qoldi (3 dona)</div>
+                    </div>
+                    <div className="p-2 rounded-xl bg-[#1a233a] text-slate-300">
+                      <div className="font-bold text-blue-400 text-[11px]">Telegram Bot</div>
+                      <div className="text-[10px] text-slate-400">Bot 100% faol holatda ishlamoqda</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
-            {/* Admin User Badge */}
-            <div className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl bg-[#0b1120] border border-slate-800">
-              <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center">
-                A
+            {/* Shopping Cart Icon with Red Badge */}
+            <div className="relative">
+              <Link
+                to="/cart"
+                onClick={() => playSound("click", soundEnabled)}
+                className="p-2 rounded-xl bg-[#182035] border border-[#232c45] text-slate-300 hover:text-white transition relative block"
+                title="Do'kon savatchasi"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#ef4444] text-white text-[10px] font-extrabold flex items-center justify-center shadow-md">
+                  8
+                </span>
+              </Link>
+            </div>
+
+            {/* User Avatar with Green Active Dot */}
+            <div className="flex items-center gap-2 pl-2 border-l border-[#1c2438]">
+              <div className="relative">
+                <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/30 bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                    alt="Admin Avatar"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
+                  <span>A</span>
+                </div>
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#111625]"></span>
               </div>
-              <span className="text-xs font-bold text-white hidden sm:inline">Admin</span>
+
               <button
                 onClick={() => {
                   logoutUser();
                   playSound("warn", soundEnabled);
                 }}
-                className="text-slate-400 hover:text-rose-400 ml-1"
-                title="Chiqish"
+                className="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-[#1a2238] transition hidden sm:block"
+                title="Chiqish (Logout)"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="w-4 h-4" />
               </button>
             </div>
           </div>
         </header>
 
+        {/* BREADCRUMBS & ACTION HEADER */}
+        <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-black text-white tracking-tight">Dashboard</h1>
+            <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium pl-3 border-l border-[#1f283e]">
+              <Home className="w-3.5 h-3.5 text-slate-400" />
+              <span>eCommerce</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            {/* Quick Settings Button */}
+            <button
+              onClick={() => {
+                setIsSettingsOpen(!isSettingsOpen);
+                playSound("click", soundEnabled);
+              }}
+              className="px-4 py-2 rounded-xl bg-[#0d6efd] hover:bg-[#0b5ed7] text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-95"
+            >
+              <Settings className="w-4 h-4" />
+              <span>Settings</span>
+            </button>
+          </div>
+        </div>
+
+        {/* SETTINGS MODAL / POPUP */}
+        {isSettingsOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+            <div className="relative w-full max-w-sm rounded-3xl bg-[#141b2e] border border-[#232d46] p-6 shadow-2xl space-y-5">
+              <div className="flex items-center justify-between pb-3 border-b border-[#232d46]">
+                <h3 className="font-bold text-white text-base flex items-center gap-2">
+                  <Sliders className="w-4 h-4 text-blue-400" />
+                  <span>Dashboard Sozlamalari</span>
+                </h3>
+                <button onClick={() => setIsSettingsOpen(false)} className="text-slate-400 hover:text-white">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="space-y-4 text-xs">
+                {/* Sound */}
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300 font-semibold">Taktil Ovoz Effekti (SFX):</span>
+                  <button
+                    onClick={handleToggleSound}
+                    className={`px-3 py-1.5 rounded-xl font-bold transition ${
+                      soundEnabled ? "bg-emerald-500 text-white" : "bg-slate-800 text-slate-400"
+                    }`}
+                  >
+                    {soundEnabled ? "Yoniq" : "O'chiq"}
+                  </button>
+                </div>
+
+                {/* Fullscreen */}
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300 font-semibold">To'liq Ekran:</span>
+                  <button
+                    onClick={handleToggleFullscreen}
+                    className="px-3 py-1.5 rounded-xl bg-[#1b243b] text-white font-bold hover:bg-[#232e4b]"
+                  >
+                    {isFullscreen ? "Kichraytirish" : "Kengaytirish"}
+                  </button>
+                </div>
+
+                {/* Language */}
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-300 font-semibold">Tizim Tili:</span>
+                  <div className="flex gap-1">
+                    {["uz", "ru", "en"].map((lng) => (
+                      <button
+                        key={lng}
+                        onClick={() => {
+                          setLanguage(lng);
+                          playSound("click", soundEnabled);
+                        }}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase ${
+                          language === lng ? "bg-blue-500 text-white" : "bg-slate-800 text-slate-400"
+                        }`}
+                      >
+                        {lng}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsSettingsOpen(false)}
+                className="w-full py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs"
+              >
+                Yopish
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* TAB CONTENTS */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl w-full mx-auto">
-          {/* 1. DASHBOARD TAB */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
+          {/* 1. MAXTON ECOMMERCE DASHBOARD TAB */}
           {activeTab === "dashboard" && (
-            <div className="space-y-8 animate-in fade-in duration-200">
-              {/* Stat Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-2 relative overflow-hidden group">
-                  <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
-                    <span>{language === "ru" ? "Общий доход" : language === "en" ? "Total Revenue" : "Umumiy Tushum"}</span>
-                    <DollarSign className="w-5 h-5 text-emerald-400" />
+            <div className="space-y-6 animate-in fade-in duration-200">
+              {/* TOP ROW: 5 METRIC CARDS (Congratulations + 4 Sparkline cards) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                {/* CARD 1: Congratulations Jhon (2 cols on desktop) */}
+                <div className="sm:col-span-2 lg:col-span-2 p-5 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex items-center justify-between relative overflow-hidden group hover:border-[#2d3a5a] transition">
+                  <div className="space-y-1 z-10 max-w-[65%]">
+                    <h3 className="font-bold text-white text-sm sm:text-base flex items-center gap-1.5">
+                      <span>Congratulations Khabibullo</span>
+                      <span>🎉</span>
+                    </h3>
+                    <p className="text-[11px] text-slate-400 leading-snug">
+                      You are the best seller of this month
+                    </p>
+                    <div className="pt-2">
+                      <div className="text-2xl font-black text-white tracking-tight">
+                        $168.5K
+                      </div>
+                      <div className="text-[11px] text-slate-400 font-medium">
+                        58% of sales target
+                      </div>
+                    </div>
+                    <div className="pt-3">
+                      <button
+                        onClick={() => {
+                          setActiveTab("products");
+                          playSound("click", soundEnabled);
+                        }}
+                        className="px-4 py-2 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 text-white font-bold text-[11px] shadow-lg shadow-pink-500/25 transition active:scale-95"
+                      >
+                        View Details
+                      </button>
+                    </div>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">
-                    {totalRevenue.toLocaleString()} <span className="text-xs text-emerald-400">{t.cart?.currency || "so'm"}</span>
-                  </div>
-                  <div className="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    <span>{language === "ru" ? "+24% по сравнению с прошлой неделей" : language === "en" ? "+24% vs last week" : "+24% o'tgan haftaga nisbatan"}</span>
+
+                  {/* 3D Gift Box with Ribbons & Confetti */}
+                  <div className="relative w-28 h-28 flex items-center justify-center flex-shrink-0">
+                    <span className="absolute -top-1 left-2 text-amber-300 text-xs animate-bounce">✨</span>
+                    <span className="absolute -top-2 right-4 text-pink-400 text-sm animate-pulse">🎉</span>
+                    <span className="absolute bottom-2 -left-2 text-cyan-300 text-xs">⭐</span>
+                    <span className="absolute -bottom-1 right-2 text-amber-400 text-xs animate-ping">✨</span>
+
+                    <svg viewBox="0 0 100 100" className="w-24 h-24 drop-shadow-[0_10px_20px_rgba(244,63,94,0.35)]">
+                      {/* Box bottom */}
+                      <rect x="20" y="42" width="60" height="46" rx="6" fill="#f59e0b" />
+                      <rect x="20" y="42" width="30" height="46" rx="6" fill="#d97706" opacity="0.4" />
+                      {/* Box lid */}
+                      <rect x="15" y="32" width="70" height="15" rx="4" fill="#fbbf24" />
+                      <rect x="15" y="32" width="35" height="15" rx="4" fill="#d97706" opacity="0.3" />
+                      {/* Vertical Red Ribbon */}
+                      <rect x="44" y="32" width="12" height="56" fill="#ef4444" />
+                      {/* Horizontal Red Ribbon */}
+                      <rect x="20" y="58" width="60" height="10" fill="#dc2626" />
+                      {/* Ribbon Bow */}
+                      <path d="M 50 32 C 38 18, 28 22, 38 32 C 44 34, 48 33, 50 32 Z" fill="#ef4444" />
+                      <path d="M 50 32 C 62 18, 72 22, 62 32 C 56 34, 52 33, 50 32 Z" fill="#dc2626" />
+                      <circle cx="50" cy="32" r="5" fill="#f87171" />
+                    </svg>
                   </div>
                 </div>
 
-                <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-2 relative overflow-hidden group">
-                  <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
-                    <span>{language === "ru" ? "Всего заказов" : language === "en" ? "Total Orders" : "Jami Buyurtmalar"}</span>
-                    <ShoppingBag className="w-5 h-5 text-cyan-400" />
+                {/* CARD 2: Total Orders (248k) */}
+                <div className="p-4 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex flex-col justify-between hover:border-blue-500/40 transition">
+                  <div className="flex items-center justify-between">
+                    <div className="w-9 h-9 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center">
+                      <ShoppingCart className="w-4 h-4" />
+                    </div>
+                    <div className="text-[11px] font-bold text-emerald-400 flex items-center gap-0.5">
+                      <span>+24%</span>
+                      <TrendingUp className="w-3 h-3" />
+                    </div>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">
-                    {totalOrdersCount} <span className="text-xs text-slate-400">{language === "ru" ? "шт." : language === "en" ? "orders" : "ta"}</span>
+                  <div className="my-2">
+                    <div className="text-xl font-black text-white">248k</div>
+                    <div className="text-[11px] text-slate-400 font-medium">Total Orders</div>
                   </div>
-                  <div className="text-[11px] text-amber-400 font-bold">
-                    {pendingOrdersCount} {language === "ru" ? "новых в ожидании" : language === "en" ? "new pending" : "ta yangi kutilmoqda"}
+                  {/* Blue Smooth Sparkline */}
+                  <div className="h-9 w-full pt-1">
+                    <svg viewBox="0 0 120 35" className="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="sparkBlue" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.4" />
+                          <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M 0 25 Q 15 10, 30 20 T 60 12 T 90 24 T 120 8 L 120 35 L 0 35 Z" fill="url(#sparkBlue)" />
+                      <path d="M 0 25 Q 15 10, 30 20 T 60 12 T 90 24 T 120 8" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+                    </svg>
                   </div>
                 </div>
 
-                <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-2 relative overflow-hidden group">
-                  <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
-                    <span>{language === "ru" ? "Активные товары" : language === "en" ? "Active Products" : "Faol Mahsulotlar"}</span>
-                    <Package className="w-5 h-5 text-teal-400" />
+                {/* CARD 3: Total Sales ($47.6k) */}
+                <div className="p-4 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex flex-col justify-between hover:border-emerald-500/40 transition">
+                  <div className="flex items-center justify-between">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+                      <DollarSign className="w-4 h-4" />
+                    </div>
+                    <div className="text-[11px] font-bold text-emerald-400 flex items-center gap-0.5">
+                      <span>+14%</span>
+                      <TrendingUp className="w-3 h-3" />
+                    </div>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">
-                    {products.length} <span className="text-xs text-slate-400">{language === "ru" ? "вид." : language === "en" ? "items" : "xil"}</span>
+                  <div className="my-2">
+                    <div className="text-xl font-black text-white">$47.6k</div>
+                    <div className="text-[11px] text-slate-400 font-medium">Total Sales</div>
                   </div>
-                  <div className="text-[11px] text-slate-400">
-                    {language === "ru" ? "В 4 основных категориях" : language === "en" ? "Across 4 main categories" : "4 ta asosiy toifada"}
+                  {/* Green Smooth Sparkline */}
+                  <div className="h-9 w-full pt-1">
+                    <svg viewBox="0 0 120 35" className="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="sparkGreen" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#22c55e" stopOpacity="0.4" />
+                          <stop offset="100%" stopColor="#22c55e" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M 0 28 Q 20 32, 40 18 T 80 12 T 100 8 T 120 14 L 120 35 L 0 35 Z" fill="url(#sparkGreen)" />
+                      <path d="M 0 28 Q 20 32, 40 18 T 80 12 T 100 8 T 120 14" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" />
+                    </svg>
                   </div>
                 </div>
 
-                <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-2 relative overflow-hidden group">
-                  <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
-                    <span>{language === "ru" ? "База клиентов (CRM)" : language === "en" ? "Customer Database (CRM)" : "Mijozlar Bazasi (CRM)"}</span>
-                    <Users className="w-5 h-5 text-purple-400" />
+                {/* CARD 4: Total Visits (189K) */}
+                <div className="p-4 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex flex-col justify-between hover:border-cyan-500/40 transition">
+                  <div className="flex items-center justify-between">
+                    <div className="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center">
+                      <Eye className="w-4 h-4" />
+                    </div>
+                    <div className="text-[11px] font-bold text-rose-400 flex items-center gap-0.5">
+                      <span>-35%</span>
+                      <TrendingDown className="w-3 h-3" />
+                    </div>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white">
-                    {customersList.length} <span className="text-xs text-slate-400">{language === "ru" ? "чел." : language === "en" ? "people" : "nafar"}</span>
+                  <div className="my-2">
+                    <div className="text-xl font-black text-white">189K</div>
+                    <div className="text-[11px] text-slate-400 font-medium">Total Visits</div>
                   </div>
-                  <div className="text-[11px] text-emerald-400 font-bold">
-                    {language === "ru" ? "Постоянные спортсмены" : language === "en" ? "Active athletes" : "Doimiy sportchilar"}
+                  {/* Cyan Smooth Sparkline */}
+                  <div className="h-9 w-full pt-1">
+                    <svg viewBox="0 0 120 35" className="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="sparkCyan" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.4" />
+                          <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M 0 14 Q 20 8, 40 24 T 70 16 T 95 28 T 120 18 L 120 35 L 0 35 Z" fill="url(#sparkCyan)" />
+                      <path d="M 0 14 Q 20 8, 40 24 T 70 16 T 95 28 T 120 18" fill="none" stroke="#06b6d4" strokeWidth="2.5" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* CARD 5: Bounce Rate (24.6%) */}
+                <div className="p-4 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex flex-col justify-between hover:border-amber-500/40 transition">
+                  <div className="flex items-center justify-between">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center">
+                      <BarChart2 className="w-4 h-4" />
+                    </div>
+                    <div className="text-[11px] font-bold text-emerald-400 flex items-center gap-0.5">
+                      <span>+18%</span>
+                      <TrendingUp className="w-3 h-3" />
+                    </div>
+                  </div>
+                  <div className="my-2">
+                    <div className="text-xl font-black text-white">24.6%</div>
+                    <div className="text-[11px] text-slate-400 font-medium">Bounce Rate</div>
+                  </div>
+                  {/* Amber Mini Vertical Columns */}
+                  <div className="flex items-end justify-between h-9 gap-1 pt-1">
+                    {[35, 50, 30, 65, 45, 90, 60, 95, 75, 100, 70, 85].map((h, i) => (
+                      <div
+                        key={i}
+                        className="w-1.5 bg-[#f59e0b] rounded-t-sm transition-all duration-300 hover:bg-amber-300"
+                        style={{ height: `${h}%` }}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
 
-              {/* Quick Action Bar */}
-              <div className="p-4 rounded-2xl bg-[#0e1626] border border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleOpenAddModal}
-                    className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>{t.admin?.addProduct || "Yangi Mahsulot"}</span>
-                  </button>
+              {/* MIDDLE ROW: Order Status (Donut) & Sales & Views (Dual Bar Chart) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                {/* 1. ORDER STATUS (DONUT CHART) - spans 5 cols */}
+                <div className="lg:col-span-5 p-6 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex flex-col justify-between space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-white text-base">Order Status</h3>
+                    <button className="text-slate-400 hover:text-white p-1">
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </div>
 
-                  <button
-                    onClick={handleCreateTestOrder}
-                    className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition"
-                  >
-                    <ShoppingBag className="w-3.5 h-3.5" />
-                    <span>{language === "ru" ? "Создать тест-заказ" : language === "en" ? "Create Test Order" : "Test Buyurtma Yaratish"}</span>
-                  </button>
+                  {/* Multi-Color Segmented Donut Chart */}
+                  <div className="relative flex items-center justify-center my-4">
+                    <svg viewBox="0 0 160 160" className="w-52 h-52 transform -rotate-90">
+                      <defs>
+                        <linearGradient id="donutCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#00d2ff" />
+                          <stop offset="100%" stopColor="#0d6efd" />
+                        </linearGradient>
+                        <linearGradient id="donutPink" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#ff416c" />
+                          <stop offset="100%" stopColor="#ff4b2b" />
+                        </linearGradient>
+                        <linearGradient id="donutGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#00e396" />
+                          <stop offset="100%" stopColor="#00b074" />
+                        </linearGradient>
+                      </defs>
 
-                  <button
-                    onClick={handleTestTelegram}
-                    disabled={isTestingBot}
-                    className="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-sky-500/20 transition"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>{language === "ru" ? "Тест Telegram" : language === "en" ? "Telegram Test" : "Telegram Sinov"}</span>
-                  </button>
+                      {/* Track Background */}
+                      <circle
+                        cx="80"
+                        cy="80"
+                        r="60"
+                        fill="none"
+                        stroke="#1a2238"
+                        strokeWidth="14"
+                      />
+
+                      {/* Segment 1: Sales (68%) */}
+                      <circle
+                        cx="80"
+                        cy="80"
+                        r="60"
+                        fill="none"
+                        stroke="url(#donutCyan)"
+                        strokeWidth="14"
+                        strokeDasharray="256 377"
+                        strokeDashoffset="0"
+                        strokeLinecap="round"
+                      />
+
+                      {/* Segment 2: Product (25%) */}
+                      <circle
+                        cx="80"
+                        cy="80"
+                        r="60"
+                        fill="none"
+                        stroke="url(#donutPink)"
+                        strokeWidth="14"
+                        strokeDasharray="94 377"
+                        strokeDashoffset="-262"
+                        strokeLinecap="round"
+                      />
+
+                      {/* Segment 3: Income (14%) */}
+                      <circle
+                        cx="80"
+                        cy="80"
+                        r="60"
+                        fill="none"
+                        stroke="url(#donutGreen)"
+                        strokeWidth="14"
+                        strokeDasharray="52 377"
+                        strokeDashoffset="-360"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+
+                    {/* Center Text */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                      <span className="text-3xl font-black text-white tracking-tight">68%</span>
+                      <span className="text-xs text-slate-400 font-medium">Total Sales</span>
+                    </div>
+                  </div>
+
+                  {/* Donut Legend */}
+                  <div className="grid grid-cols-1 gap-2 pt-2 border-t border-[#1f283e] text-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                        <span className="text-slate-300">Sales</span>
+                      </div>
+                      <span className="font-bold text-white">68%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                        <span className="text-slate-300">Product</span>
+                      </div>
+                      <span className="font-bold text-white">25%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        <span className="text-slate-300">Income</span>
+                      </div>
+                      <span className="font-bold text-white">14%</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleExportDatabase}
-                    className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center gap-1.5 transition"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>JSON Backup</span>
-                  </button>
+                {/* 2. SALES & VIEWS (DUAL BAR CHART) - spans 7 cols */}
+                <div className="lg:col-span-7 p-6 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex flex-col justify-between space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-white text-base">Sales & Views</h3>
+                    <button className="text-slate-400 hover:text-white p-1">
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Dual Column Bar Chart Area */}
+                  <div className="relative pt-4">
+                    {/* Y-axis guidelines */}
+                    <div className="absolute inset-x-0 inset-y-0 flex flex-col justify-between pointer-events-none text-[10px] text-slate-500">
+                      <div className="border-b border-[#1c2438] pb-1 flex justify-between"><span>60</span></div>
+                      <div className="border-b border-[#1c2438] pb-1 flex justify-between"><span>40</span></div>
+                      <div className="border-b border-[#1c2438] pb-1 flex justify-between"><span>20</span></div>
+                      <div className="border-b border-[#1c2438] pb-1 flex justify-between"><span>0</span></div>
+                    </div>
+
+                    {/* Bars Container */}
+                    <div className="relative h-44 flex items-end justify-between px-6 pt-2">
+                      {salesViewsData.map((d) => (
+                        <div
+                          key={d.month}
+                          onMouseEnter={() => setHoveredMonth(d.month)}
+                          onMouseLeave={() => setHoveredMonth(null)}
+                          className="flex flex-col items-center gap-2 group cursor-pointer"
+                        >
+                          {/* Tooltip on hover */}
+                          {hoveredMonth === d.month && (
+                            <div className="absolute -top-7 px-2 py-0.5 rounded-md bg-[#0a0e1a] border border-[#222c44] text-[10px] font-bold text-white shadow-lg pointer-events-none z-20">
+                              Sales: {d.sales} | Views: {d.views}
+                            </div>
+                          )}
+
+                          {/* Bars Pair */}
+                          <div className="flex items-end gap-1">
+                            {/* Orange/Amber Bar (Sales) */}
+                            <div
+                              className="w-2.5 sm:w-3.5 bg-gradient-to-t from-amber-500 to-amber-400 rounded-t-sm transition-all duration-300 group-hover:brightness-125"
+                              style={{ height: `${(d.sales / 65) * 140}px` }}
+                            />
+                            {/* Cyan/Blue Bar (Views) */}
+                            <div
+                              className="w-2.5 sm:w-3.5 bg-gradient-to-t from-cyan-500 to-blue-500 rounded-t-sm transition-all duration-300 group-hover:brightness-125"
+                              style={{ height: `${(d.views / 65) * 140}px` }}
+                            />
+                          </div>
+
+                          {/* Month Label */}
+                          <span className="text-[10px] text-slate-400 font-medium group-hover:text-white transition">
+                            {d.month}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Chart Legend */}
+                    <div className="flex items-center justify-center gap-6 pt-3 text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-sm bg-amber-400"></span>
+                        <span className="text-slate-300">Sales</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-sm bg-cyan-400"></span>
+                        <span className="text-slate-300">Views</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Dials: Monthly and Yearly Circular Gauges */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#1f283e]">
+                    {/* Gauge 1: Monthly */}
+                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#111728] border border-[#1d263d]">
+                      <div className="relative w-12 h-12 flex-shrink-0">
+                        <svg viewBox="0 0 60 60" className="w-full h-full transform -rotate-90">
+                          <circle cx="30" cy="30" r="24" fill="none" stroke="#1f2942" strokeWidth="6" />
+                          <circle
+                            cx="30"
+                            cy="30"
+                            r="24"
+                            fill="none"
+                            stroke="#00d2ff"
+                            strokeWidth="6"
+                            strokeDasharray="110 150"
+                            strokeDashoffset="0"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-[11px] text-slate-400">Monthly</div>
+                        <div className="text-lg font-black text-white">65,127</div>
+                        <div className="text-[10px] font-bold text-emerald-400">
+                          16.5% <span className="text-slate-400 font-normal">55.21 USD</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Gauge 2: Yearly */}
+                    <div className="flex items-center gap-4 p-3 rounded-xl bg-[#111728] border border-[#1d263d]">
+                      <div className="relative w-12 h-12 flex-shrink-0">
+                        <svg viewBox="0 0 60 60" className="w-full h-full transform -rotate-90">
+                          <circle cx="30" cy="30" r="24" fill="none" stroke="#1f2942" strokeWidth="6" />
+                          <circle
+                            cx="30"
+                            cy="30"
+                            r="24"
+                            fill="none"
+                            stroke="#f59e0b"
+                            strokeWidth="6"
+                            strokeDasharray="125 150"
+                            strokeDashoffset="0"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-[11px] text-slate-400">Yearly</div>
+                        <div className="text-lg font-black text-white">984,246</div>
+                        <div className="text-[10px] font-bold text-emerald-400">
+                          24.9% <span className="text-slate-400 font-normal">267.35 USD</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Recent Orders Overview */}
-              <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                  <h3 className="text-base font-black text-white flex items-center gap-2">
-                    <ShoppingBag className="w-4 h-4 text-emerald-400" />
+              {/* ROW 3: QUICK RECENT ORDERS OVERVIEW */}
+              <div className="p-6 rounded-2xl bg-[#151c2e] border border-[#1f283e] space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-[#1f283e]">
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <ShoppingBag className="w-4 h-4 text-blue-400" />
                     <span>{language === "ru" ? "Последние заказы" : language === "en" ? "Recent Orders" : "So'nggi Buyurtmalar"}</span>
                   </h3>
                   <button
-                    onClick={() => setActiveTab("orders")}
-                    className="text-xs font-bold text-emerald-400 hover:underline"
+                    onClick={() => {
+                      setActiveTab("orders");
+                      playSound("click", soundEnabled);
+                    }}
+                    className="text-xs font-bold text-blue-400 hover:underline"
                   >
                     {language === "ru" ? "Посмотреть все" : language === "en" ? "View all" : "Barchasini ko'rish"} ({orders.length})
                   </button>
                 </div>
 
-                <div className="divide-y divide-slate-800/60">
+                <div className="divide-y divide-[#1f283e]">
                   {orders.slice(0, 4).map((ord) => (
-                    <div key={ord.id} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                    <div key={ord.id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                       <div>
-                        <span className="font-black text-emerald-400">#{ord.id}</span>
-                        <span className="text-slate-300 font-bold ml-2">{ord.customerName}</span>
-                        <span className="text-slate-500 ml-2">({ord.phone})</span>
+                        <span className="font-black text-blue-400">#{ord.id}</span>
+                        <span className="text-white font-bold ml-2">{ord.customerName}</span>
+                        <span className="text-slate-400 ml-2">({ord.phone})</span>
                       </div>
 
                       <div className="flex items-center gap-3">
@@ -1099,7 +1771,7 @@ export const AdminPage = () => {
                           {ord.total.toLocaleString()} {t.cart?.currency || "so'm"}
                         </span>
                         <span
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                             ord.status === "completed"
                               ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                               : ord.status === "delivering"
