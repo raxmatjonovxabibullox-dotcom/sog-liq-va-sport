@@ -389,13 +389,23 @@ export const AppProvider = ({ children }) => {
   // 9. Telegram Bot Config
   const [telegramConfig, setTelegramConfig] = useState(() => {
     const saved = localStorage.getItem("sport_telegram_config");
-    return saved
-      ? JSON.parse(saved)
-      : {
-          botToken: "",
-          chatId: "",
-          botUsername: "@Kitobchalar_bot",
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return {
+          botToken: parsed.botToken || "",
+          chatId: parsed.chatId || "8823235791",
+          botUsername: parsed.botUsername || "@Kitobchalar_bot",
         };
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return {
+      botToken: "",
+      chatId: "8823235791",
+      botUsername: "@Kitobchalar_bot",
+    };
   });
 
   useEffect(() => {

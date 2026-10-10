@@ -221,7 +221,7 @@ export const AdminPage = () => {
 
   // Telegram Config & Live Broadcast state
   const [botToken, setBotToken] = useState(telegramConfig?.botToken || "");
-  const [chatId, setChatId] = useState(telegramConfig?.chatId || "");
+  const [chatId, setChatId] = useState(telegramConfig?.chatId || "8823235791");
   const [showToken, setShowToken] = useState(false);
   const [isTestingBot, setIsTestingBot] = useState(false);
   const [broadcastMessage, setBroadcastMessage] = useState("");
