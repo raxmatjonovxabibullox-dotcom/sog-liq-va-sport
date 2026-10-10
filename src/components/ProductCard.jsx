@@ -2,15 +2,19 @@ import React from "react";
 import { useApp } from "../context/AppContext";
 import { Heart, ShoppingBag, Eye, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getCategoryLabel } from "../data/mockProducts";
 
 export const ProductCard = ({ product }) => {
-  const { addToCart, toggleWishlist, isInWishlist, setQuickViewProduct, t } = useApp();
+  const { addToCart, toggleWishlist, isInWishlist, setQuickViewProduct, t, language } = useApp();
   const isFav = isInWishlist(product.id);
 
   const discountPercent =
     product.oldPrice && product.oldPrice > product.price
       ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
       : null;
+
+  const categoryName = getCategoryLabel(product.category, language);
+  const currency = t.cart?.currency || "so'm";
 
   return (
     <div className="group relative flex flex-col rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 overflow-hidden shadow-sm hover:shadow-xl hover:border-emerald-500/40 transition-all duration-300">
@@ -32,7 +36,7 @@ export const ProductCard = ({ product }) => {
           )}
           {product.featured && (
             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500 text-white shadow-md">
-              Top
+              {t.shop?.topProduct || "Top"}
             </span>
           )}
         </div>
@@ -64,8 +68,8 @@ export const ProductCard = ({ product }) => {
       {/* Content */}
       <div className="flex flex-col flex-1 p-5">
         <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
-          <span className="font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider text-[11px]">
-            {product.categoryLabel || product.category}
+          <span className="font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider text-[11px]">
+            {categoryName}
           </span>
           <div className="flex items-center gap-1 text-amber-400 font-semibold">
             <Star className="w-3.5 h-3.5 fill-amber-400" />
@@ -85,11 +89,11 @@ export const ProductCard = ({ product }) => {
         <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
           <div>
             <div className="text-lg font-black text-slate-900 dark:text-white">
-              {product.price.toLocaleString()} <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">so'm</span>
+              {product.price.toLocaleString()} <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{currency}</span>
             </div>
             {product.oldPrice && product.oldPrice > product.price && (
               <div className="text-xs text-slate-400 line-through">
-                {product.oldPrice.toLocaleString()} so'm
+                {product.oldPrice.toLocaleString()} {currency}
               </div>
             )}
           </div>

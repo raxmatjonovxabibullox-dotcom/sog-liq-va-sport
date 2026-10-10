@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { ProductCard } from "../components/ProductCard";
-import { productCategories } from "../data/mockProducts";
+import { productCategories, getCategoryLabel } from "../data/mockProducts";
 import {
   Search,
   SlidersHorizontal,
@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const ShopPage = () => {
-  const { products, t } = useApp();
+  const { products, t, language } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const urlCategory = searchParams.get("cat") || "all";
@@ -82,7 +82,7 @@ export const ShopPage = () => {
           {t.shop.title}
         </span>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
-          Barcha Sport Mahsulotlari
+          {t.shop.allProductsTitle}
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-400">
           {t.shop.subtitle}
@@ -111,7 +111,7 @@ export const ShopPage = () => {
             className="lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300"
           >
             <SlidersHorizontal className="w-4 h-4 text-emerald-500" />
-            <span>Filtrlar</span>
+            <span>{t.shop.filtersTitle}</span>
           </button>
 
           {/* Sort Dropdown */}
@@ -146,7 +146,7 @@ export const ShopPage = () => {
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
             <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
               <SlidersHorizontal className="w-4 h-4 text-emerald-500" />
-              <span>Filtrlar</span>
+              <span>{t.shop.filtersTitle}</span>
             </h3>
             <button
               onClick={resetAllFilters}
@@ -165,6 +165,7 @@ export const ShopPage = () => {
             <div className="flex flex-col gap-1.5">
               {productCategories.map((cat) => {
                 const isSelected = selectedCategory === cat.id;
+                const catLabel = getCategoryLabel(cat.id, language);
                 return (
                   <button
                     key={cat.id}
@@ -175,7 +176,7 @@ export const ShopPage = () => {
                         : "bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                     }`}
                   >
-                    <span>{cat.labelUz}</span>
+                    <span>{catLabel}</span>
                     {isSelected && <Check className="w-3.5 h-3.5" />}
                   </button>
                 );
@@ -190,7 +191,7 @@ export const ShopPage = () => {
                 {t.shop.priceRange}
               </label>
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                {priceMax.toLocaleString()} so'm gacha
+                {t.shop.upTo} {priceMax.toLocaleString()} {t.cart.currency}
               </span>
             </div>
             <input
@@ -203,8 +204,8 @@ export const ShopPage = () => {
               className="w-full accent-emerald-500 cursor-pointer"
             />
             <div className="flex justify-between text-[11px] text-slate-400">
-              <span>100 000 so'm</span>
-              <span>1 200 000 so'm</span>
+              <span>100 000 {t.cart.currency}</span>
+              <span>1 200 000 {t.cart.currency}</span>
             </div>
           </div>
 
@@ -218,7 +219,7 @@ export const ShopPage = () => {
                 className="w-4 h-4 rounded text-emerald-500 accent-emerald-500 cursor-pointer"
               />
               <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Faqat mavjud tovarlar
+                {language === "ru" ? "Только в наличии" : language === "en" ? "In stock only" : "Faqat mavjud tovarlar"}
               </span>
             </label>
           </div>
@@ -228,7 +229,13 @@ export const ShopPage = () => {
         <main className="lg:col-span-3 space-y-6">
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
             <span>
-              Jami <b className="text-slate-900 dark:text-white">{filteredProducts.length}</b> ta mahsulot topildi
+              {language === "ru" ? (
+                <>Найдено <b className="text-slate-900 dark:text-white">{filteredProducts.length}</b> товаров</>
+              ) : language === "en" ? (
+                <>Found <b className="text-slate-900 dark:text-white">{filteredProducts.length}</b> products</>
+              ) : (
+                <>Jami <b className="text-slate-900 dark:text-white">{filteredProducts.length}</b> ta mahsulot topildi</>
+              )}
             </span>
           </div>
 
@@ -241,7 +248,7 @@ export const ShopPage = () => {
                 {t.shop.noProducts}
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                Qidiruv so'zini o'zgartirib ko'ring yoki filtrlarni tozalang.
+                {language === "ru" ? "Попробуйте изменить запрос или сбросить фильтры." : language === "en" ? "Try modifying your search or reset filters." : "Qidiruv so'zini o'zgartirib ko'ring yoki filtrlarni tozalang."}
               </p>
               <button
                 onClick={resetAllFilters}

@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { X, Star, Heart, ShoppingBag, Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getCategoryLabel } from "../data/mockProducts";
 
 export const QuickViewModal = () => {
-  const { quickViewProduct, setQuickViewProduct, addToCart, toggleWishlist, isInWishlist, t } = useApp();
+  const { quickViewProduct, setQuickViewProduct, addToCart, toggleWishlist, isInWishlist, t, language } = useApp();
   const [qty, setQty] = useState(1);
 
   if (!quickViewProduct) return null;
@@ -40,7 +41,7 @@ export const QuickViewModal = () => {
             />
             {quickViewProduct.featured && (
               <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-md">
-                Top Mahsulot
+                {t.shop?.topProduct || "Top"}
               </span>
             )}
           </div>
@@ -48,7 +49,7 @@ export const QuickViewModal = () => {
           {/* Details */}
           <div className="flex flex-col">
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-2">
-              {quickViewProduct.categoryLabel || quickViewProduct.category}
+              {getCategoryLabel(quickViewProduct.category, language)}
             </span>
 
             <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2 leading-snug">
@@ -60,23 +61,27 @@ export const QuickViewModal = () => {
               <div className="flex items-center gap-1 text-amber-400 font-bold">
                 <Star className="w-4 h-4 fill-amber-400" />
                 <span>{quickViewProduct.rating}</span>
-                <span className="text-slate-400 font-normal">({quickViewProduct.reviewsCount} sharh)</span>
+                <span className="text-slate-400 font-normal">
+                  ({quickViewProduct.reviewsCount} {language === "ru" ? "отзывов" : language === "en" ? "reviews" : "sharh"})
+                </span>
               </div>
               <span className="text-slate-300 dark:text-slate-700">|</span>
               <span className="text-emerald-600 dark:text-emerald-400 font-medium text-xs flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" />
-                {quickViewProduct.stock > 0 ? `${t.shop.inStock} (${quickViewProduct.stock} ta)` : t.shop.outOfStock}
+                {quickViewProduct.stock > 0
+                  ? `${t.shop.inStock} (${quickViewProduct.stock} ${language === "ru" ? "шт." : language === "en" ? "pcs" : "ta"})`
+                  : t.shop.outOfStock}
               </span>
             </div>
 
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-4">
               <span className="text-2xl font-black text-slate-900 dark:text-white">
-                {quickViewProduct.price.toLocaleString()} <span className="text-sm font-bold text-emerald-600">so'm</span>
+                {quickViewProduct.price.toLocaleString()} <span className="text-sm font-bold text-emerald-600">{t.cart?.currency || "so'm"}</span>
               </span>
               {quickViewProduct.oldPrice && (
                 <span className="text-base text-slate-400 line-through">
-                  {quickViewProduct.oldPrice.toLocaleString()} so'm
+                  {quickViewProduct.oldPrice.toLocaleString()} {t.cart?.currency || "so'm"}
                 </span>
               )}
             </div>
@@ -146,7 +151,9 @@ export const QuickViewModal = () => {
               onClick={() => setQuickViewProduct(null)}
               className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
             >
-              <span>To'liq sahifada ochish</span>
+              <span>
+                {language === "ru" ? "Открыть полную страницу" : language === "en" ? "Open full page" : "To'liq sahifada ochish"}
+              </span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

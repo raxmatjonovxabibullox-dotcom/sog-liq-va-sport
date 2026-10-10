@@ -64,7 +64,7 @@ export const WorkoutsPage = () => {
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
           <HeartPulse className="w-4 h-4" />
-          <span>Salomatlik & Sport Dasturi</span>
+          <span>{language === "ru" ? "Программа Здоровья и Спорта" : language === "en" ? "Fitness & Health Guide" : "Salomatlik & Sport Dasturi"}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white">
           {t.workouts.title}
@@ -100,7 +100,9 @@ export const WorkoutsPage = () => {
                     : "bg-amber-500/20 text-amber-600 dark:text-amber-400"
                 }`}
               >
-                {currentMode === "work" ? "🔥 Ishlash (Mashq)" : "☕ Dam olish"}
+                {currentMode === "work"
+                  ? (language === "ru" ? "🔥 Работа (Упражнение)" : language === "en" ? "🔥 Work (Exercise)" : "🔥 Ishlash (Mashq)")
+                  : (language === "ru" ? "☕ Отдых" : language === "en" ? "☕ Rest" : "☕ Dam olish")}
               </span>
               <span className="text-6xl sm:text-7xl font-black tracking-tight text-slate-900 dark:text-white">
                 {timeLeft}
@@ -111,7 +113,7 @@ export const WorkoutsPage = () => {
             </div>
 
             <div className="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-4">
-              Bajarilgan raundlar: <b className="text-emerald-600 dark:text-emerald-400">{roundsCompleted}</b>
+              {language === "ru" ? "Завершенных раундов:" : language === "en" ? "Completed rounds:" : "Bajarilgan raundlar:"} <b className="text-emerald-600 dark:text-emerald-400">{roundsCompleted}</b>
             </div>
 
             {/* Timer Controls */}
@@ -142,13 +144,13 @@ export const WorkoutsPage = () => {
           <div className="lg:col-span-6 space-y-6 bg-white/90 dark:bg-slate-800/60 p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-md dark:shadow-none">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Timer className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
-              <span>Interval sozlamalari</span>
+              <span>{language === "ru" ? "Настройки интервалов" : language === "en" ? "Interval Settings" : "Interval sozlamalari"}</span>
             </h3>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-xs text-slate-600 dark:text-slate-400 font-medium block mb-1">
-                  Mashq vaqti (soniya)
+                  {language === "ru" ? "Время работы (сек)" : language === "en" ? "Work time (sec)" : "Mashq vaqti (soniya)"}
                 </label>
                 <input
                   type="number"
@@ -167,7 +169,7 @@ export const WorkoutsPage = () => {
 
               <div>
                 <label className="text-xs text-slate-600 dark:text-slate-400 font-medium block mb-1">
-                  Dam olish (soniya)
+                  {language === "ru" ? "Время отдыха (сек)" : language === "en" ? "Rest time (sec)" : "Dam olish (soniya)"}
                 </label>
                 <input
                   type="number"
@@ -189,14 +191,16 @@ export const WorkoutsPage = () => {
                   <span>{t.workouts.waterIntake}</span>
                 </span>
                 <span className="text-base font-black text-slate-900 dark:text-white">
-                  {recommendedWater} litr / kun
+                  {recommendedWater} {language === "ru" ? "л / день" : language === "en" ? "L / day" : "litr / kun"}
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.workouts.waterDesc}
               </p>
               <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-500 dark:text-slate-400">Vazningiz:</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  {language === "ru" ? "Ваш вес:" : language === "en" ? "Your weight:" : "Vazningiz:"}
+                </span>
                 <input
                   type="range"
                   min="40"
@@ -218,10 +222,10 @@ export const WorkoutsPage = () => {
       <section className="space-y-8">
         <div>
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-            Mashg'ulot Rejalari
+            {language === "ru" ? "Планы Тренировок" : language === "en" ? "Workout Plans" : "Mashg'ulot Rejalari"}
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-            Mutaxassislar Tavsiya Etgan Kurslar
+            {language === "ru" ? "Курсы от профессиональных тренеров" : language === "en" ? "Expert Recommended Programs" : "Mutaxassislar Tavsiya Etgan Kurslar"}
           </h2>
         </div>
 
@@ -265,7 +269,7 @@ export const WorkoutsPage = () => {
 
                     <div className="space-y-2 mb-6">
                       <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                        Mashqlar ro'yxati:
+                        {language === "ru" ? "Список упражнений:" : language === "en" ? "Exercises list:" : "Mashqlar ro'yxati:"}
                       </div>
                       {plan.exercises.map((ex, i) => (
                         <div
@@ -288,7 +292,7 @@ export const WorkoutsPage = () => {
                     className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-500 hover:text-white text-slate-900 dark:text-white font-bold text-xs transition flex items-center justify-center gap-2"
                   >
                     <Play className="w-3.5 h-3.5" />
-                    <span>Taymer bilan boshlash</span>
+                    <span>{language === "ru" ? "Начать с таймером" : language === "en" ? "Start with timer" : "Taymer bilan boshlash"}</span>
                   </button>
                 </div>
               </div>
@@ -301,7 +305,7 @@ export const WorkoutsPage = () => {
       <section className="space-y-6">
         <div>
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-            Maslahatlar
+            {language === "ru" ? "Полезные советы" : language === "en" ? "Tips & Advice" : "Maslahatlar"}
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
             {t.workouts.nutritionTips}

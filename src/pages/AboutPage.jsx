@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 export const AboutPage = () => {
-  const { t } = useApp();
+  const { t, language } = useApp();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-16">
@@ -16,7 +16,7 @@ export const AboutPage = () => {
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
           <Target className="w-4 h-4" />
-          <span>Bizning Missiyamiz</span>
+          <span>{language === "ru" ? "Наша Миссия" : language === "en" ? "Our Mission" : "Bizning Missiyamiz"}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white">
           {t.about.title}
@@ -33,7 +33,11 @@ export const AboutPage = () => {
             {t.about.storyTitle}
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-snug">
-            Sog'lom hayot har bir inson uchun erisharli bo'lishi kerak!
+            {language === "ru"
+              ? "Здоровый образ жизни должен быть доступен каждому!"
+              : language === "en"
+              ? "A healthy lifestyle should be accessible to everyone!"
+              : "Sog'lom hayot har bir inson uchun erisharli bo'lishi kerak!"}
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
             {t.about.storyP1}
@@ -46,10 +50,10 @@ export const AboutPage = () => {
             <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
               <ShieldCheck className="w-6 h-6 text-emerald-500 mb-2" />
               <div className="font-bold text-sm text-slate-900 dark:text-white">
-                Sertifikatlangan
+                {language === "ru" ? "Сертифицировано" : language === "en" ? "Certified" : "Sertifikatlangan"}
               </div>
               <div className="text-xs text-slate-500">
-                AQSH va Yevropa sifat kafolati
+                {language === "ru" ? "Гарантия качества США и Европы" : language === "en" ? "USA & European Quality Assured" : "AQSH va Yevropa sifat kafolati"}
               </div>
             </div>
 
@@ -59,7 +63,7 @@ export const AboutPage = () => {
                 100% Original
               </div>
               <div className="text-xs text-slate-500">
-                Faqat rasmiy distribyutorlar
+                {language === "ru" ? "Только официальные поставки" : language === "en" ? "Direct official distributors only" : "Faqat rasmiy distribyutorlar"}
               </div>
             </div>
           </div>
@@ -108,13 +112,17 @@ export const AboutPage = () => {
       <section className="space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-            Bizning Jamoa
+            {language === "ru" ? "Наша Команда" : language === "en" ? "Our Team" : "Bizning Jamoa"}
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-            Rahbariyat va Yetakchi Mutaxassislarimiz
+            {language === "ru" ? "Руководство и Ведущие Специалисты" : language === "en" ? "Leadership & Head Fitness Specialists" : "Rahbariyat va Yetakchi Mutaxassislarimiz"}
           </h2>
           <p className="text-xs text-slate-500">
-            Sizga to'g'ri ozuqa va mashg'ulot tanlashda professional maslahat beruvchi ekspertlar
+            {language === "ru"
+              ? "Эксперты, помогающие подобрать лучшее спортивное питание и тренировки"
+              : language === "en"
+              ? "Experts advising on optimal nutrition and training routines"
+              : "Sizga to'g'ri ozuqa va mashg'ulot tanlashda professional maslahat beruvchi ekspertlar"}
           </p>
         </div>
 
@@ -130,11 +138,15 @@ export const AboutPage = () => {
                 Khabibullo Raxmatjonov
               </h4>
               <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                Platforma Asoschisi & Bosh Rahbari
+                {language === "ru" ? "Основатель и Руководитель Платформы" : language === "en" ? "Founder & Executive Director" : "Platforma Asoschisi & Bosh Rahbari"}
               </p>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
-              O'zbekistonda professional sport ozuqalari va sog'lom turmush tarzi madaniyatini rivojlantirishga qaratilgan ekotizim muallifi.
+              {language === "ru"
+                ? "Создатель экосистемы для развития спорта, правильного питания и здорового образа жизни в Узбекистане."
+                : language === "en"
+                ? "Creator of the premier sports nutrition and wellness ecosystem across Uzbekistan."
+                : "O'zbekistonda professional sport ozuqalari va sog'lom turmush tarzi madaniyatini rivojlantirishga qaratilgan ekotizim muallifi."}
             </p>
           </div>
 
@@ -149,11 +161,15 @@ export const AboutPage = () => {
                 Jahongir To'xtayev
               </h4>
               <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                Bosh Fitnes Murabbiy & Krossfit Atleti
+                {language === "ru" ? "Главный Фитнес-Тренер & Кроссфит Атлет" : language === "en" ? "Head Fitness Coach & Crossfit Athlete" : "Bosh Fitnes Murabbiy & Krossfit Atleti"}
               </p>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
-              8 yillik xalqaro murabbiylik tajribasiga ega mutaxassis. 1,000 dan ortiq shogirdlarga kuch va qomatni shakllantirishda yordam bergan.
+              {language === "ru"
+                ? "Специалист с 8-летним международным тренерским стажем. Помог более 1000 ученикам обрести идеальную форму."
+                : language === "en"
+                ? "8+ years of certified training experience, coaching 1,000+ athletes to athletic transformation."
+                : "8 yillik xalqaro murabbiylik tajribasiga ega mutaxassis. 1,000 dan ortiq shogirdlarga kuch va qomatni shakllantirishda yordam bergan."}
             </p>
           </div>
 
@@ -168,11 +184,15 @@ export const AboutPage = () => {
                 Nargiza Karimova
               </h4>
               <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                Bosh Nutrisiolog & Ratsion Mutaxassisi
+                {language === "ru" ? "Главный Нутрициолог & Эксперт по рациону" : language === "en" ? "Lead Nutritionist & Diet Specialist" : "Bosh Nutrisiolog & Ratsion Mutaxassisi"}
               </p>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Sog'lom vazn tashlash, gormonal balans va sportchilar uchun individual ratsion tuzish bo'yicha 7 yillik amaliy tajribaga ega ekspert.
+              {language === "ru"
+                ? "Эксперт с 7-летним опытом в составлении персонального рациона, баланса нутриентов и спортивного питания."
+                : language === "en"
+                ? "7+ years specializing in athletic nutrition planning, hormonal wellness, and lean muscle building."
+                : "Sog'lom vazn tashlash, gormonal balans va sportchilar uchun individual ratsion tuzish bo'yicha 7 yillik amaliy tajribaga ega ekspert."}
             </p>
           </div>
         </div>

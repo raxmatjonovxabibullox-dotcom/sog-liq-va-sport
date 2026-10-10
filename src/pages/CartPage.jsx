@@ -299,7 +299,7 @@ export const CartPage = () => {
                 <button
                   onClick={removePromo}
                   className="p-1 rounded-lg hover:bg-emerald-500/20 text-rose-500"
-                  title="Kodni bekor qilish"
+                  title={language === "ru" ? "Отменить промокод" : language === "en" ? "Remove promo code" : "Kodni bekor qilish"}
                 >
                   <X className="w-4 h-4" />
                 </button>

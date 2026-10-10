@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
-import { productCategories } from "../data/mockProducts";
+import { productCategories, getCategoryLabel } from "../data/mockProducts";
 import {
   LayoutDashboard,
   Package,
@@ -32,7 +32,8 @@ import {
   EyeOff,
   Copy,
   Terminal,
-  Crown
+  Crown,
+  Globe
 } from "lucide-react";
 
 // Synthesized Web Audio SFX for high-tech tactile response
@@ -94,7 +95,10 @@ export const AdminPage = () => {
     showToast,
     promoCodesList,
     addPromoCode,
-    deletePromoCode
+    deletePromoCode,
+    t,
+    language,
+    setLanguage
   } = useApp();
 
   // Active Tab
@@ -567,7 +571,13 @@ export const AdminPage = () => {
       e.preventDefault();
       const res = loginUser(adminUsernameInput, adminPasswordInput);
       if (!res.success || res.user.role !== "admin") {
-        setAdminAuthError("Login yoki parol noto'g'ri!");
+        setAdminAuthError(
+          language === "ru"
+            ? "Неверный логин или пароль!"
+            : language === "en"
+            ? "Invalid username or password!"
+            : "Login yoki parol noto'g'ri!"
+        );
         playSound("warn", soundEnabled);
       } else {
         playSound("success", soundEnabled);
@@ -588,7 +598,11 @@ export const AdminPage = () => {
               Executive Studio Admin
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              "Sog'liq va Sport" Boshqaruv Markazi
+              {language === "ru"
+                ? "Центр управления «Sog'liq va Sport»"
+                : language === "en"
+                ? "Control Center «Sog'liq va Sport»"
+                : "\"Sog'liq va Sport\" Boshqaruv Markazi"}
             </p>
           </div>
 
@@ -601,7 +615,7 @@ export const AdminPage = () => {
           <form onSubmit={handleLoginSubmit} className="space-y-4 text-left">
             <div>
               <label className="block text-xs font-bold text-slate-400 mb-1.5">
-                Admin Foydalanuvchi Nomi
+                {language === "ru" ? "Имя пользователя Admin" : language === "en" ? "Admin Username" : "Admin Foydalanuvchi Nomi"}
               </label>
               <input
                 type="text"
@@ -613,7 +627,7 @@ export const AdminPage = () => {
 
             <div>
               <label className="block text-xs font-bold text-slate-400 mb-1.5">
-                Admin Paroli
+                {language === "ru" ? "Пароль Admin" : language === "en" ? "Admin Password" : "Admin Paroli"}
               </label>
               <input
                 type="password"
@@ -627,7 +641,7 @@ export const AdminPage = () => {
               type="submit"
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 font-extrabold text-sm text-white shadow-xl shadow-emerald-500/25 transition active:scale-95"
             >
-              Boshqaruv Paneliga Kirish
+              {language === "ru" ? "Войти в панель управления" : language === "en" ? "Sign in to Admin Panel" : "Boshqaruv Paneliga Kirish"}
             </button>
           </form>
 
@@ -637,7 +651,13 @@ export const AdminPage = () => {
               className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white font-semibold"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Bosh sahifaga (Do'konga) qaytish</span>
+              <span>
+                {language === "ru"
+                  ? "Вернуться на главную (В магазин)"
+                  : language === "en"
+                  ? "Back to Home (Store)"
+                  : "Bosh sahifaga (Do'konga) qaytish"}
+              </span>
             </Link>
           </div>
         </div>
@@ -703,11 +723,11 @@ export const AdminPage = () => {
             >
               <div className="flex items-center gap-3">
                 <LayoutDashboard className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>Dashboard & Analitika</span>}
+                {!isSidebarCollapsed && <span>{t.admin?.tabDashboard || "Dashboard & Analitika"}</span>}
               </div>
               {!isSidebarCollapsed && (
                 <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 font-extrabold">
-                  Live
+                  {t.admin?.liveBadge || "Live"}
                 </span>
               )}
             </button>
@@ -725,7 +745,7 @@ export const AdminPage = () => {
             >
               <div className="flex items-center gap-3">
                 <Package className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>Mahsulotlar (CRUD)</span>}
+                {!isSidebarCollapsed && <span>{t.admin?.tabProducts || "Mahsulotlar (CRUD)"}</span>}
               </div>
               {!isSidebarCollapsed && (
                 <span className="text-[11px] font-bold text-slate-400">{products.length}</span>
@@ -745,7 +765,7 @@ export const AdminPage = () => {
             >
               <div className="flex items-center gap-3">
                 <ShoppingBag className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>Buyurtmalar</span>}
+                {!isSidebarCollapsed && <span>{t.admin?.tabOrders || "Buyurtmalar"}</span>}
               </div>
               {!isSidebarCollapsed && (
                 <span className="text-[10px] px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-400 font-bold">
@@ -767,7 +787,7 @@ export const AdminPage = () => {
             >
               <div className="flex items-center gap-3">
                 <Tag className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>Promokodlar</span>}
+                {!isSidebarCollapsed && <span>{t.admin?.tabPromos || "Promokodlar"}</span>}
               </div>
               {!isSidebarCollapsed && (
                 <span className="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 font-bold">
@@ -789,7 +809,7 @@ export const AdminPage = () => {
             >
               <div className="flex items-center gap-3">
                 <Users className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>Mijozlar (CRM)</span>}
+                {!isSidebarCollapsed && <span>{t.admin?.tabCustomers || "Mijozlar (CRM)"}</span>}
               </div>
               {!isSidebarCollapsed && (
                 <span className="text-[11px] font-bold text-slate-400">{customersList.length}</span>
@@ -809,7 +829,7 @@ export const AdminPage = () => {
             >
               <div className="flex items-center gap-3">
                 <Send className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>Telegram Bot</span>}
+                {!isSidebarCollapsed && <span>{t.admin?.tabTelegram || "Telegram Bot"}</span>}
               </div>
               {!isSidebarCollapsed && (
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -829,7 +849,7 @@ export const AdminPage = () => {
             >
               <div className="flex items-center gap-3">
                 <Terminal className="w-4 h-4" />
-                {!isSidebarCollapsed && <span>Server & Tizim</span>}
+                {!isSidebarCollapsed && <span>{t.admin?.tabSystem || "Server & Tizim"}</span>}
               </div>
               {!isSidebarCollapsed && (
                 <span className="text-[10px] font-mono text-purple-400 font-bold">{serverPing}ms</span>
@@ -846,7 +866,9 @@ export const AdminPage = () => {
             className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            {!isSidebarCollapsed && <span>Do'konga qaytish</span>}
+            {!isSidebarCollapsed && (
+              <span>{language === "ru" ? "Назад в магазин" : language === "en" ? "Back to shop" : "Do'konga qaytish"}</span>
+            )}
           </Link>
         </div>
       </aside>
@@ -870,8 +892,30 @@ export const AdminPage = () => {
             </div>
           </div>
 
-          {/* Utilities: Accent Color, Sound, Fullscreen, Profile */}
+          {/* Utilities: Language, Accent Color, Sound, Fullscreen, Profile */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Language Selector */}
+            <div className="flex items-center gap-1 px-1.5 py-1 rounded-xl bg-[#0b1120] border border-slate-800 text-xs font-bold">
+              <Globe className="w-3.5 h-3.5 text-emerald-400 ml-1" />
+              {["uz", "ru", "en"].map((lng) => (
+                <button
+                  key={lng}
+                  onClick={() => {
+                    setLanguage(lng);
+                    playSound("click", soundEnabled);
+                  }}
+                  className={`px-2 py-0.5 rounded-lg text-[11px] font-bold uppercase transition ${
+                    language === lng
+                      ? "bg-emerald-500 text-white shadow-sm"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                  title={lng === "uz" ? "O'zbekcha" : lng === "ru" ? "Русский" : "English"}
+                >
+                  {lng}
+                </button>
+              ))}
+            </div>
+
             {/* Color Accent Picker */}
             <div className="hidden lg:flex items-center gap-1.5 px-2 py-1 rounded-xl bg-[#0b1120] border border-slate-800">
               {Object.keys(accentStyles).map((col) => (
@@ -891,7 +935,7 @@ export const AdminPage = () => {
             <button
               onClick={handleToggleSound}
               className="p-2 rounded-xl bg-[#0b1120] border border-slate-800 text-slate-300 hover:text-white transition"
-              title={soundEnabled ? "Ovozni o'chirish" : "Ovozni yoqish"}
+              title={soundEnabled ? (language === "ru" ? "Выключить звук" : language === "en" ? "Mute sound" : "Ovozni o'chirish") : (language === "ru" ? "Включить звук" : language === "en" ? "Enable sound" : "Ovozni yoqish")}
             >
               {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
             </button>
@@ -900,7 +944,7 @@ export const AdminPage = () => {
             <button
               onClick={handleToggleFullscreen}
               className="p-2 rounded-xl bg-[#0b1120] border border-slate-800 text-slate-300 hover:text-white transition"
-              title="To'liq ekran"
+              title={language === "ru" ? "Полный экран" : language === "en" ? "Fullscreen" : "To'liq ekran"}
             >
               {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </button>
@@ -934,54 +978,54 @@ export const AdminPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-2 relative overflow-hidden group">
                   <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
-                    <span>Umumiy Tushum</span>
+                    <span>{language === "ru" ? "Общий доход" : language === "en" ? "Total Revenue" : "Umumiy Tushum"}</span>
                     <DollarSign className="w-5 h-5 text-emerald-400" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-white">
-                    {totalRevenue.toLocaleString()} <span className="text-xs text-emerald-400">so'm</span>
+                    {totalRevenue.toLocaleString()} <span className="text-xs text-emerald-400">{t.cart?.currency || "so'm"}</span>
                   </div>
                   <div className="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
                     <TrendingUp className="w-3.5 h-3.5" />
-                    <span>+24% o'tgan haftaga nisbatan</span>
+                    <span>{language === "ru" ? "+24% по сравнению с прошлой неделей" : language === "en" ? "+24% vs last week" : "+24% o'tgan haftaga nisbatan"}</span>
                   </div>
                 </div>
 
                 <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-2 relative overflow-hidden group">
                   <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
-                    <span>Jami Buyurtmalar</span>
+                    <span>{language === "ru" ? "Всего заказов" : language === "en" ? "Total Orders" : "Jami Buyurtmalar"}</span>
                     <ShoppingBag className="w-5 h-5 text-cyan-400" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-white">
-                    {totalOrdersCount} <span className="text-xs text-slate-400">ta</span>
+                    {totalOrdersCount} <span className="text-xs text-slate-400">{language === "ru" ? "шт." : language === "en" ? "orders" : "ta"}</span>
                   </div>
                   <div className="text-[11px] text-amber-400 font-bold">
-                    {pendingOrdersCount} ta yangi kutilmoqda
+                    {pendingOrdersCount} {language === "ru" ? "новых в ожидании" : language === "en" ? "new pending" : "ta yangi kutilmoqda"}
                   </div>
                 </div>
 
                 <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-2 relative overflow-hidden group">
                   <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
-                    <span>Faol Mahsulotlar</span>
+                    <span>{language === "ru" ? "Активные товары" : language === "en" ? "Active Products" : "Faol Mahsulotlar"}</span>
                     <Package className="w-5 h-5 text-teal-400" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-white">
-                    {products.length} <span className="text-xs text-slate-400">xil</span>
+                    {products.length} <span className="text-xs text-slate-400">{language === "ru" ? "вид." : language === "en" ? "items" : "xil"}</span>
                   </div>
                   <div className="text-[11px] text-slate-400">
-                    4 ta asosiy toifada
+                    {language === "ru" ? "В 4 основных категориях" : language === "en" ? "Across 4 main categories" : "4 ta asosiy toifada"}
                   </div>
                 </div>
 
                 <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800/80 shadow-xl space-y-2 relative overflow-hidden group">
                   <div className="flex items-center justify-between text-slate-400 text-xs font-bold">
-                    <span>Mijozlar Bazasi (CRM)</span>
+                    <span>{language === "ru" ? "База клиентов (CRM)" : language === "en" ? "Customer Database (CRM)" : "Mijozlar Bazasi (CRM)"}</span>
                     <Users className="w-5 h-5 text-purple-400" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-white">
-                    {customersList.length} <span className="text-xs text-slate-400">nafar</span>
+                    {customersList.length} <span className="text-xs text-slate-400">{language === "ru" ? "чел." : language === "en" ? "people" : "nafar"}</span>
                   </div>
                   <div className="text-[11px] text-emerald-400 font-bold">
-                    Doimiy sportchilar
+                    {language === "ru" ? "Постоянные спортсмены" : language === "en" ? "Active athletes" : "Doimiy sportchilar"}
                   </div>
                 </div>
               </div>
@@ -994,7 +1038,7 @@ export const AdminPage = () => {
                     className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Yangi Mahsulot</span>
+                    <span>{t.admin?.addProduct || "Yangi Mahsulot"}</span>
                   </button>
 
                   <button
@@ -1002,7 +1046,7 @@ export const AdminPage = () => {
                     className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition"
                   >
                     <ShoppingBag className="w-3.5 h-3.5" />
-                    <span>Test Buyurtma Yaratish</span>
+                    <span>{language === "ru" ? "Создать тест-заказ" : language === "en" ? "Create Test Order" : "Test Buyurtma Yaratish"}</span>
                   </button>
 
                   <button
@@ -1011,7 +1055,7 @@ export const AdminPage = () => {
                     className="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-sky-500/20 transition"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Telegram Sinov</span>
+                    <span>{language === "ru" ? "Тест Telegram" : language === "en" ? "Telegram Test" : "Telegram Sinov"}</span>
                   </button>
                 </div>
 
@@ -1031,13 +1075,13 @@ export const AdminPage = () => {
                 <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                   <h3 className="text-base font-black text-white flex items-center gap-2">
                     <ShoppingBag className="w-4 h-4 text-emerald-400" />
-                    <span>So'nggi Buyurtmalar</span>
+                    <span>{language === "ru" ? "Последние заказы" : language === "en" ? "Recent Orders" : "So'nggi Buyurtmalar"}</span>
                   </h3>
                   <button
                     onClick={() => setActiveTab("orders")}
                     className="text-xs font-bold text-emerald-400 hover:underline"
                   >
-                    Barchasini ko'rish ({orders.length})
+                    {language === "ru" ? "Посмотреть все" : language === "en" ? "View all" : "Barchasini ko'rish"} ({orders.length})
                   </button>
                 </div>
 
@@ -1052,7 +1096,7 @@ export const AdminPage = () => {
 
                       <div className="flex items-center gap-3">
                         <span className="font-black text-white">
-                          {ord.total.toLocaleString()} so'm
+                          {ord.total.toLocaleString()} {t.cart?.currency || "so'm"}
                         </span>
                         <span
                           className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${
@@ -1063,7 +1107,11 @@ export const AdminPage = () => {
                               : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                           }`}
                         >
-                          {ord.status}
+                          {ord.status === "completed"
+                            ? (t.admin?.statusCompleted || "Yakunlandi")
+                            : ord.status === "delivering"
+                            ? (t.admin?.statusDelivering || "Yetkazilmoqda")
+                            : (t.admin?.statusPending || "Kutilmoqda")}
                         </span>
                       </div>
                     </div>
@@ -1078,8 +1126,16 @@ export const AdminPage = () => {
             <div className="space-y-6 animate-in fade-in duration-200">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-black text-white">Mahsulotlar Boshqaruvi</h2>
-                  <p className="text-xs text-slate-400 mt-0.5">Jami {products.length} ta mahsulot katalogda mavjud</p>
+                  <h2 className="text-xl font-black text-white">
+                    {language === "ru" ? "Управление товарами" : language === "en" ? "Product Management" : "Mahsulotlar Boshqaruvi"}
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {language === "ru"
+                      ? `Всего ${products.length} товаров в каталоге`
+                      : language === "en"
+                      ? `Total ${products.length} products in catalog`
+                      : `Jami ${products.length} ta mahsulot katalogda mavjud`}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -1089,7 +1145,13 @@ export const AdminPage = () => {
                       className="px-3.5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs flex items-center gap-1.5 transition"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>Tanlanganlarni o'chirish ({selectedProductIds.length})</span>
+                      <span>
+                        {language === "ru"
+                          ? `Удалить выбранные (${selectedProductIds.length})`
+                          : language === "en"
+                          ? `Delete selected (${selectedProductIds.length})`
+                          : `Tanlanganlarni o'chirish (${selectedProductIds.length})`}
+                      </span>
                     </button>
                   )}
 
@@ -1098,7 +1160,7 @@ export const AdminPage = () => {
                     className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-500/25 transition"
                   >
                     <Plus className="w-4 h-4" />
-                    <span>Yangi Tovar Qo'shish</span>
+                    <span>{t.admin?.addProduct || "Yangi Tovar Qo'shish"}</span>
                   </button>
                 </div>
               </div>
@@ -1110,7 +1172,7 @@ export const AdminPage = () => {
                     type="text"
                     value={productSearch}
                     onChange={(e) => setProductSearch(e.target.value)}
-                    placeholder="Qidiruv (nomi, ID)..."
+                    placeholder={language === "ru" ? "Поиск (название, ID)..." : language === "en" ? "Search (name, ID)..." : "Qidiruv (nomi, ID)..."}
                     className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#0b1120] border border-slate-700 text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                   <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
@@ -1121,11 +1183,16 @@ export const AdminPage = () => {
                   onChange={(e) => setCategoryFilter(e.target.value)}
                   className="px-3 py-2 rounded-xl bg-[#0b1120] border border-slate-700 text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                 >
-                  <option value="all">Barcha Kategoriyalar</option>
-                  <option value="nutrition">Sport ozuqalari</option>
-                  <option value="equipment">Trenajyor va Anjomlar</option>
-                  <option value="wear">Sport kiyimlari</option>
-                  <option value="accessories">Aksessuarlar</option>
+                  <option value="all">
+                    {language === "ru" ? "Все категории" : language === "en" ? "All Categories" : "Barcha Kategoriyalar"}
+                  </option>
+                  {productCategories
+                    .filter((c) => c.id !== "all")
+                    .map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {getCategoryLabel(c.id, language)}
+                      </option>
+                    ))}
                 </select>
 
                 <select
@@ -1133,10 +1200,18 @@ export const AdminPage = () => {
                   onChange={(e) => setStockFilter(e.target.value)}
                   className="px-3 py-2 rounded-xl bg-[#0b1120] border border-slate-700 text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                 >
-                  <option value="all">Barcha Zaxira holati</option>
-                  <option value="in_stock">Mavjud (&gt;5)</option>
-                  <option value="low">Kam qolgan (1-5)</option>
-                  <option value="out">Tugagan (0)</option>
+                  <option value="all">
+                    {language === "ru" ? "Любой статус остатка" : language === "en" ? "All stock status" : "Barcha Zaxira holati"}
+                  </option>
+                  <option value="in_stock">
+                    {language === "ru" ? "В наличии (>5)" : language === "en" ? "In stock (>5)" : "Mavjud (>5)"}
+                  </option>
+                  <option value="low">
+                    {language === "ru" ? "Заканчивается (1-5)" : language === "en" ? "Low stock (1-5)" : "Kam qolgan (1-5)"}
+                  </option>
+                  <option value="out">
+                    {language === "ru" ? "Закончился (0)" : language === "en" ? "Out of stock (0)" : "Tugagan (0)"}
+                  </option>
                 </select>
               </div>
 
@@ -1157,11 +1232,21 @@ export const AdminPage = () => {
                             className="rounded accent-emerald-500"
                           />
                         </th>
-                        <th className="p-4">Rasm & Nomi</th>
-                        <th className="p-4">Kategoriya</th>
-                        <th className="p-4">Narxi</th>
-                        <th className="p-4">Zaxira</th>
-                        <th className="p-4 text-right">Amallar</th>
+                        <th className="p-4">
+                          {language === "ru" ? "Фото и Название" : language === "en" ? "Image & Name" : "Rasm & Nomi"}
+                        </th>
+                        <th className="p-4">
+                          {t.admin?.productCategory || "Kategoriya"}
+                        </th>
+                        <th className="p-4">
+                          {t.admin?.productPrice || "Narxi"}
+                        </th>
+                        <th className="p-4">
+                          {t.admin?.productStock || "Zaxira"}
+                        </th>
+                        <th className="p-4 text-right">
+                          {language === "ru" ? "Действия" : language === "en" ? "Actions" : "Amallar"}
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800/60">
@@ -1191,11 +1276,11 @@ export const AdminPage = () => {
                           </td>
                           <td className="p-4">
                             <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#0b1120] text-slate-300 border border-slate-700">
-                              {p.categoryLabel || p.category}
+                              {getCategoryLabel(p.category, language)}
                             </span>
                           </td>
                           <td className="p-4 font-black text-white">
-                            {p.price.toLocaleString()} so'm
+                            {p.price.toLocaleString()} {t.cart?.currency || "so'm"}
                           </td>
                           <td className="p-4">
                             <span
@@ -1207,7 +1292,7 @@ export const AdminPage = () => {
                                   : "bg-rose-500/10 text-rose-400"
                               }`}
                             >
-                              {p.stock} ta
+                              {p.stock} {language === "ru" ? "шт." : language === "en" ? "pcs" : "ta"}
                             </span>
                           </td>
                           <td className="p-4 text-right">
@@ -1215,19 +1300,19 @@ export const AdminPage = () => {
                               <button
                                 onClick={() => handleOpenEditModal(p)}
                                 className="p-2 rounded-xl text-teal-400 hover:bg-slate-800 transition"
-                                title="Tahrirlash"
+                                title={t.admin?.editProduct || "Tahrirlash"}
                               >
                                 <Edit2 className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => {
-                                  if (confirm("Mahsulotni o'chirmoqchimisiz?")) {
+                                  if (confirm(t.admin?.confirmDelete || "Mahsulotni o'chirmoqchimisiz?")) {
                                     deleteProduct(p.id);
                                     playSound("warn", soundEnabled);
                                   }
                                 }}
                                 className="p-2 rounded-xl text-rose-400 hover:bg-slate-800 transition"
-                                title="O'chirish"
+                                title={t.admin?.deleteProduct || "O'chirish"}
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
@@ -1247,8 +1332,12 @@ export const AdminPage = () => {
             <div className="space-y-6 animate-in fade-in duration-200">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-black text-white">Buyurtmalar Nazorati</h2>
-                  <p className="text-xs text-slate-400 mt-0.5">Xaridorlardan kelib tushgan buyurtmalar</p>
+                  <h2 className="text-xl font-black text-white">
+                    {language === "ru" ? "Управление заказами" : language === "en" ? "Order Management" : "Buyurtmalar Nazorati"}
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {language === "ru" ? "Заказы, поступившие от покупателей" : language === "en" ? "Orders received from customers" : "Xaridorlardan kelib tushgan buyurtmalar"}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -1257,7 +1346,7 @@ export const AdminPage = () => {
                     className="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-cyan-500/25 transition"
                   >
                     <Plus className="w-4 h-4" />
-                    <span>Yangi Test Buyurtma</span>
+                    <span>{language === "ru" ? "Новый тест-заказ" : language === "en" ? "New Test Order" : "Yangi Test Buyurtma"}</span>
                   </button>
                 </div>
               </div>
@@ -1268,7 +1357,13 @@ export const AdminPage = () => {
                   <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                   <input
                     type="text"
-                    placeholder="Buyurtma ID, ism, telefon yoki manzil bo'yicha qidirish..."
+                    placeholder={
+                      language === "ru"
+                        ? "Поиск по ID заказа, имени, телефону или адресу..."
+                        : language === "en"
+                        ? "Search by order ID, name, phone or address..."
+                        : "Buyurtma ID, ism, telefon yoki manzil bo'yicha qidirish..."
+                    }
                     value={orderSearchQuery}
                     onChange={(e) => setOrderSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#0e1626] border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
@@ -1292,13 +1387,21 @@ export const AdminPage = () => {
                         setOrderStatusFilter(st);
                         playSound("click", soundEnabled);
                       }}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition ${
+                      className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
                         orderStatusFilter === st
                           ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
                           : "text-slate-400 hover:text-white"
                       }`}
                     >
-                      {st === "all" ? "Barchasi" : st}
+                      {st === "all"
+                        ? (language === "ru" ? "Все" : language === "en" ? "All" : "Barchasi")
+                        : st === "pending"
+                        ? (t.admin?.statusPending || "Kutilmoqda")
+                        : st === "delivering"
+                        ? (t.admin?.statusDelivering || "Yetkazilmoqda")
+                        : st === "completed"
+                        ? (t.admin?.statusCompleted || "Yakunlandi")
+                        : (t.admin?.statusCancelled || "Bekor qilindi")}
                     </button>
                   ))}
                 </div>
@@ -1318,22 +1421,22 @@ export const AdminPage = () => {
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-400 font-semibold">Holati:</span>
+                        <span className="text-xs text-slate-400 font-semibold">{t.admin?.orderStatus || "Holati"}:</span>
                         <select
                           value={ord.status}
                           onChange={(e) => updateOrderStatus(ord.id, e.target.value)}
                           className="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#0b1120] border border-slate-700 text-white cursor-pointer"
                         >
-                          <option value="pending">Kutilmoqda</option>
-                          <option value="delivering">Yetkazilmoqda</option>
-                          <option value="completed">Yakunlandi</option>
-                          <option value="cancelled">Bekor qilindi</option>
+                          <option value="pending">{t.admin?.statusPending || "Kutilmoqda"}</option>
+                          <option value="delivering">{t.admin?.statusDelivering || "Yetkazilmoqda"}</option>
+                          <option value="completed">{t.admin?.statusCompleted || "Yakunlandi"}</option>
+                          <option value="cancelled">{t.admin?.statusCancelled || "Bekor qilindi"}</option>
                         </select>
 
                         <button
                           onClick={() => setViewingOrderInvoice(ord)}
                           className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300"
-                          title="Chekni ko'rish (Chop etish)"
+                          title={language === "ru" ? "Посмотреть чек (Печать)" : language === "en" ? "View invoice (Print)" : "Chekni ko'rish (Chop etish)"}
                         >
                           <Printer className="w-4 h-4" />
                         </button>
@@ -1342,24 +1445,28 @@ export const AdminPage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                       <div>
-                        <div className="text-slate-400 font-semibold mb-1">Xaridor:</div>
+                        <div className="text-slate-400 font-semibold mb-1">
+                          {t.cart?.recipient || (language === "ru" ? "Получатель:" : language === "en" ? "Recipient:" : "Xaridor:")}
+                        </div>
                         <div className="font-bold text-white text-sm">{ord.customerName}</div>
                         <div className="text-slate-300 mt-0.5">📞 {ord.phone}</div>
                         <div className="text-slate-400 mt-1">📍 {ord.address}</div>
                       </div>
 
                       <div>
-                        <div className="text-slate-400 font-semibold mb-1">Buyurtma tarkibi:</div>
+                        <div className="text-slate-400 font-semibold mb-1">
+                          {language === "ru" ? "Содержимое заказа:" : language === "en" ? "Order items:" : "Buyurtma tarkibi:"}
+                        </div>
                         <ul className="space-y-1">
                           {ord.items &&
                             ord.items.map((it, idx) => (
                               <li key={idx} className="text-slate-300">
-                                • <b>{it.name}</b> x {it.quantity} ({(it.price * it.quantity).toLocaleString()} so'm)
+                                • <b>{it.name}</b> x {it.quantity} ({(it.price * it.quantity).toLocaleString()} {t.cart?.currency || "so'm"})
                               </li>
                             ))}
                         </ul>
                         <div className="mt-3 pt-2 border-t border-slate-800 font-black text-emerald-400 text-sm">
-                          Jami: {ord.total.toLocaleString()} so'm
+                          {language === "ru" ? "Итого:" : language === "en" ? "Total:" : "Jami:"} {ord.total.toLocaleString()} {t.cart?.currency || "so'm"}
                         </div>
                       </div>
                     </div>
@@ -1374,21 +1481,27 @@ export const AdminPage = () => {
             <div className="space-y-6 animate-in fade-in duration-200">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-black text-white">Promokodlar Boshqaruvi</h2>
-                  <p className="text-xs text-slate-400 mt-0.5">Mijozlar uchun chegirma kodlarini sozlash</p>
+                  <h2 className="text-xl font-black text-white">
+                    {language === "ru" ? "Управление промокодами" : language === "en" ? "Promo Code Management" : "Promokodlar Boshqaruvi"}
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {language === "ru" ? "Настройка скидочных купонов для клиентов" : language === "en" ? "Configure discount codes for customers" : "Mijozlar uchun chegirma kodlarini sozlash"}
+                  </p>
                 </div>
               </div>
 
               {/* Add New Promo Code */}
               <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800 space-y-4">
-                <h3 className="text-sm font-bold text-white">Yangi Promokod Qo'shish</h3>
+                <h3 className="text-sm font-bold text-white">
+                  {language === "ru" ? "Добавить новый промокод" : language === "en" ? "Add New Promo Code" : "Yangi Promokod Qo'shish"}
+                </h3>
                 <form onSubmit={handleCreatePromo} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <input
                     type="text"
                     value={newPromoCode}
                     onChange={(e) => setNewPromoCode(e.target.value)}
                     required
-                    placeholder="Kod nomi (Masalan: SPORT2026)"
+                    placeholder={language === "ru" ? "Код (Например: SPORT2026)" : language === "en" ? "Code name (e.g. SPORT2026)" : "Kod nomi (Masalan: SPORT2026)"}
                     className="px-4 py-2.5 rounded-xl bg-[#0b1120] border border-slate-700 text-white font-mono uppercase text-xs font-bold"
                   />
                   <input
@@ -1398,14 +1511,14 @@ export const AdminPage = () => {
                     value={newPromoPercent}
                     onChange={(e) => setNewPromoPercent(e.target.value)}
                     required
-                    placeholder="Chegirma foizi (15%)"
+                    placeholder={language === "ru" ? "Процент скидки (15%)" : language === "en" ? "Discount percent (15%)" : "Chegirma foizi (15%)"}
                     className="px-4 py-2.5 rounded-xl bg-[#0b1120] border border-slate-700 text-white text-xs font-bold"
                   />
                   <button
                     type="submit"
                     className="py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-500/20"
                   >
-                    Promokod Yaratish
+                    {language === "ru" ? "Создать промокод" : language === "en" ? "Create Promo Code" : "Promokod Yaratish"}
                   </button>
                 </form>
               </div>
@@ -1434,7 +1547,7 @@ export const AdminPage = () => {
                         className="text-[11px] font-semibold text-slate-400 hover:text-white flex items-center gap-1"
                       >
                         <Copy className="w-3 h-3" />
-                        <span>Nusxalash</span>
+                        <span>{language === "ru" ? "Копировать" : language === "en" ? "Copy" : "Nusxalash"}</span>
                       </button>
                       <button
                         onClick={() => {
@@ -1443,7 +1556,7 @@ export const AdminPage = () => {
                         }}
                         className="text-[11px] font-semibold text-rose-400 hover:underline"
                       >
-                        O'chirish
+                        {language === "ru" ? "Удалить" : language === "en" ? "Delete" : "O'chirish"}
                       </button>
                     </div>
                   </div>
@@ -1456,19 +1569,23 @@ export const AdminPage = () => {
           {activeTab === "customers" && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h2 className="text-xl font-black text-white">Mijozlar Bazasi (CRM)</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Xarid amalga oshirgan barcha mijozlar statistikasi</p>
+                <h2 className="text-xl font-black text-white">
+                  {language === "ru" ? "База клиентов (CRM)" : language === "en" ? "Customer Database (CRM)" : "Mijozlar Bazasi (CRM)"}
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  {language === "ru" ? "Статистика клиентов, совершивших покупки" : language === "en" ? "Statistics of all customers who made purchases" : "Xarid amalga oshirgan barcha mijozlar statistikasi"}
+                </p>
               </div>
 
               <div className="rounded-3xl bg-[#0e1626] border border-slate-800/80 overflow-hidden shadow-xl">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-[#121c30] text-slate-400 font-bold uppercase text-[11px] border-b border-slate-800">
                     <tr>
-                      <th className="p-4">Ism & Familiya</th>
-                      <th className="p-4">Telefon</th>
-                      <th className="p-4">Manzil</th>
-                      <th className="p-4">Buyurtmalar</th>
-                      <th className="p-4">Jami Xarid</th>
+                      <th className="p-4">{language === "ru" ? "Имя и Фамилия" : language === "en" ? "Full Name" : "Ism & Familiya"}</th>
+                      <th className="p-4">{language === "ru" ? "Телефон" : language === "en" ? "Phone" : "Telefon"}</th>
+                      <th className="p-4">{language === "ru" ? "Адрес" : language === "en" ? "Address" : "Manzil"}</th>
+                      <th className="p-4">{language === "ru" ? "Заказы" : language === "en" ? "Orders" : "Buyurtmalar"}</th>
+                      <th className="p-4">{language === "ru" ? "Всего покупок" : language === "en" ? "Total Spent" : "Jami Xarid"}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
@@ -1477,8 +1594,12 @@ export const AdminPage = () => {
                         <td className="p-4 font-bold text-white">{c.name}</td>
                         <td className="p-4 text-emerald-400 font-mono font-semibold">{c.phone}</td>
                         <td className="p-4 text-slate-400">{c.address}</td>
-                        <td className="p-4 font-bold text-cyan-400">{c.ordersCount} ta</td>
-                        <td className="p-4 font-black text-white">{c.totalSpent.toLocaleString()} so'm</td>
+                        <td className="p-4 font-bold text-cyan-400">
+                          {c.ordersCount} {language === "ru" ? "шт." : language === "en" ? "orders" : "ta"}
+                        </td>
+                        <td className="p-4 font-black text-white">
+                          {c.totalSpent.toLocaleString()} {t.cart?.currency || "so'm"}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -1528,7 +1649,11 @@ export const AdminPage = () => {
 
                   <div>
                     <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                      Telegram Admin Chat ID (Xabarlar boradigan shaxsiy chat)
+                      {language === "ru"
+                        ? "Telegram Admin Chat ID (Личный чат для уведомлений)"
+                        : language === "en"
+                        ? "Telegram Admin Chat ID (Personal chat for notifications)"
+                        : "Telegram Admin Chat ID (Xabarlar boradigan shaxsiy chat)"}
                     </label>
                     <input
                       type="text"
@@ -1539,7 +1664,11 @@ export const AdminPage = () => {
                     />
                     <div className="flex justify-between items-center mt-1.5">
                       <span className="text-[11px] text-emerald-400 font-medium">
-                        ✓ Faol Admin Chat ID: 8170197389 (@Kitobchalar_bot ga keladi)
+                        {language === "ru"
+                          ? "✓ Активный Admin Chat ID: 8170197389 (поступает в @Kitobchalar_bot)"
+                          : language === "en"
+                          ? "✓ Active Admin Chat ID: 8170197389 (routed to @Kitobchalar_bot)"
+                          : "✓ Faol Admin Chat ID: 8170197389 (@Kitobchalar_bot ga keladi)"}
                       </span>
                       <button
                         type="button"
@@ -1547,7 +1676,9 @@ export const AdminPage = () => {
                         disabled={isDetectingId}
                         className="text-[11px] font-bold text-sky-400 hover:text-sky-300 underline cursor-pointer"
                       >
-                        {isDetectingId ? "Qidirilmoqda..." : "⚡ Avtomatik aniqlash"}
+                        {isDetectingId
+                          ? (language === "ru" ? "Поиск..." : language === "en" ? "Searching..." : "Qidirilmoqda...")
+                          : (language === "ru" ? "⚡ Автоопределение" : language === "en" ? "⚡ Auto Detect" : "⚡ Avtomatik aniqlash")}
                       </button>
                     </div>
                   </div>
@@ -1558,7 +1689,7 @@ export const AdminPage = () => {
                       className="flex-1 py-3.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
                     >
                       <Save className="w-4 h-4" />
-                      <span>Sozlamalarni Saqlash</span>
+                      <span>{language === "ru" ? "Сохранить настройки" : language === "en" ? "Save Settings" : "Sozlamalarni Saqlash"}</span>
                     </button>
 
                     <button
@@ -1568,7 +1699,11 @@ export const AdminPage = () => {
                       className="py-3.5 px-6 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 disabled:opacity-50"
                     >
                       <Send className="w-4 h-4" />
-                      <span>{isTestingBot ? "Yuborilmoqda..." : "Sinov Xabari"}</span>
+                      <span>
+                        {isTestingBot
+                          ? (language === "ru" ? "Отправка..." : language === "en" ? "Sending..." : "Yuborilmoqda...")
+                          : (language === "ru" ? "Тестовое сообщение" : language === "en" ? "Test Message" : "Sinov Xabari")}
+                      </span>
                     </button>
                   </div>
                 </form>
@@ -1576,13 +1711,19 @@ export const AdminPage = () => {
                 {/* Broadcast message section */}
                 <div className="pt-6 border-t border-slate-800 space-y-3">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-                    Jonli Ommaviy E'lon (Broadcast)
+                    {language === "ru" ? "Живое оповещение (Broadcast)" : language === "en" ? "Live Broadcast" : "Jonli Ommaviy E'lon (Broadcast)"}
                   </h4>
                   <textarea
                     rows={3}
                     value={broadcastMessage}
                     onChange={(e) => setBroadcastMessage(e.target.value)}
-                    placeholder="Barcha obunachilarga e'lon xabari yuborish..."
+                    placeholder={
+                      language === "ru"
+                        ? "Отправить объявление всем подписчикам..."
+                        : language === "en"
+                        ? "Send broadcast announcement to all subscribers..."
+                        : "Barcha obunachilarga e'lon xabari yuborish..."
+                    }
                     className="w-full px-4 py-3 rounded-xl bg-[#0b1120] border border-slate-700 text-white text-xs resize-none"
                   ></textarea>
                   <button
@@ -1591,7 +1732,11 @@ export const AdminPage = () => {
                     className="w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{isBroadcasting ? "Yuborilmoqda..." : "Kanalga E'lon Jo'natish"}</span>
+                    <span>
+                      {isBroadcasting
+                        ? (language === "ru" ? "Отправка..." : language === "en" ? "Sending..." : "Yuborilmoqda...")
+                        : (language === "ru" ? "Отправить в канал" : language === "en" ? "Send to Channel" : "Kanalga E'lon Jo'natish")}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -1602,8 +1747,16 @@ export const AdminPage = () => {
           {activeTab === "system" && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h2 className="text-xl font-black text-white">Server & Tizim Monitoringi</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Real-vaqt tizim ko'rsatkichlari va buyruqlar terminali</p>
+                <h2 className="text-xl font-black text-white">
+                  {language === "ru" ? "Мониторинг сервера и системы" : language === "en" ? "Server & System Monitoring" : "Server & Tizim Monitoringi"}
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  {language === "ru"
+                    ? "Системные показатели в реальном времени и командный терминал"
+                    : language === "en"
+                    ? "Real-time system indicators and command terminal"
+                    : "Real-vaqt tizim ko'rsatkichlari va buyruqlar terminali"}
+                </p>
               </div>
 
               {/* Hardware Metrics Cards */}
@@ -1619,12 +1772,16 @@ export const AdminPage = () => {
                 </div>
 
                 <div className="p-5 rounded-2xl bg-[#0e1626] border border-slate-800 space-y-1">
-                  <span className="text-[11px] text-slate-400 font-bold uppercase">CPU Bandligi</span>
+                  <span className="text-[11px] text-slate-400 font-bold uppercase">
+                    {language === "ru" ? "Загрузка CPU" : language === "en" ? "CPU Usage" : "CPU Bandligi"}
+                  </span>
                   <div className="text-2xl font-black text-purple-400 font-mono">{cpuUsage}%</div>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-[#0e1626] border border-slate-800 space-y-1">
-                  <span className="text-[11px] text-slate-400 font-bold uppercase">RAM Xotira</span>
+                  <span className="text-[11px] text-slate-400 font-bold uppercase">
+                    {language === "ru" ? "Память RAM" : language === "en" ? "RAM Memory" : "RAM Xotira"}
+                  </span>
                   <div className="text-2xl font-black text-cyan-400 font-mono">{ramUsage}%</div>
                 </div>
               </div>
@@ -1696,7 +1853,13 @@ export const AdminPage = () => {
                     type="text"
                     value={terminalInput}
                     onChange={(e) => setTerminalInput(e.target.value)}
-                    placeholder="Buyruq kiriting (masalan: status, ping, help, clear)..."
+                    placeholder={
+                      language === "ru"
+                        ? "Введите команду (например: status, ping, help, clear)..."
+                        : language === "en"
+                        ? "Enter command (e.g.: status, ping, help, clear)..."
+                        : "Buyruq kiriting (masalan: status, ping, help, clear)..."
+                    }
                     className="flex-1 bg-transparent border-0 text-white font-mono text-xs focus:outline-none"
                   />
                 </form>
@@ -1705,8 +1868,16 @@ export const AdminPage = () => {
               {/* Database Backup & Restore */}
               <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <h4 className="text-sm font-bold text-white">Ma'lumotlar Bazasi Zaxirasi</h4>
-                  <p className="text-xs text-slate-400">Barcha tovarlar va buyurtmalarni JSON faylda saqlang yoki tiklang</p>
+                  <h4 className="text-sm font-bold text-white">
+                    {language === "ru" ? "Резервная копия базы данных" : language === "en" ? "Database Backup & Restore" : "Ma'lumotlar Bazasi Zaxirasi"}
+                  </h4>
+                  <p className="text-xs text-slate-400">
+                    {language === "ru"
+                      ? "Сохраняйте или восстанавливайте товары и заказы через JSON-файл"
+                      : language === "en"
+                      ? "Save or restore products and orders via JSON file"
+                      : "Barcha tovarlar va buyurtmalarni JSON faylda saqlang yoki tiklang"}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -1715,7 +1886,7 @@ export const AdminPage = () => {
                     className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    <span>Zaxirani Yuklab Olish</span>
+                    <span>{language === "ru" ? "Скачать бэкап" : language === "en" ? "Download Backup" : "Zaxirani Yuklab Olish"}</span>
                   </button>
 
                   <input
@@ -1731,7 +1902,7 @@ export const AdminPage = () => {
                     className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center gap-1.5"
                   >
                     <Upload className="w-3.5 h-3.5" />
-                    <span>Tiklash (JSON)</span>
+                    <span>{language === "ru" ? "Восстановить (JSON)" : language === "en" ? "Restore (JSON)" : "Tiklash (JSON)"}</span>
                   </button>
                 </div>
               </div>
@@ -1752,13 +1923,15 @@ export const AdminPage = () => {
             </button>
 
             <h3 className="text-xl font-black text-white mb-6">
-              {editingProduct ? "Mahsulotni Tahrirlash" : "Yangi Mahsulot Qo'shish"}
+              {editingProduct
+                ? (t.admin?.editProduct || "Mahsulotni Tahrirlash")
+                : (t.admin?.addProduct || "Yangi Mahsulot Qo'shish")}
             </h3>
 
             <form onSubmit={handleSaveProduct} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-slate-300 mb-1">
-                  Mahsulot Nomi *
+                  {t.admin?.productName || "Mahsulot Nomi"} *
                 </label>
                 <input
                   type="text"
@@ -1773,23 +1946,26 @@ export const AdminPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1">
-                    Kategoriya
+                    {t.admin?.productCategory || "Kategoriya"}
                   </label>
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-[#0b1120] border border-slate-700 text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
-                    <option value="nutrition">Sport ozuqalari</option>
-                    <option value="equipment">Trenajyor va Anjomlar</option>
-                    <option value="wear">Sport kiyimlari</option>
-                    <option value="accessories">Aksessuarlar</option>
+                    {productCategories
+                      .filter((c) => c.id !== "all")
+                      .map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {getCategoryLabel(c.id, language)}
+                        </option>
+                      ))}
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1">
-                    Zaxira soni
+                    {t.admin?.productStock || "Zaxira soni"}
                   </label>
                   <input
                     type="number"
@@ -1803,7 +1979,7 @@ export const AdminPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1">
-                    Narxi (so'm) *
+                    {t.admin?.productPrice || "Narxi"} ({t.cart?.currency || "so'm"}) *
                   </label>
                   <input
                     type="number"
@@ -1817,7 +1993,7 @@ export const AdminPage = () => {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-300 mb-1">
-                    Eski Narxi (so'm)
+                    {t.admin?.productOldPrice || "Eski Narxi"} ({t.cart?.currency || "so'm"})
                   </label>
                   <input
                     type="number"
@@ -1831,7 +2007,7 @@ export const AdminPage = () => {
 
               <div>
                 <label className="block text-xs font-bold text-slate-300 mb-1">
-                  Rasm URL
+                  {t.admin?.productImage || "Rasm URL"}
                 </label>
                 <input
                   type="text"
@@ -1844,7 +2020,7 @@ export const AdminPage = () => {
 
               <div>
                 <label className="block text-xs font-bold text-slate-300 mb-1">
-                  Tavsifi
+                  {t.admin?.productDesc || "Tavsifi"}
                 </label>
                 <textarea
                   rows={3}
@@ -1857,7 +2033,7 @@ export const AdminPage = () => {
 
               <div>
                 <label className="block text-xs font-bold text-slate-300 mb-1">
-                  Xususiyatlari (vergul bilan ajrating)
+                  {language === "ru" ? "Характеристики (через запятую)" : language === "en" ? "Specs (comma-separated)" : "Xususiyatlari (vergul bilan ajrating)"}
                 </label>
                 <input
                   type="text"
@@ -1874,13 +2050,13 @@ export const AdminPage = () => {
                   onClick={() => setIsProductModalOpen(false)}
                   className="px-5 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs"
                 >
-                  Bekor qilish
+                  {t.admin?.cancel || "Bekor qilish"}
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-500/20"
                 >
-                  Saqlash
+                  {t.admin?.save || "Saqlash"}
                 </button>
               </div>
             </form>
@@ -1907,36 +2083,38 @@ export const AdminPage = () => {
 
             <div className="text-xs space-y-1">
               <div className="flex justify-between font-bold">
-                <span>Buyurtma ID:</span>
+                <span>{t.cart?.orderId || "Buyurtma ID:"}</span>
                 <span>#{viewingOrderInvoice.id}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Mijoz:</span>
+                <span className="text-slate-500">{t.cart?.recipient || "Mijoz:"}</span>
                 <span className="font-semibold">{viewingOrderInvoice.customerName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Telefon:</span>
+                <span className="text-slate-500">{t.cart?.phoneLabel || "Telefon:"}</span>
                 <span className="font-semibold">{viewingOrderInvoice.phone}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Manzil:</span>
+                <span className="text-slate-500">{t.cart?.addressLabel || "Manzil:"}</span>
                 <span className="font-semibold">{viewingOrderInvoice.address}</span>
               </div>
             </div>
 
             <div className="border-t border-b py-3 space-y-2 text-xs">
-              <div className="font-bold text-slate-700">Xarid tarkibi:</div>
+              <div className="font-bold text-slate-700">
+                {language === "ru" ? "Состав заказа:" : language === "en" ? "Order items:" : "Xarid tarkibi:"}
+              </div>
               {viewingOrderInvoice.items?.map((it, idx) => (
                 <div key={idx} className="flex justify-between">
                   <span>{it.name} x {it.quantity}</span>
-                  <span className="font-bold">{((it.price || 0) * it.quantity).toLocaleString()} so'm</span>
+                  <span className="font-bold">{((it.price || 0) * it.quantity).toLocaleString()} {t.cart?.currency || "so'm"}</span>
                 </div>
               ))}
             </div>
 
             <div className="flex justify-between items-baseline font-black text-base">
-              <span>Jami Summa:</span>
-              <span className="text-emerald-600">{viewingOrderInvoice.total?.toLocaleString()} so'm</span>
+              <span>{t.cart?.totalToPay || "Jami Summa:"}</span>
+              <span className="text-emerald-600">{viewingOrderInvoice.total?.toLocaleString()} {t.cart?.currency || "so'm"}</span>
             </div>
 
             <div className="pt-2 flex gap-3">
@@ -1945,7 +2123,7 @@ export const AdminPage = () => {
                 className="flex-1 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2"
               >
                 <Printer className="w-4 h-4" />
-                <span>Chop Etish (Print)</span>
+                <span>{language === "ru" ? "Печать (Print)" : language === "en" ? "Print Invoice" : "Chop Etish (Print)"}</span>
               </button>
             </div>
           </div>

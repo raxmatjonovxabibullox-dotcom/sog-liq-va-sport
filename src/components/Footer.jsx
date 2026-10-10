@@ -16,7 +16,7 @@ import {
 const CURRENT_YEAR = new Date().getFullYear();
 
 export const Footer = () => {
-  const { t } = useApp();
+  const { t, language } = useApp();
 
   return (
     <footer className="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-800 transition-colors duration-200">
@@ -83,7 +83,11 @@ export const Footer = () => {
               </span>
             </Link>
             <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm">
-              Sog'lom turmush tarzi, yuqori sifatli sport anjomlari, xalqaro sertifikatlangan sport ozuqalari va mashg'ulotlar dasturi bo'yicha yetakchi internet gipermarketi.
+              {language === "ru"
+                ? "Ведущий спортивный интернет-магазин: здоровый образ жизни, качественный инвентарь, сертифицированное спортивное питание и программы тренировок."
+                : language === "en"
+                ? "Leading fitness hypermarket: authentic gear, certified supplements, and guided workout programs."
+                : "Sog'lom turmush tarzi, yuqori sifatli sport anjomlari, xalqaro sertifikatlangan sport ozuqalari va mashg'ulotlar dasturi bo'yicha yetakchi internet gipermarketi."}
             </p>
             <div className="pt-2 flex items-center gap-3">
               <a
@@ -119,7 +123,7 @@ export const Footer = () => {
           {/* Quick Links */}
           <div className="space-y-3">
             <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Sahifalar
+              {language === "ru" ? "Страницы" : language === "en" ? "Pages" : "Sahifalar"}
             </h4>
             <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <li>
@@ -158,27 +162,27 @@ export const Footer = () => {
           {/* Categories */}
           <div className="space-y-3">
             <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Kategoriyalar
+              {language === "ru" ? "Категории" : language === "en" ? "Categories" : "Kategoriyalar"}
             </h4>
             <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <li>
                 <Link to="/shop?cat=nutrition" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition">
-                  Sport ozuqalari & Protein
+                  {language === "ru" ? "Спортивное питание" : language === "en" ? "Sports Nutrition" : "Sport ozuqalari"}
                 </Link>
               </li>
               <li>
                 <Link to="/shop?cat=equipment" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition">
-                  Gantellar & Anjomlar
+                  {language === "ru" ? "Тренажеры и инвентарь" : language === "en" ? "Gym & Equipment" : "Trenajyor va anjomlar"}
                 </Link>
               </li>
               <li>
                 <Link to="/shop?cat=wear" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition">
-                  Fitnes kiyimlari
+                  {language === "ru" ? "Спортивная одежда" : language === "en" ? "Sportswear" : "Sport kiyimlari"}
                 </Link>
               </li>
               <li>
                 <Link to="/shop?cat=accessories" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition">
-                  Aksessuarlar & Gadjetlar
+                  {language === "ru" ? "Фитнес аксессуары" : language === "en" ? "Fitness Accessories" : "Aksessuarlar"}
                 </Link>
               </li>
             </ul>
@@ -187,12 +191,12 @@ export const Footer = () => {
           {/* Contacts */}
           <div className="space-y-3">
             <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Bog'lanish
+              {t.nav?.contact || "Bog'lanish"}
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-400">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
-                <span>Toshkent, Amir Temur 45</span>
+                <span>{language === "ru" ? "Ташкент, пр-т Амира Темура 45" : language === "en" ? "Tashkent, Amir Temur 45" : "Toshkent, Amir Temur 45"}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
@@ -202,7 +206,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
-                <span>Har kuni: 09:00 - 21:00</span>
+                <span>{language === "ru" ? "Ежедневно: 09:00 - 21:00" : language === "en" ? "Daily: 09:00 - 21:00" : "Har kuni: 09:00 - 21:00"}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
@@ -215,10 +219,16 @@ export const Footer = () => {
         {/* Bottom copyright */}
         <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <div>
-            © {CURRENT_YEAR} "Sog'liq va Sport" platformasi. Barcha huquqlar himoyalangan.
+            {language === "ru"
+              ? `© ${CURRENT_YEAR} Платформа "Sog'liq va Sport". Все права защищены.`
+              : language === "en"
+              ? `© ${CURRENT_YEAR} "Sog'liq va Sport" platform. All rights reserved.`
+              : `© ${CURRENT_YEAR} "Sog'liq va Sport" platformasi. Barcha huquqlar himoyalangan.`}
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Promokod: SPORT2026 (-15%)</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+              {language === "ru" ? "Промокод: SPORT2026 (-15%)" : language === "en" ? "Promo: SPORT2026 (-15%)" : "Promokod: SPORT2026 (-15%)"}
+            </span>
             <span>•</span>
             <span>Vercel + GitHub Ready</span>
           </div>

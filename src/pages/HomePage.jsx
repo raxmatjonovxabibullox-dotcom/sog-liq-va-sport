@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { ProductCard } from "../components/ProductCard";
-import { productCategories } from "../data/mockProducts";
+import { productCategories, getCategoryLabel } from "../data/mockProducts";
 import {
   ArrowRight,
   Sparkles,
@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const HomePage = () => {
-  const { products, t } = useApp();
+  const { products, t, language } = useApp();
 
   // Interactive BMI Calculator state
   const [height, setHeight] = useState(175);
@@ -29,21 +29,61 @@ export const HomePage = () => {
       let advice = "";
 
       if (val < 18.5) {
-        status = "Kam vazn (Oqsil va kaloriya kerak)";
+        status =
+          language === "ru"
+            ? "Дефицит массы (Нужен белок и калории)"
+            : language === "en"
+            ? "Underweight (Needs protein & calories)"
+            : "Kam vazn (Oqsil va kaloriya kerak)";
         color = "text-sky-500";
-        advice = "Sizga mushak massasini oshirish uchun Gainer va Protein ozuqalari tavsiya etiladi.";
+        advice =
+          language === "ru"
+            ? "Вам рекомендуется гейнер и сывороточный протеин для набора сухой мышечной массы."
+            : language === "en"
+            ? "Gainer and Whey Protein supplements are recommended to build lean muscle mass."
+            : "Sizga mushak massasini oshirish uchun Gainer va Protein ozuqalari tavsiya etiladi.";
       } else if (val >= 18.5 && val <= 24.9) {
-        status = "Normal va sog'lom vazn (A'lo darajada!)";
+        status =
+          language === "ru"
+            ? "Нормальный и здоровый вес (Отличная форма!)"
+            : language === "en"
+            ? "Normal & healthy weight (Great shape!)"
+            : "Normal va sog'lom vazn (A'lo darajada!)";
         color = "text-emerald-500";
-        advice = "Ajoyib shakldasiz! Ushbu holatni saqlab qolish uchun muntazam kardio va vitaminlar qabul qiling.";
+        advice =
+          language === "ru"
+            ? "Вы в отличной форме! Поддерживайте ее регулярными кардио-тренировками и витаминами."
+            : language === "en"
+            ? "You are in great shape! Maintain it with regular cardio workouts and daily vitamins."
+            : "Ajoyib shakldasiz! Ushbu holatni saqlab qolish uchun muntazam kardio va vitaminlar qabul qiling.";
       } else if (val >= 25 && val <= 29.9) {
-        status = "Ortiqcha vazn (Kardio va parhez tavsiya)";
+        status =
+          language === "ru"
+            ? "Избыточный вес (Рекомендуется кардио и диета)"
+            : language === "en"
+            ? "Overweight (Cardio & diet recommended)"
+            : "Ortiqcha vazn (Kardio va parhez tavsiya)";
         color = "text-amber-500";
-        advice = "Haftasiga 3-4 marta yog' yoqish kardio mashqlari (HIIT) va L-Karnitin tavsiya etiladi.";
+        advice =
+          language === "ru"
+            ? "Рекомендуются кардио HIIT-тренировки 3-4 раза в неделю и жиросжигатель L-карнитин."
+            : language === "en"
+            ? "Cardio HIIT workouts 3-4 times a week and L-Carnitine are recommended."
+            : "Haftasiga 3-4 marta yog' yoqish kardio mashqlari (HIIT) va L-Karnitin tavsiya etiladi.";
       } else {
-        status = "Semizlik darajasi (E'tibor talab)";
+        status =
+          language === "ru"
+            ? "Степень ожирения (Требует внимания)"
+            : language === "en"
+            ? "Obesity level (Requires attention)"
+            : "Semizlik darajasi (E'tibor talab)";
         color = "text-rose-500";
-        advice = "Shifokor va murabbiy maslahati bilan to'g'ri rejim hamda parhezga o'tish zarur.";
+        advice =
+          language === "ru"
+            ? "Рекомендуется консультация врача и тренера для коррекции рациона и программы."
+            : language === "en"
+            ? "Consult a physician and personal trainer for structured nutrition and cardio."
+            : "Shifokor va murabbiy maslahati bilan to'g'ri rejim hamda parhezga o'tish zarur.";
       }
 
       setBmiResult({ val, status, color, advice });
@@ -107,7 +147,7 @@ export const HomePage = () => {
                     5,000+
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400">
-                    Faol sportchilar
+                    {t.hero.activeAthletes}
                   </div>
                 </div>
                 <div>
@@ -115,7 +155,7 @@ export const HomePage = () => {
                     100%
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400">
-                    Original sifat
+                    {t.hero.originalQuality}
                   </div>
                 </div>
                 <div>
@@ -123,7 +163,7 @@ export const HomePage = () => {
                     24/7
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400">
-                    Yetkazib berish
+                    {t.hero.fastDelivery}
                   </div>
                 </div>
               </div>
@@ -144,20 +184,20 @@ export const HomePage = () => {
                   <div>
                     <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                       <Flame className="w-3.5 h-3.5 fill-emerald-500" />
-                      <span>Maxsus Taklif</span>
+                      <span>{t.hero.specialOffer}</span>
                     </div>
                     <div className="text-sm font-black text-slate-900 dark:text-white">
-                      SPORT2026 Promokodi
+                      {language === "ru" ? "Промокод SPORT2026" : language === "en" ? "Promo Code SPORT2026" : "SPORT2026 Promokodi"}
                     </div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">
-                      Savatda 15% chegirma beradi!
+                      {t.hero.promoSubtitle}
                     </div>
                   </div>
                   <Link
                     to="/shop"
                     className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md"
                   >
-                    Foydalanish
+                    {t.hero.useBtn}
                   </Link>
                 </div>
               </div>
@@ -171,7 +211,7 @@ export const HomePage = () => {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-              Katalog
+              {t.hero.catalogTag}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
               {t.hero.categoriesTitle}
@@ -181,7 +221,7 @@ export const HomePage = () => {
             to="/shop"
             className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
           >
-            <span>Barcha tovarlarni ko'rish</span>
+            <span>{t.hero.viewAllProducts}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -196,6 +236,7 @@ export const HomePage = () => {
                 wear: "/products/prod_11_nike_pegasus.jpg",
                 accessories: "/products/prod_15_apple_watch.jpg",
               };
+              const localizedCatName = getCategoryLabel(cat.id, language);
               return (
                 <Link
                   key={cat.id}
@@ -204,16 +245,16 @@ export const HomePage = () => {
                 >
                   <img
                     src={bgImages[cat.id]}
-                    alt={cat.labelUz}
+                    alt={localizedCatName}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 right-4">
                     <span className="text-[11px] font-semibold text-emerald-400 block mb-1">
-                      Kategoriya #{idx + 1}
+                      {t.hero.categoryNumber} #{idx + 1}
                     </span>
                     <h3 className="text-base sm:text-lg font-black text-white group-hover:text-emerald-400 transition">
-                      {cat.labelUz}
+                      {localizedCatName}
                     </h3>
                   </div>
                 </Link>
@@ -237,7 +278,7 @@ export const HomePage = () => {
             to="/shop"
             className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
           >
-            <span>Ko'proq xarid qilish</span>
+            <span>{language === "ru" ? "Смотреть больше" : language === "en" ? "View more" : "Ko'proq xarid qilish"}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -259,32 +300,32 @@ export const HomePage = () => {
             <div className="lg:col-span-6 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20">
                 <Scale className="w-4 h-4" />
-                <span>Salomatlik Tekshiruvi</span>
+                <span>{language === "ru" ? "Проверка здоровья" : language === "en" ? "Health Assessment" : "Salomatlik Tekshiruvi"}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black tracking-tight leading-snug text-slate-900 dark:text-white">
                 {t.hero.bmiTitle}
               </h2>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {t.hero.bmiSubtitle} Tana massasi indeksi (BMI) sizning bo'yingiz va vazningiz nisbatini baholab, sog'lom fitnes rejangizni tuzishga yordam beradi.
+                {t.hero.bmiSubtitle}
               </p>
 
               {/* BMI Legend */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 text-center text-xs">
                 <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
                   <div className="text-sky-500 dark:text-sky-400 font-bold">&lt; 18.5</div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Kam vazn</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">{language === "ru" ? "Дефицит" : language === "en" ? "Underweight" : "Kam vazn"}</div>
                 </div>
                 <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
                   <div className="text-emerald-500 dark:text-emerald-400 font-bold">18.5 - 24.9</div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Normal</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">{language === "ru" ? "Норма" : language === "en" ? "Normal" : "Normal"}</div>
                 </div>
                 <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
                   <div className="text-amber-500 dark:text-amber-400 font-bold">25 - 29.9</div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Ortiqcha</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">{language === "ru" ? "Избыток" : language === "en" ? "Overweight" : "Ortiqcha"}</div>
                 </div>
                 <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
                   <div className="text-rose-500 dark:text-rose-400 font-bold">&gt; 30</div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Semizlik</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">{language === "ru" ? "Ожирение" : language === "en" ? "Obese" : "Semizlik"}</div>
                 </div>
               </div>
             </div>
@@ -332,7 +373,9 @@ export const HomePage = () => {
               {bmiResult && (
                 <div className="mt-5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 animate-in fade-in duration-300">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Sizning BMI ko'rsatkichingiz:</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                      {language === "ru" ? "Ваш показатель ИМТ:" : language === "en" ? "Your BMI Score:" : "Sizning BMI ko'rsatkichingiz:"}
+                    </span>
                     <span className="text-2xl font-black text-slate-900 dark:text-white">{bmiResult.val}</span>
                   </div>
                   <div className={`text-sm font-bold ${bmiResult.color} mb-1.5`}>
@@ -352,13 +395,13 @@ export const HomePage = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-            Fikr-Mulohazalar
+            {language === "ru" ? "Отзывы чемпионов" : language === "en" ? "Athlete Reviews" : "Fikr-Mulohazalar"}
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-            Professional Sportchilar va Olimpiada Chempionlari E'tirofi
+            {language === "ru" ? "Выбор Профессиональных Спортсменов и Олимпийских Чемпионов" : language === "en" ? "Trusted by Pro Athletes & Olympic Champions" : "Professional Sportchilar va Olimpiada Chempionlari E'tirofi"}
           </h2>
           <p className="text-xs text-slate-500">
-            O'zbekistonning eng sara sportchilari va chempionlari "Sog'liq va Sport" sifatiga ishonishadi
+            {language === "ru" ? "Лучшие спортсмены Узбекистана доверяют качеству Sog'liq va Sport" : language === "en" ? "Uzbekistan's top athletes trust the quality of Sog'liq va Sport" : "O'zbekistonning eng sara sportchilari va chempionlari \"Sog'liq va Sport\" sifatiga ishonishadi"}
           </p>
         </div>
 
@@ -375,12 +418,16 @@ export const HomePage = () => {
                   Bahodir Jalolov
                 </h4>
                 <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                  2 karra Olimpiada & Jahon chempioni (Boks)
+                  {language === "ru" ? "2-кратный Олимпийский чемпион (Бокс)" : language === "en" ? "2x Olympic & World Champion (Boxing)" : "2 karra Olimpiada & Jahon chempioni (Boks)"}
                 </p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic">
-              "Optimum Nutrition Gold Standard va Bowflex gantellarni xarid qildim. Yetkazib berish Toshkent ichida bir necha soatda amalga oshirildi, qadoqlari butun va 100% original."
+              {language === "ru"
+                ? "\"Заказал Optimum Nutrition Gold Standard и разборные гантели Bowflex. Доставка по Ташкенту заняла пару часов, упаковка целая, продукция 100% оригинал.\""
+                : language === "en"
+                ? "\"Ordered Optimum Nutrition Gold Standard and Bowflex dumbbells. Delivered in Tashkent within hours, fully sealed and 100% authentic.\""
+                : "\"Optimum Nutrition Gold Standard va Bowflex gantellarni xarid qildim. Yetkazib berish Toshkent ichida bir necha soatda amalga oshirildi, qadoqlari butun va 100% original.\""}
             </p>
           </div>
 
@@ -396,12 +443,16 @@ export const HomePage = () => {
                   Diyora Keldiyorova
                 </h4>
                 <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                  Parij-2024 Olimpiada chempioni (Dzyudo)
+                  {language === "ru" ? "Олимпийская чемпионка Париж-2024 (Дзюдо)" : language === "en" ? "Paris-2024 Olympic Champion (Judo)" : "Parij-2024 Olimpiada chempioni (Dzyudo)"}
                 </p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic">
-              "Dymatize ISO100 proteini va Gymshark fitnes kiyimlari juda sifatli va qulay! Mashg'ulotlar uchun faqat shu platformadan olishni tavsiya qilaman."
+              {language === "ru"
+                ? "\"Протеин Dymatize ISO100 и одежда Gymshark идеального качества и очень удобные! Для тренировок выбираю только Sog'liq va Sport.\""
+                : language === "en"
+                ? "\"Dymatize ISO100 protein and Gymshark activewear are top notch! I recommend this platform for professional fitness.\""
+                : "\"Dymatize ISO100 proteini va Gymshark fitnes kiyimlari juda sifatli va qulay! Mashg'ulotlar uchun faqat shu platformadan olishni tavsiya qilaman.\""}
             </p>
           </div>
 
@@ -417,12 +468,16 @@ export const HomePage = () => {
                   Ulug'bek Rashitov
                 </h4>
                 <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                  2 karra Olimpiada chempioni (Taekvondo)
+                  {language === "ru" ? "2-кратный Олимпийский чемпион (Тхэквондо)" : language === "en" ? "2x Olympic Champion (Taekwondo)" : "2 karra Olimpiada chempioni (Taekvondo)"}
                 </p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic">
-              "Nike Pegasus 40 krossovkalari va Hydro Flask sport idishi musobaqa hamda mashg'ulotlarda juda qo'l keldi. Sifatiga gap yo'q, barchaga tavsiya etaman!"
+              {language === "ru"
+                ? "\"Кроссовки Nike Pegasus и термос Hydro Flask незаменимы на сборах и тренировках. Качество на высоте, всем рекомендую!\""
+                : language === "en"
+                ? "\"Nike Pegasus shoes and Hydro Flask were perfect for intense tournament camps. Top-tier quality, highly recommended!\""
+                : "\"Nike Pegasus 40 krossovkalari va Hydro Flask sport idishi musobaqa hamda mashg'ulotlarda juda qo'l keldi. Sifatiga gap yo'q, barchaga tavsiya etaman!\""}
             </p>
           </div>
         </div>
@@ -433,13 +488,17 @@ export const HomePage = () => {
         <div className="relative rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-8 sm:p-12 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left z-10">
             <span className="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold uppercase tracking-wider">
-              Chegirma Imkoniyati
+              {language === "ru" ? "Специальная Скидка" : language === "en" ? "Special Discount" : "Chegirma Imkoniyati"}
             </span>
             <h3 className="text-2xl sm:text-3xl font-black tracking-tight">
-              Promokod: <span className="underline decoration-amber-400">SPORT2026</span>
+              {language === "ru" ? "Промокод:" : language === "en" ? "Promo Code:" : "Promokod:"} <span className="underline decoration-amber-400">SPORT2026</span>
             </h3>
             <p className="text-sm text-emerald-100 max-w-md">
-              Savatda ushbu kodni kiritib barcha sport ozuqalari va mashq anjomlariga 15% chegirma oling!
+              {language === "ru"
+                ? "Введите промокод в корзине и получите 15% скидку на всё спортивное питание и инвентарь!"
+                : language === "en"
+                ? "Apply this coupon in your cart to receive 15% OFF on all sports nutrition and gym gear!"
+                : "Savatda ushbu kodni kiritib barcha sport ozuqalari va mashq anjomlariga 15% chegirma oling!"}
             </p>
           </div>
 
@@ -448,7 +507,7 @@ export const HomePage = () => {
               to="/shop"
               className="px-6 py-3.5 rounded-2xl bg-white text-emerald-800 hover:bg-slate-100 font-black text-sm shadow-xl transition active:scale-95"
             >
-              Hozir xarid qilish
+              {language === "ru" ? "Купить со скидкой" : language === "en" ? "Shop with Discount" : "Hozir xarid qilish"}
             </Link>
           </div>
         </div>

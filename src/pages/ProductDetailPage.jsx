@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { ProductCard } from "../components/ProductCard";
+import { getCategoryLabel } from "../data/mockProducts";
 import {
   Star,
   Heart,
@@ -15,7 +16,7 @@ import {
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
-  const { products, addToCart, toggleWishlist, isInWishlist, showToast, t } = useApp();
+  const { products, addToCart, toggleWishlist, isInWishlist, showToast, t, language } = useApp();
   const [qty, setQty] = useState(1);
 
   const product = products.find((p) => p.id === id);
@@ -24,14 +25,14 @@ export const ProductDetailPage = () => {
     return (
       <div className="max-w-md mx-auto py-24 text-center space-y-4">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-          Mahsulot topilmadi
+          {t.shop?.noProducts || "Mahsulot topilmadi"}
         </h2>
         <Link
           to="/shop"
           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-500 text-white font-bold text-xs"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Katalogga qaytish</span>
+          <span>{language === "ru" ? "Вернуться в каталог" : language === "en" ? "Back to catalog" : "Katalogga qaytish"}</span>
         </Link>
       </div>
     );
@@ -44,7 +45,7 @@ export const ProductDetailPage = () => {
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    showToast("Havola nusxalandi!");
+    showToast(language === "ru" ? "Ссылка скопирована!" : language === "en" ? "Link copied!" : "Havola nusxalandi!");
   };
 
   return (
@@ -56,7 +57,7 @@ export const ProductDetailPage = () => {
           className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-500 transition"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Do'konga qaytish</span>
+          <span>{language === "ru" ? "Назад в магазин" : language === "en" ? "Back to shop" : "Do'konga qaytish"}</span>
         </Link>
       </div>
 
@@ -71,7 +72,7 @@ export const ProductDetailPage = () => {
           />
           {product.featured && (
             <span className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full text-xs font-black bg-amber-500 text-white shadow-md">
-              Top Mahsulot
+              {t.shop?.topProduct || "Top"}
             </span>
           )}
         </div>
@@ -81,12 +82,12 @@ export const ProductDetailPage = () => {
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
-                {product.categoryLabel || product.category}
+                {getCategoryLabel(product.category, language)}
               </span>
               <button
                 onClick={handleShare}
                 className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white"
-                title="Ulashish"
+                title={language === "ru" ? "Поделиться" : language === "en" ? "Share" : "Ulashish"}
               >
                 <Share2 className="w-4 h-4" />
               </button>
@@ -102,14 +103,16 @@ export const ProductDetailPage = () => {
                 <Star className="w-4 h-4 fill-amber-400" />
                 <span>{product.rating}</span>
                 <span className="text-slate-400 font-normal">
-                  ({product.reviewsCount} ta sharh)
+                  ({product.reviewsCount} {language === "ru" ? "отзывов" : language === "en" ? "reviews" : "ta sharh"})
                 </span>
               </div>
               <span className="text-slate-300 dark:text-slate-700">|</span>
               <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-semibold">
                 <Check className="w-3.5 h-3.5" />
                 <span>
-                  {product.stock > 0 ? `${t.shop.inStock} (${product.stock} ta)` : t.shop.outOfStock}
+                  {product.stock > 0
+                    ? `${t.shop.inStock} (${product.stock} ${language === "ru" ? "шт." : language === "en" ? "pcs" : "ta"})`
+                    : t.shop.outOfStock}
                 </span>
               </span>
             </div>
@@ -118,11 +121,11 @@ export const ProductDetailPage = () => {
           {/* Price Box */}
           <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-baseline gap-4">
             <span className="text-3xl font-black text-slate-900 dark:text-white">
-              {product.price.toLocaleString()} <span className="text-sm font-bold text-emerald-500">so'm</span>
+              {product.price.toLocaleString()} <span className="text-sm font-bold text-emerald-500">{t.cart?.currency || "so'm"}</span>
             </span>
             {product.oldPrice && (
               <span className="text-base text-slate-400 line-through">
-                {product.oldPrice.toLocaleString()} so'm
+                {product.oldPrice.toLocaleString()} {t.cart?.currency || "so'm"}
               </span>
             )}
           </div>
@@ -136,7 +139,7 @@ export const ProductDetailPage = () => {
           {product.specs && product.specs.length > 0 && (
             <div className="space-y-2 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-xs">
               <span className="font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                Asosiy xususiyatlari:
+                {language === "ru" ? "Основные характеристики:" : language === "en" ? "Key features:" : "Asosiy xususiyatlari:"}
               </span>
               {product.specs.map((sp, idx) => (
                 <div key={idx} className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
@@ -193,11 +196,11 @@ export const ProductDetailPage = () => {
           <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500">
             <div className="flex items-center gap-2">
               <Truck className="w-4 h-4 text-emerald-500" />
-              <span>O'zbekiston bo'ylab 24 soatda</span>
+              <span>{language === "ru" ? "По Узбекистану за 24 часа" : language === "en" ? "Across Uzbekistan in 24 hours" : "O'zbekiston bo'ylab 24 soatda"}</span>
             </div>
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>100% Original mahsulot</span>
+              <span>{language === "ru" ? "100% Оригинальный товар" : language === "en" ? "100% Authentic product" : "100% Original mahsulot"}</span>
             </div>
           </div>
         </div>
@@ -207,7 +210,7 @@ export const ProductDetailPage = () => {
       {related.length > 0 && (
         <div className="space-y-6 pt-12 border-t border-slate-200/80 dark:border-slate-800">
           <h3 className="text-2xl font-black text-slate-900 dark:text-white">
-            O'xshash Mahsulotlar
+            {language === "ru" ? "Похожие товары" : language === "en" ? "Related Products" : "O'xshash Mahsulotlar"}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {related.map((p) => (

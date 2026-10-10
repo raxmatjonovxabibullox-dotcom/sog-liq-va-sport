@@ -249,9 +249,17 @@ export const initialProducts = [
 ];
 
 export const productCategories = [
-  { id: "all", labelUz: "Barchasi", labelRu: "Все", labelEn: "All" },
-  { id: "nutrition", labelUz: "Sport ozuqalari", labelRu: "Спортпит", labelEn: "Nutrition" },
-  { id: "equipment", labelUz: "Trenajyor va anjomlar", labelRu: "Инвентарь", labelEn: "Equipment" },
-  { id: "wear", labelUz: "Sport kiyimlari", labelRu: "Одежда", labelEn: "Apparel" },
-  { id: "accessories", labelUz: "Aksessuarlar", labelRu: "Аксессуары", labelEn: "Accessories" },
+  { id: "all", labelUz: "Barchasi", labelRu: "Все товары", labelEn: "All Products" },
+  { id: "nutrition", labelUz: "Sport ozuqalari", labelRu: "Спортивное питание", labelEn: "Sports Nutrition" },
+  { id: "equipment", labelUz: "Trenajyor va anjomlar", labelRu: "Тренажеры и инвентарь", labelEn: "Equipment & Gym" },
+  { id: "wear", labelUz: "Sport kiyimlari", labelRu: "Спортивная одежда", labelEn: "Sportswear & Apparel" },
+  { id: "accessories", labelUz: "Aksessuarlar", labelRu: "Фитнес аксессуары", labelEn: "Fitness Accessories" },
 ];
+
+export const getCategoryLabel = (catId, lang = "uz") => {
+  const found = productCategories.find((c) => c.id === catId);
+  if (!found) return catId;
+  if (lang === "ru") return found.labelRu;
+  if (lang === "en") return found.labelEn;
+  return found.labelUz;
+};

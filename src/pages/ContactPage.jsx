@@ -12,7 +12,7 @@ import {
 import { formatUzbekPhone, handlePhoneKeyDown } from "../utils/phoneFormatter";
 
 export const ContactPage = () => {
-  const { t, sendTelegramMessage, showToast } = useApp();
+  const { t, language, sendTelegramMessage, showToast } = useApp();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998");
   const [message, setMessage] = useState("");
@@ -22,7 +22,7 @@ export const ContactPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !message.trim()) {
-      showToast("Iltimos, barcha maydonlarni to'ldiring!");
+      showToast(language === "ru" ? "Пожалуйста, заполните все поля!" : language === "en" ? "Please fill in all fields!" : "Iltimos, barcha maydonlarni to'ldiring!");
       return;
     }
 
@@ -50,7 +50,7 @@ export const ContactPage = () => {
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
           <MessageSquare className="w-4 h-4" />
-          <span>24/7 Aloqa</span>
+          <span>{language === "ru" ? "24/7 Поддержка" : language === "en" ? "24/7 Support" : "24/7 Aloqa"}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white">
           {t.contact.title}
@@ -74,7 +74,7 @@ export const ContactPage = () => {
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400 font-semibold">Manzil:</div>
+                  <div className="text-xs text-slate-400 font-semibold">{t.cart?.addressLabel || "Manzil:"}</div>
                   <div className="font-bold text-slate-900 dark:text-white">
                     Toshkent sh., Amir Temur shoh ko'chasi, 45-uy
                   </div>
@@ -86,7 +86,7 @@ export const ContactPage = () => {
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400 font-semibold">Telefon raqamlar:</div>
+                  <div className="text-xs text-slate-400 font-semibold">{t.cart?.phoneLabel || "Telefon:"}</div>
                   <div className="font-bold text-slate-900 dark:text-white">
                     +998 (71) 200-45-45
                   </div>
@@ -101,9 +101,11 @@ export const ContactPage = () => {
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400 font-semibold">Ish vaqti:</div>
+                  <div className="text-xs text-slate-400 font-semibold">
+                    {language === "ru" ? "Время работы:" : language === "en" ? "Working hours:" : "Ish vaqti:"}
+                  </div>
                   <div className="font-bold text-slate-900 dark:text-white">
-                    Dushanba - Yakshanba: 09:00 - 21:00
+                    {language === "ru" ? "Понедельник - Воскресенье: 09:00 - 21:00" : language === "en" ? "Monday - Sunday: 09:00 - 21:00" : "Dushanba - Yakshanba: 09:00 - 21:00"}
                   </div>
                 </div>
               </div>
@@ -113,7 +115,9 @@ export const ContactPage = () => {
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400 font-semibold">Elektron pochta:</div>
+                  <div className="text-xs text-slate-400 font-semibold">
+                    {language === "ru" ? "Электронная почта:" : language === "en" ? "Email address:" : "Elektron pochta:"}
+                  </div>
                   <div className="font-bold text-slate-900 dark:text-white">
                     info@sogliqsport.uz
                   </div>
@@ -130,7 +134,7 @@ export const ContactPage = () => {
                 className="w-full py-3 px-4 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25 transition cursor-pointer"
               >
                 <Send className="w-4 h-4" />
-                <span>@Kitobchalar_bot ni ochish</span>
+                <span>{t.cart?.openTelegramBot || "@Kitobchalar_bot ni ochish"}</span>
               </a>
             </div>
           </div>
@@ -144,7 +148,11 @@ export const ContactPage = () => {
                 {t.contact.formTitle}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Xabaringiz to'g'ridan-to'g'ri Telegram bot orqali operatorlarimizga jo'natiladi.
+                {language === "ru"
+                  ? "Ваше сообщение будет мгновенно отправлено операторам через Telegram бот."
+                  : language === "en"
+                  ? "Your inquiry is delivered directly to our operators via Telegram bot."
+                  : "Xabaringiz to'g'ridan-to'g'ri Telegram bot orqali operatorlarimizga jo'natiladi."}
               </p>
             </div>
 
@@ -164,7 +172,7 @@ export const ContactPage = () => {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ismingizni kiriting"
+                  placeholder={language === "ru" ? "Введите ваше имя" : language === "en" ? "Enter your name" : "Ismingizni kiriting"}
                   required
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
@@ -194,7 +202,7 @@ export const ContactPage = () => {
                   rows={4}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Qanday mahsulot yoki mashg'ulot bo'yicha maslahat kerak?..."
+                  placeholder={language === "ru" ? "По какому товару или тренировке вам нужна консультация?..." : language === "en" ? "What product or workout routine do you need advice with?..." : "Qanday mahsulot yoki mashg'ulot bo'yicha maslahat kerak?..."}
                   required
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
                 ></textarea>
@@ -206,7 +214,7 @@ export const ContactPage = () => {
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-60"
               >
                 <Send className="w-4 h-4" />
-                <span>{isSubmitting ? "Yuborilmoqda..." : t.contact.sendBtn}</span>
+                <span>{isSubmitting ? (language === "ru" ? "Отправка..." : language === "en" ? "Sending..." : "Yuborilmoqda...") : t.contact.sendBtn}</span>
               </button>
             </form>
           </div>

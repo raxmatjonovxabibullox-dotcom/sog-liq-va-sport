@@ -178,7 +178,7 @@ export const Navbar = () => {
             {/* Dark / Light Toggle */}
             <button
               onClick={toggleTheme}
-              title="Rejimni o'zgartirish"
+              title={language === "ru" ? "Сменить тему" : language === "en" ? "Toggle theme" : "Rejimni o'zgartirish"}
               className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-emerald-500 border border-slate-200/80 dark:border-slate-800 transition"
             >
               {theme === "dark" ? (
@@ -246,7 +246,7 @@ export const Navbar = () => {
                         onClick={() => setUserMenuOpen(false)}
                         className="block px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                       >
-                        Boshqaruv Paneli
+                        {language === "ru" ? "Панель управления" : language === "en" ? "Control Panel" : "Boshqaruv Paneli"}
                       </Link>
                     )}
                     <button
