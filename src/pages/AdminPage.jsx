@@ -219,9 +219,15 @@ export const AdminPage = () => {
   const [newPromoPercent, setNewPromoPercent] = useState("15");
   const [newPromoDesc, setNewPromoDesc] = useState("");
 
-  // Telegram Config & Live Broadcast state
-  const [botToken, setBotToken] = useState(telegramConfig?.botToken || "");
-  const [chatId, setChatId] = useState(telegramConfig?.chatId || "8823235791");
+  const [botToken, setBotToken] = useState(
+    telegramConfig?.botToken || "8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8"
+  );
+  const [chatId, setChatId] = useState(
+    telegramConfig?.chatId && telegramConfig?.chatId !== "8823235791"
+      ? telegramConfig.chatId
+      : ""
+  );
+  const [isDetectingId, setIsDetectingId] = useState(false);
   const [showToken, setShowToken] = useState(false);
   const [isTestingBot, setIsTestingBot] = useState(false);
   const [broadcastMessage, setBroadcastMessage] = useState("");
@@ -386,8 +392,38 @@ export const AdminPage = () => {
 
   const handleSaveTelegram = (e) => {
     e.preventDefault();
-    saveTelegramConfig({ botToken, chatId });
+    saveTelegramConfig({ botToken, chatId, botUsername: "@Kitobchalar_bot" });
     playSound("success", soundEnabled);
+  };
+
+  const handleAutoDetectChatId = async () => {
+    setIsDetectingId(true);
+    playSound("click", soundEnabled);
+    try {
+      const token = botToken || "8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8";
+      const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
+      const data = await res.json();
+      if (data.ok && Array.isArray(data.result) && data.result.length > 0) {
+        for (let i = data.result.length - 1; i >= 0; i--) {
+          const u = data.result[i];
+          const senderId = u.message?.chat?.id || u.channel_post?.chat?.id || u.my_chat_member?.chat?.id;
+          if (senderId && String(senderId) !== "8823235791") {
+            const detected = String(senderId);
+            setChatId(detected);
+            saveTelegramConfig({ botToken: token, chatId: detected, botUsername: "@Kitobchalar_bot" });
+            showToast(`Chat ID topildi va saqlandi: ${detected}`);
+            playSound("success", soundEnabled);
+            setIsDetectingId(false);
+            return;
+          }
+        }
+      }
+      showToast("Xabar topilmadi. Avval @Kitobchalar_bot ga kirib Start bosing!");
+      playSound("warn", soundEnabled);
+    } catch {
+      showToast("Telegram serveriga ulanib bo'lmadi");
+    }
+    setIsDetectingId(false);
   };
 
   const handleTestTelegram = async () => {
@@ -1473,9 +1509,22 @@ export const AdminPage = () => {
                       type="text"
                       value={chatId}
                       onChange={(e) => setChatId(e.target.value)}
-                      placeholder="-1001234567890 yoki 123456789"
+                      placeholder="Masalan: 123456789"
                       className="w-full px-4 py-3 rounded-xl bg-[#0b1120] border border-slate-700 text-white font-mono text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
+                    <div className="flex justify-between items-center mt-1.5">
+                      <span className="text-[11px] text-slate-400">
+                        O'zingizning shaxsiy Chat ID raqamingiz
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleAutoDetectChatId}
+                        disabled={isDetectingId}
+                        className="text-[11px] font-bold text-sky-400 hover:text-sky-300 underline cursor-pointer"
+                      >
+                        {isDetectingId ? "Qidirilmoqda..." : "⚡ Avtomatik aniqlash"}
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3 pt-2">
