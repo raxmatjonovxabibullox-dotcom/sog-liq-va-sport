@@ -85,36 +85,6 @@ export const CartPage = () => {
     const order = await createOrder(orderData);
     setIsSubmitting(false);
     setCompletedOrder(order);
-
-    const itemsText = order.items
-      ?.map(
-        (it, idx) =>
-          `  ${idx + 1}. ${it.name} x ${it.quantity} = ${(it.price * it.quantity).toLocaleString()} so'm`
-      )
-      .join("\n");
-
-    const messageText =
-      `🏋️ YANGI SPORT BUYURTMASI #${order.id}\n\n` +
-      `👤 Mijoz: ${order.customerName}\n` +
-      `📞 Telefon: ${order.phone}\n` +
-      `📍 Manzil: ${order.address}\n` +
-      `💳 To'lov: ${order.paymentMethod === "cash" ? "Naqd / Qabul qilganda" : "Onlayn"}\n\n` +
-      `📦 Mahsulotlar:\n${itemsText}\n\n` +
-      (order.discount > 0 ? `🏷 Chegirma: -${order.discount.toLocaleString()} so'm\n` : "") +
-      `💰 JAMI: ${order.total.toLocaleString()} so'm\n` +
-      `🕒 Sana: ${order.date}`;
-
-    const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(messageText)}`;
-
-    // Avtomatik Telegram ochilishi (hech qanday qo'shimcha tugma bosmasdan)
-    try {
-      const win = window.open(tgShareUrl, "_blank");
-      if (!win) {
-        window.location.href = tgShareUrl;
-      }
-    } catch {
-      window.location.href = tgShareUrl;
-    }
   };
 
   // If order successfully placed
@@ -133,9 +103,9 @@ export const CartPage = () => {
           {t.cart.orderSuccessDesc}
         </p>
 
-        <div className="p-3.5 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold flex items-center justify-center gap-2 max-w-md mx-auto">
-          <Send className="w-4 h-4 text-sky-400 animate-pulse" />
-          <span>Telegram ilovasida buyurtma cheki avtomatik ochildi!</span>
+        <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 text-xs font-semibold flex items-center justify-center gap-2 max-w-md mx-auto">
+          <Send className="w-4 h-4 text-emerald-500 animate-pulse" />
+          <span>Buyurtma qabul qilindi va @Kitobchalar_bot orqali Telegram'ingizga avtomatik yetkazildi!</span>
         </div>
 
         <div className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left max-w-md mx-auto space-y-3">
@@ -164,25 +134,6 @@ export const CartPage = () => {
         </div>
 
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a
-            href={`https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(
-              `🏋️ YANGI SPORT BUYURTMASI #${completedOrder.id}\n\n` +
-              `👤 Mijoz: ${completedOrder.customerName}\n` +
-              `📞 Telefon: ${completedOrder.phone}\n` +
-              `📍 Manzil: ${completedOrder.address}\n\n` +
-              `📦 Mahsulotlar:\n` +
-              (completedOrder.items?.map((it, idx) => `  ${idx + 1}. ${it.name} x ${it.quantity} = ${((it.price) * it.quantity).toLocaleString()} so'm`).join("\n") || "") +
-              (completedOrder.discount > 0 ? `\n🏷 Chegirma: -${completedOrder.discount.toLocaleString()} so'm` : "") +
-              `\n💰 JAMI: ${completedOrder.total.toLocaleString()} so'm`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-xl shadow-sky-500/25 transition"
-          >
-            <Send className="w-4 h-4" />
-            <span>@Kitobchalar_bot ga jo'natish</span>
-          </a>
-
           <Link
             to="/shop"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 transition"
@@ -190,6 +141,16 @@ export const CartPage = () => {
             <span>{t.cart.continueShopping}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
+
+          <a
+            href="https://t.me/Kitobchalar_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm border border-slate-700 transition"
+          >
+            <Send className="w-4 h-4 text-sky-400" />
+            <span>@Kitobchalar_bot ni ochish</span>
+          </a>
         </div>
       </div>
     );

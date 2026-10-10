@@ -225,13 +225,24 @@ export const AdminPage = () => {
   const [chatId, setChatId] = useState(
     telegramConfig?.chatId && telegramConfig?.chatId !== "8823235791"
       ? telegramConfig.chatId
-      : ""
+      : "8170197389"
   );
   const [isDetectingId, setIsDetectingId] = useState(false);
   const [showToken, setShowToken] = useState(false);
   const [isTestingBot, setIsTestingBot] = useState(false);
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [isBroadcasting, setIsBroadcasting] = useState(false);
+
+  useEffect(() => {
+    if (telegramConfig?.chatId && telegramConfig.chatId !== "8823235791") {
+      setChatId(telegramConfig.chatId);
+    } else {
+      setChatId("8170197389");
+    }
+    if (telegramConfig?.botToken) {
+      setBotToken(telegramConfig.botToken);
+    }
+  }, [telegramConfig]);
 
   // System & Terminal State
   const [serverPing, setServerPing] = useState(19);
@@ -1503,18 +1514,18 @@ export const AdminPage = () => {
 
                   <div>
                     <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                      Telegram Chat ID (Guruh yoki Kanal ID)
+                      Telegram Admin Chat ID (Xabarlar boradigan shaxsiy chat)
                     </label>
                     <input
                       type="text"
                       value={chatId}
                       onChange={(e) => setChatId(e.target.value)}
-                      placeholder="Masalan: 123456789"
+                      placeholder="8170197389"
                       className="w-full px-4 py-3 rounded-xl bg-[#0b1120] border border-slate-700 text-white font-mono text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                     <div className="flex justify-between items-center mt-1.5">
-                      <span className="text-[11px] text-slate-400">
-                        O'zingizning shaxsiy Chat ID raqamingiz
+                      <span className="text-[11px] text-emerald-400 font-medium">
+                        ✓ Faol Admin Chat ID: 8170197389 (@Kitobchalar_bot ga keladi)
                       </span>
                       <button
                         type="button"

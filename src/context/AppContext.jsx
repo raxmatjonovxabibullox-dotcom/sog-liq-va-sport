@@ -387,6 +387,7 @@ export const AppProvider = ({ children }) => {
   }, [orders]);
 
   const DEFAULT_BOT_TOKEN = "8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8";
+  const DEFAULT_CHAT_ID = "8170197389";
 
   // 9. Telegram Bot Config
   const [telegramConfig, setTelegramConfig] = useState(() => {
@@ -395,8 +396,8 @@ export const AppProvider = ({ children }) => {
       try {
         const parsed = JSON.parse(saved);
         return {
-          botToken: parsed.botToken && !parsed.botToken.includes("PLEASE_REPLACE") ? parsed.botToken : DEFAULT_BOT_TOKEN,
-          chatId: parsed.chatId && parsed.chatId !== "8823235791" ? parsed.chatId : "",
+          botToken: DEFAULT_BOT_TOKEN,
+          chatId: parsed.chatId && parsed.chatId !== "8823235791" ? parsed.chatId : DEFAULT_CHAT_ID,
           botUsername: "@Kitobchalar_bot",
         };
       } catch (e) {
@@ -405,7 +406,7 @@ export const AppProvider = ({ children }) => {
     }
     return {
       botToken: DEFAULT_BOT_TOKEN,
-      chatId: "",
+      chatId: DEFAULT_CHAT_ID,
       botUsername: "@Kitobchalar_bot",
     };
   });
@@ -421,35 +422,12 @@ export const AppProvider = ({ children }) => {
 
   const sendTelegramMessage = async (text) => {
     const token = telegramConfig.botToken || DEFAULT_BOT_TOKEN;
-    let targetChatId = telegramConfig.chatId;
-
-    // If targetChatId is not set or equals the bot's own ID, attempt auto-detection from getUpdates
-    if (!targetChatId || targetChatId === "8823235791") {
-      try {
-        const updRes = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
-        const updData = await updRes.json();
-        if (updData.ok && Array.isArray(updData.result) && updData.result.length > 0) {
-          for (let i = updData.result.length - 1; i >= 0; i--) {
-            const u = updData.result[i];
-            const senderId = u.message?.chat?.id || u.channel_post?.chat?.id || u.my_chat_member?.chat?.id;
-            if (senderId && String(senderId) !== "8823235791") {
-              targetChatId = String(senderId);
-              setTelegramConfig((prev) => ({ ...prev, chatId: targetChatId, botToken: token }));
-              break;
-            }
-          }
-        }
-      } catch (err) {
-        console.warn("Auto-detect chatId notice:", err);
-      }
-    }
-
-    if (!targetChatId || targetChatId === "8823235791") {
-      return {
-        success: false,
-        error: "Iltimos, avval @Kitobchalar_bot ga kirib Start bosing!",
-      };
-    }
+    const targetChatId =
+      telegramConfig.chatId &&
+      telegramConfig.chatId !== "8823235791" &&
+      String(telegramConfig.chatId).trim().length > 3
+        ? telegramConfig.chatId
+        : DEFAULT_CHAT_ID;
 
     try {
       const response = await fetch(
