@@ -392,8 +392,9 @@ export const AppProvider = ({ children }) => {
     return saved
       ? JSON.parse(saved)
       : {
-          botToken: "7654321098:AAEXAMPLE_TOKEN_PLEASE_REPLACE",
-          chatId: "-1001234567890",
+          botToken: "",
+          chatId: "",
+          botUsername: "@Kitobchalar_bot",
         };
   });
 

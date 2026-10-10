@@ -145,7 +145,7 @@ export const CartPage = () => {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm shadow-xl shadow-sky-500/25 transition"
           >
             <Send className="w-4 h-4" />
-            <span>Telegram orqali yuborish</span>
+            <span>@Kitobchalar_bot ga jo'natish</span>
           </a>
 
           <Link
@@ -389,22 +389,20 @@ export const CartPage = () => {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("cash")}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition ${
-                    paymentMethod === "cash"
+                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition ${paymentMethod === "cash"
                       ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
                       : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
-                  }`}
+                    }`}
                 >
                   Naqd / Yetkazganda
                 </button>
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("online")}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition ${
-                    paymentMethod === "online"
+                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition ${paymentMethod === "online"
                       ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
                       : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
-                  }`}
+                    }`}
                 >
                   Payme / Click
                 </button>
