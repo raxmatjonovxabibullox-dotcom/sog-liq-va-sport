@@ -24,6 +24,7 @@ export const CartPage = () => {
     cartTotal,
     discountAmount,
     promo,
+    promoCodesList,
     applyPromo,
     removePromo,
     createOrder,
@@ -285,7 +286,27 @@ export const CartPage = () => {
             )}
 
             <div className="text-[11px] text-slate-400">
-              💡 Sinab ko'ring: <b className="text-emerald-500">SPORT2026</b> (15% chegirma) yoki <b className="text-emerald-500">FITNESS10</b>
+              💡 Sinab ko'ring:{" "}
+              {promoCodesList && promoCodesList.length > 0 ? (
+                promoCodesList.slice(0, 4).map((pr, idx) => (
+                  <span key={pr.code}>
+                    {idx > 0 && " yoki "}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPromoInput(pr.code);
+                        applyPromo(pr.code);
+                      }}
+                      className="text-emerald-500 font-bold hover:underline cursor-pointer"
+                    >
+                      {pr.code}
+                    </button>
+                    <span className="text-slate-400"> ({pr.percent > 0 ? `${pr.percent}%` : `${(pr.fixed || 0).toLocaleString()} so'm`})</span>
+                  </span>
+                ))
+              ) : (
+                <b className="text-emerald-500">SPORT2026</b>
+              )}
             </div>
           </div>
         </div>

@@ -91,7 +91,10 @@ export const AdminPage = () => {
     telegramConfig,
     saveTelegramConfig,
     sendTelegramMessage,
-    showToast
+    showToast,
+    promoCodesList,
+    addPromoCode,
+    deletePromoCode
   } = useApp();
 
   // Active Tab
@@ -212,22 +215,6 @@ export const AdminPage = () => {
   const [viewingOrderInvoice, setViewingOrderInvoice] = useState(null);
 
   // Promo Codes Management State
-  const [promoCodesList, setPromoCodesList] = useState(() => {
-    const saved = localStorage.getItem("sport_promocodes_list");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          { code: "SPORT2026", percent: 15, desc: "Asosiy yangi mavsum chegirmasi" },
-          { code: "FITNESS10", percent: 10, desc: "Barcha fitnes tovarlariga 10%" },
-          { code: "GEMINI", percent: 20, desc: "VIP maxsus promo 20%" },
-          { code: "SALOM", percent: 5, desc: "Boshlang'ich xarid uchun" }
-        ];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("sport_promocodes_list", JSON.stringify(promoCodesList));
-  }, [promoCodesList]);
-
   const [newPromoCode, setNewPromoCode] = useState("");
   const [newPromoPercent, setNewPromoPercent] = useState("15");
   const [newPromoDesc, setNewPromoDesc] = useState("");
@@ -502,12 +489,11 @@ export const AdminPage = () => {
   const handleCreatePromo = (e) => {
     e.preventDefault();
     if (!newPromoCode.trim()) return;
-    const item = {
-      code: newPromoCode.trim().toUpperCase(),
+    const item = addPromoCode({
+      code: newPromoCode,
       percent: Number(newPromoPercent) || 10,
       desc: newPromoDesc.trim() || `${newPromoPercent}% Chegirma`
-    };
-    setPromoCodesList((prev) => [item, ...prev]);
+    });
     setNewPromoCode("");
     setNewPromoDesc("");
     playSound("success", soundEnabled);
@@ -1391,7 +1377,7 @@ export const AdminPage = () => {
                       </button>
                       <button
                         onClick={() => {
-                          setPromoCodesList((prev) => prev.filter((x) => x.code !== pr.code));
+                          deletePromoCode(pr.code);
                           playSound("warn", soundEnabled);
                         }}
                         className="text-[11px] font-semibold text-rose-400 hover:underline"

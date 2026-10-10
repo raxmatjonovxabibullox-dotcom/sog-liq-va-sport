@@ -137,26 +137,66 @@ export const AppProvider = ({ children }) => {
     setCart([]);
   };
 
-  // 5. Promo Code
+  // 5. Promo Codes Management
+  const [promoCodesList, setPromoCodesList] = useState(() => {
+    const saved = localStorage.getItem("sport_promocodes_list");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return [
+      { code: "SPORT2026", percent: 15, fixed: 0, desc: "Asosiy yangi mavsum chegirmasi (15%)" },
+      { code: "FITNESS10", percent: 10, fixed: 0, desc: "Barcha fitnes tovarlariga 10%" },
+      { code: "GEMINI", percent: 20, fixed: 0, desc: "VIP maxsus promo (20%)" },
+      { code: "SALOM", percent: 0, fixed: 50000, desc: "Boshlang'ich xarid uchun 50 000 so'm" }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("sport_promocodes_list", JSON.stringify(promoCodesList));
+  }, [promoCodesList]);
+
+  const addPromoCode = (newPromo) => {
+    const code = newPromo.code.trim().toUpperCase();
+    const percent = Number(newPromo.percent) || 0;
+    const fixed = Number(newPromo.fixed) || 0;
+    const desc = newPromo.desc?.trim() || (percent > 0 ? `${percent}% Chegirma` : `${fixed.toLocaleString()} so'm chegirma`);
+
+    const item = { code, percent, fixed, desc };
+    setPromoCodesList((prev) => {
+      const filtered = prev.filter((p) => p.code !== code);
+      return [item, ...filtered];
+    });
+    return item;
+  };
+
+  const deletePromoCode = (code) => {
+    setPromoCodesList((prev) => prev.filter((p) => p.code !== code));
+  };
+
   const [promo, setPromo] = useState(null);
 
   const applyPromo = (code) => {
+    if (!code) return false;
     const clean = code.trim().toUpperCase();
-    if (clean === "SPORT2026") {
-      setPromo({ code: "SPORT2026", percent: 15, fixed: 0 });
-      showToast("SPORT2026: 15% chegirma berildi!");
-      return true;
-    } else if (clean === "FITNESS10") {
-      setPromo({ code: "FITNESS10", percent: 10, fixed: 0 });
-      showToast("FITNESS10: 10% chegirma berildi!");
-      return true;
-    } else if (clean === "GEMINI") {
-      setPromo({ code: "GEMINI", percent: 20, fixed: 0 });
-      showToast("GEMINI: 20% maxsus chegirma berildi!");
-      return true;
-    } else if (clean === "SALOM") {
-      setPromo({ code: "SALOM", percent: 0, fixed: 50000 });
-      showToast("SALOM: 50 000 so'm chegirma berildi!");
+    const found = promoCodesList.find(
+      (p) => p.code && p.code.trim().toUpperCase() === clean
+    );
+    if (found) {
+      setPromo({
+        code: found.code,
+        percent: Number(found.percent) || 0,
+        fixed: Number(found.fixed) || 0,
+        desc: found.desc || ""
+      });
+      const discountText =
+        found.percent > 0
+          ? `${found.percent}%`
+          : `${(found.fixed || 0).toLocaleString()} so'm`;
+      showToast(`${found.code}: ${discountText} chegirma muvaffaqiyatli qo'llandi!`);
       return true;
     }
     return false;
@@ -479,6 +519,9 @@ export const AppProvider = ({ children }) => {
         cartCount,
         discountAmount,
         promo,
+        promoCodesList,
+        addPromoCode,
+        deletePromoCode,
         applyPromo,
         removePromo,
         wishlist,
