@@ -14,7 +14,6 @@ import {
   ShieldAlert,
   Menu,
   X,
-  Sparkles,
 } from "lucide-react";
 
 export const Navbar = () => {

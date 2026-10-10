@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { productCategories } from "../data/mockProducts";
 import {
@@ -10,24 +10,15 @@ import {
   Plus,
   Edit2,
   Trash2,
-  CheckCircle,
+  Layers,
   Clock,
   TrendingUp,
   DollarSign,
   Users,
   X,
   Save,
-  AlertTriangle,
-  Lock,
   ArrowLeft,
-  ChevronDown,
-  BarChart3,
-  Activity,
-  Layers,
-  Settings,
   Search,
-  Filter,
-  Check,
   Tag,
   Download,
   Upload,
@@ -36,18 +27,11 @@ import {
   VolumeX,
   Maximize2,
   Minimize2,
-  Sparkles,
-  ExternalLink,
-  Flame,
-  Radio,
-  RefreshCw,
   LogOut,
   Eye,
   EyeOff,
   Copy,
   Terminal,
-  FileText,
-  ShieldCheck,
   Crown
 } from "lucide-react";
 
@@ -89,7 +73,7 @@ const playSound = (type = "click", enabled = true) => {
       osc.start();
       osc.stop(ctx.currentTime + 0.16);
     }
-  } catch (e) {}
+  } catch {}
 };
 
 export const AdminPage = () => {
@@ -107,12 +91,8 @@ export const AdminPage = () => {
     telegramConfig,
     saveTelegramConfig,
     sendTelegramMessage,
-    showToast,
-    promo,
-    t
+    showToast
   } = useApp();
-
-  const navigate = useNavigate();
 
   // Active Tab
   const [activeTab, setActiveTab] = useState("dashboard"); // 'dashboard' | 'products' | 'orders' | 'promos' | 'customers' | 'telegram' | 'system'
@@ -123,7 +103,7 @@ export const AdminPage = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Real-time clock
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(() => new Date());
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -281,6 +261,8 @@ export const AdminPage = () => {
       setSystemUptime((p) => p + 1);
       setCpuUsage(+(14 + Math.random() * 10).toFixed(1));
       setRamUsage(+(52 + Math.random() * 4).toFixed(1));
+      setServerPing(Math.floor(16 + Math.random() * 8));
+      setTelegramPing(Math.floor(30 + Math.random() * 12));
     }, 2500);
     return () => clearInterval(interval);
   }, []);
@@ -360,7 +342,7 @@ export const AdminPage = () => {
     setFormPrice("");
     setFormOldPrice("");
     setFormStock("20");
-    setFormImage("https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=800&q=80");
+    setFormImage("/products/prod_1_on_whey.jpg");
     setFormDesc("");
     setFormSpecs("100% original sifat, AQSH");
     setIsProductModalOpen(true);
@@ -392,7 +374,7 @@ export const AdminPage = () => {
       price: Number(formPrice),
       oldPrice: formOldPrice ? Number(formOldPrice) : null,
       stock: Number(formStock),
-      image: formImage || "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80",
+      image: formImage || "/products/prod_1_on_whey.jpg",
       description: formDesc,
       specs: formSpecs.split(",").map((s) => s.trim()).filter(Boolean)
     };
@@ -500,13 +482,16 @@ export const AdminPage = () => {
     reader.onload = (evt) => {
       try {
         const parsed = JSON.parse(evt.target.result);
-        if (parsed.products) localStorage.setItem("sport_products_v2", JSON.stringify(parsed.products));
+        if (parsed.products) {
+          localStorage.setItem("sport_products_v3", JSON.stringify(parsed.products));
+          localStorage.setItem("sport_products_v2", JSON.stringify(parsed.products));
+        }
         if (parsed.orders) localStorage.setItem("sport_orders", JSON.stringify(parsed.orders));
         if (parsed.telegramConfig) localStorage.setItem("sport_telegram_config", JSON.stringify(parsed.telegramConfig));
         playSound("success", soundEnabled);
         showToast("Zaxira tiklandi! Sahifa yangilanmoqda...");
         setTimeout(() => window.location.reload(), 1200);
-      } catch (err) {
+      } catch {
         playSound("warn", soundEnabled);
         showToast("Noto'g'ri JSON fayl!");
       }
@@ -1230,24 +1215,46 @@ export const AdminPage = () => {
                 </div>
               </div>
 
-              {/* Status Filter Tabs */}
-              <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#0e1626] border border-slate-800 overflow-x-auto">
-                {["all", "pending", "delivering", "completed", "cancelled"].map((st) => (
-                  <button
-                    key={st}
-                    onClick={() => {
-                      setOrderStatusFilter(st);
-                      playSound("click", soundEnabled);
-                    }}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition ${
-                      orderStatusFilter === st
-                        ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
-                        : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    {st === "all" ? "Barchasi" : st}
-                  </button>
-                ))}
+              {/* Search & Status Filter */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                  <input
+                    type="text"
+                    placeholder="Buyurtma ID, ism, telefon yoki manzil bo'yicha qidirish..."
+                    value={orderSearchQuery}
+                    onChange={(e) => setOrderSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#0e1626] border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
+                  />
+                  {orderSearchQuery && (
+                    <button
+                      onClick={() => setOrderSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Status Filter Tabs */}
+                <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#0e1626] border border-slate-800 overflow-x-auto">
+                  {["all", "pending", "delivering", "completed", "cancelled"].map((st) => (
+                    <button
+                      key={st}
+                      onClick={() => {
+                        setOrderStatusFilter(st);
+                        playSound("click", soundEnabled);
+                      }}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition ${
+                        orderStatusFilter === st
+                          ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
+                          : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      {st === "all" ? "Barchasi" : st}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Orders List */}

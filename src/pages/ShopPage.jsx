@@ -7,7 +7,6 @@ import {
   Search,
   SlidersHorizontal,
   RotateCcw,
-  Sparkles,
   ArrowUpDown,
   Check,
 } from "lucide-react";

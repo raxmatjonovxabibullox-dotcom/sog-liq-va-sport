@@ -4,11 +4,7 @@ import { LocationMap } from "../components/LocationMap";
 import {
   ShieldCheck,
   Award,
-  Users,
-  Clock,
   Target,
-  Sparkles,
-  Heart,
 } from "lucide-react";
 
 export const AboutPage = () => {

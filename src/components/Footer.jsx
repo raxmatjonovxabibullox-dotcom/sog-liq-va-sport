@@ -13,6 +13,8 @@ import {
   HeartHandshake,
 } from "lucide-react";
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export const Footer = () => {
   const { t } = useApp();
 
@@ -213,7 +215,7 @@ export const Footer = () => {
         {/* Bottom copyright */}
         <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <div>
-            © {new Date().getFullYear()} "Sog'liq va Sport" platformasi. Barcha huquqlar himoyalangan.
+            © {CURRENT_YEAR} "Sog'liq va Sport" platformasi. Barcha huquqlar himoyalangan.
           </div>
           <div className="flex items-center gap-4">
             <span className="text-emerald-400 font-semibold">Promokod: SPORT2026 (-15%)</span>

@@ -7,14 +7,8 @@ import {
   ArrowRight,
   Sparkles,
   Flame,
-  Award,
-  Zap,
-  CheckCircle2,
-  TrendingUp,
   Activity,
-  Heart,
-  Scale,
-  Compass,
+  Scale
 } from "lucide-react";
 
 export const HomePage = () => {
@@ -197,10 +191,10 @@ export const HomePage = () => {
             .filter((c) => c.id !== "all")
             .map((cat, idx) => {
               const bgImages = {
-                nutrition: "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=600&q=80",
-                equipment: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80",
-                wear: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
-                accessories: "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?auto=format&fit=crop&w=600&q=80",
+                nutrition: "/products/prod_1_on_whey.jpg",
+                equipment: "/products/prod_6_bowflex.jpg",
+                wear: "/products/prod_11_nike_pegasus.jpg",
+                accessories: "/products/prod_15_apple_watch.jpg",
               };
               return (
                 <Link

@@ -35,10 +35,25 @@ export const AppProvider = ({ children }) => {
 
   // 3. Products State (CRUD with LocalStorage)
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem("sport_products_v2");
-    if (saved) {
+    const savedV3 = localStorage.getItem("sport_products_v3");
+    if (savedV3) {
       try {
-        return JSON.parse(saved);
+        return JSON.parse(savedV3);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    const savedV2 = localStorage.getItem("sport_products_v2");
+    if (savedV2) {
+      try {
+        const parsed = JSON.parse(savedV2);
+        return parsed.map((p) => {
+          const init = initialProducts.find((i) => i.id === p.id);
+          if (init && (p.image?.includes("unsplash.com") || !p.image)) {
+            return { ...p, image: init.image };
+          }
+          return p;
+        });
       } catch (e) {
         console.error(e);
       }
@@ -47,7 +62,7 @@ export const AppProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem("sport_products_v2", JSON.stringify(products));
+    localStorage.setItem("sport_products_v3", JSON.stringify(products));
   }, [products]);
 
   const addProduct = (newProd) => {

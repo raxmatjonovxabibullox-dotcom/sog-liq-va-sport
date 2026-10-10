@@ -9,7 +9,6 @@ import {
   Check,
   Truck,
   ShieldCheck,
-  RotateCcw,
   ArrowLeft,
   Share2,
 } from "lucide-react";

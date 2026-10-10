@@ -8,7 +8,6 @@ import {
   Send,
   MessageSquare,
   CheckCircle2,
-  Sparkles,
 } from "lucide-react";
 import { formatUzbekPhone, handlePhoneKeyDown } from "../utils/phoneFormatter";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { useApp } from "../context/AppContext";
-import { CheckCircle, Info } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 export const Toast = () => {
   const { toastMessage } = useApp();

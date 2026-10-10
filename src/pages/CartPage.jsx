@@ -9,8 +9,6 @@ import {
   Tag,
   CheckCircle,
   ArrowRight,
-  ShieldCheck,
-  Truck,
   Send,
   X,
 } from "lucide-react";

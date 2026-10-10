@@ -3,7 +3,7 @@ import { useApp } from "../context/AppContext";
 import { MapPin, Navigation, Phone, Clock, Copy, Check, ExternalLink } from "lucide-react";
 
 export const LocationMap = () => {
-  const { t, showToast } = useApp();
+  const { showToast } = useApp();
   const [copied, setCopied] = useState(false);
 
   const address = "Toshkent shahar, Amir Temur shoh ko'chasi, 45-uy";
@@ -92,7 +92,7 @@ export const LocationMap = () => {
           {/* Action Links */}
           <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 gap-3">
             <a
-              href="https://maps.google.com/?q=41.311081,69.279737"
+              href={`https://maps.google.com/?q=${coords}`}
               target="_blank"
               rel="noopener noreferrer"
               className="py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 transition"
@@ -102,7 +102,7 @@ export const LocationMap = () => {
             </a>
 
             <a
-              href="https://yandex.uz/maps/?text=41.311081,69.279737"
+              href={`https://yandex.uz/maps/?text=${coords}`}
               target="_blank"
               rel="noopener noreferrer"
               className="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 transition"

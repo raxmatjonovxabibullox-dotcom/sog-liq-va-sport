@@ -8,9 +8,7 @@ import {
   RotateCcw,
   Flame,
   Clock,
-  Dumbbell,
   Droplet,
-  Sparkles,
   HeartPulse,
   CheckCircle,
 } from "lucide-react";
