@@ -85,6 +85,36 @@ export const CartPage = () => {
     const order = await createOrder(orderData);
     setIsSubmitting(false);
     setCompletedOrder(order);
+
+    const itemsText = order.items
+      ?.map(
+        (it, idx) =>
+          `  ${idx + 1}. ${it.name} x ${it.quantity} = ${(it.price * it.quantity).toLocaleString()} so'm`
+      )
+      .join("\n");
+
+    const messageText =
+      `🏋️ YANGI SPORT BUYURTMASI #${order.id}\n\n` +
+      `👤 Mijoz: ${order.customerName}\n` +
+      `📞 Telefon: ${order.phone}\n` +
+      `📍 Manzil: ${order.address}\n` +
+      `💳 To'lov: ${order.paymentMethod === "cash" ? "Naqd / Qabul qilganda" : "Onlayn"}\n\n` +
+      `📦 Mahsulotlar:\n${itemsText}\n\n` +
+      (order.discount > 0 ? `🏷 Chegirma: -${order.discount.toLocaleString()} so'm\n` : "") +
+      `💰 JAMI: ${order.total.toLocaleString()} so'm\n` +
+      `🕒 Sana: ${order.date}`;
+
+    const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(messageText)}`;
+
+    // Avtomatik Telegram ochilishi (hech qanday qo'shimcha tugma bosmasdan)
+    try {
+      const win = window.open(tgShareUrl, "_blank");
+      if (!win) {
+        window.location.href = tgShareUrl;
+      }
+    } catch {
+      window.location.href = tgShareUrl;
+    }
   };
 
   // If order successfully placed
@@ -102,6 +132,11 @@ export const CartPage = () => {
         <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto">
           {t.cart.orderSuccessDesc}
         </p>
+
+        <div className="p-3.5 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold flex items-center justify-center gap-2 max-w-md mx-auto">
+          <Send className="w-4 h-4 text-sky-400 animate-pulse" />
+          <span>Telegram ilovasida buyurtma cheki avtomatik ochildi!</span>
+        </div>
 
         <div className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left max-w-md mx-auto space-y-3">
           <div className="flex justify-between text-xs font-bold text-slate-400">
