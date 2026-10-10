@@ -427,7 +427,7 @@ export const AppProvider = ({ children }) => {
     showToast("Telegram sozlamalari saqlandi!");
   };
 
-  const sendTelegramMessage = async (text) => {
+  const sendTelegramMessage = async (text, imageUrl = null) => {
     const token = telegramConfig.botToken || DEFAULT_BOT_TOKEN;
     const targetChatId =
       telegramConfig.chatId &&
@@ -436,6 +436,42 @@ export const AppProvider = ({ children }) => {
         ? telegramConfig.chatId
         : DEFAULT_CHAT_ID;
 
+    // 1. If image is provided, send via sendPhoto (with caption)
+    if (imageUrl) {
+      try {
+        let photoBlob = null;
+        if (imageUrl.startsWith("data:") || imageUrl.startsWith("/") || imageUrl.startsWith("http")) {
+          const imgRes = await fetch(imageUrl);
+          if (imgRes.ok) {
+            photoBlob = await imgRes.blob();
+          }
+        }
+
+        if (photoBlob) {
+          const formData = new FormData();
+          formData.append("chat_id", targetChatId);
+          formData.append("photo", photoBlob, "order_product.jpg");
+          // Telegram caption limit is 1024 characters
+          const captionText = text.length > 1020 ? text.slice(0, 1017) + "..." : text;
+          formData.append("caption", captionText);
+          formData.append("parse_mode", "HTML");
+
+          const response = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.json();
+          if (data.ok) {
+            return { success: true, data };
+          }
+          console.warn("sendPhoto response not ok, falling back to sendMessage:", data);
+        }
+      } catch (photoErr) {
+        console.warn("sendPhoto dispatch notice, falling back to text:", photoErr);
+      }
+    }
+
+    // 2. Fallback or text-only dispatch
     try {
       const response = await fetch(
         `https://api.telegram.org/bot${token}/sendMessage`,
@@ -496,7 +532,13 @@ export const AppProvider = ({ children }) => {
       `💰 <b>JAMI SUMMA:</b> <b>${newOrder.total.toLocaleString()} so'm</b>\n` +
       `🕒 <b>Vaqt:</b> ${newOrder.date}`;
 
-    await sendTelegramMessage(message);
+    // Main product image for photo dispatch
+    const mainProductImage =
+      newOrder.items?.[0]?.image ||
+      newOrder.items?.[0]?.product?.image ||
+      "/products/prod_1_on_whey.jpg";
+
+    await sendTelegramMessage(message, mainProductImage);
     return newOrder;
   };
 

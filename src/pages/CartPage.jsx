@@ -74,6 +74,7 @@ export const CartPage = () => {
         name: item.product.name,
         price: item.product.price,
         quantity: item.quantity,
+        image: item.product.image,
       })),
       subtotal: cartSubtotal,
       discount: discountAmount,

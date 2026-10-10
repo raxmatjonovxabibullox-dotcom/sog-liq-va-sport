@@ -442,12 +442,13 @@ export const AdminPage = () => {
     playSound("click", soundEnabled);
     const start = performance.now();
     const res = await sendTelegramMessage(
-      `⚡ <b>SOG'LIQ VA SPORT — ADMIN STUDIYASI</b>\n\nTelegram bot integratsiyasi 100% muvaffaqiyatli ishga tushirildi! Ping: ${Math.round(performance.now() - start)}ms\n🕒 Vaqt: ${new Date().toLocaleString()}`
+      `⚡ <b>SOG'LIQ VA SPORT — ADMIN STUDIYASI</b>\n\nTelegram bot integratsiyasi 100% muvaffaqiyatli ishga tushirildi! Mahsulot rasmlari bilan xabar kelishi to'liq yoqildi.\nPing: ${Math.round(performance.now() - start)}ms\n🕒 Vaqt: ${new Date().toLocaleString()}`,
+      "/products/prod_1_on_whey.jpg"
     );
     setIsTestingBot(false);
     if (res.success) {
       playSound("success", soundEnabled);
-      showToast("Telegramga test xabar yetkazildi!");
+      showToast("Telegramga rasmli test xabar yetkazildi!");
     } else {
       playSound("warn", soundEnabled);
       showToast("Xatolik: Token yoki Chat ID ni tekshiring!");
@@ -476,10 +477,18 @@ export const AdminPage = () => {
     playSound("click", soundEnabled);
     const randomProduct = products[Math.floor(Math.random() * products.length)] || products[0];
     const testOrder = {
-      customerName: "Sardor Qodirov (Test Buyurtma)",
+      customerName: "Khabibullo Raxmatjonov (Test Buyurtma)",
       phone: "+998 90 987 65 43",
       address: "Toshkent sh., Yunusobod 14, 22-uy",
-      items: [{ id: randomProduct.id, name: randomProduct.name, price: randomProduct.price, quantity: 1 }],
+      items: [
+        {
+          id: randomProduct.id,
+          name: randomProduct.name,
+          price: randomProduct.price,
+          quantity: 1,
+          image: randomProduct.image
+        }
+      ],
       subtotal: randomProduct.price,
       discount: 0,
       total: randomProduct.price,
