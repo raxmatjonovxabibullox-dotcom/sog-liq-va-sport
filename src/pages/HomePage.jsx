@@ -251,50 +251,50 @@ export const HomePage = () => {
 
       {/* 4. INTERACTIVE BMI CALCULATOR SECTION */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white p-8 sm:p-12 border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div className="rounded-3xl bg-gradient-to-br from-emerald-50/60 via-white to-teal-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-white p-8 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-200">
           <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left info */}
             <div className="lg:col-span-6 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20">
                 <Scale className="w-4 h-4" />
                 <span>Salomatlik Tekshiruvi</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black tracking-tight leading-snug">
+              <h2 className="text-3xl sm:text-4xl font-black tracking-tight leading-snug text-slate-900 dark:text-white">
                 {t.hero.bmiTitle}
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 {t.hero.bmiSubtitle} Tana massasi indeksi (BMI) sizning bo'yingiz va vazningiz nisbatini baholab, sog'lom fitnes rejangizni tuzishga yordam beradi.
               </p>
 
               {/* BMI Legend */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 text-center text-xs">
-                <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700">
-                  <div className="text-sky-400 font-bold">&lt; 18.5</div>
-                  <div className="text-[10px] text-slate-400">Kam vazn</div>
+                <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
+                  <div className="text-sky-500 dark:text-sky-400 font-bold">&lt; 18.5</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Kam vazn</div>
                 </div>
-                <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700">
-                  <div className="text-emerald-400 font-bold">18.5 - 24.9</div>
-                  <div className="text-[10px] text-slate-400">Normal</div>
+                <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
+                  <div className="text-emerald-500 dark:text-emerald-400 font-bold">18.5 - 24.9</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Normal</div>
                 </div>
-                <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700">
-                  <div className="text-amber-400 font-bold">25 - 29.9</div>
-                  <div className="text-[10px] text-slate-400">Ortiqcha</div>
+                <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
+                  <div className="text-amber-500 dark:text-amber-400 font-bold">25 - 29.9</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Ortiqcha</div>
                 </div>
-                <div className="p-2 rounded-xl bg-slate-800/80 border border-slate-700">
-                  <div className="text-rose-400 font-bold">&gt; 30</div>
-                  <div className="text-[10px] text-slate-400">Semizlik</div>
+                <div className="p-2.5 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none">
+                  <div className="text-rose-500 dark:text-rose-400 font-bold">&gt; 30</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400">Semizlik</div>
                 </div>
               </div>
             </div>
 
             {/* Right form */}
-            <div className="lg:col-span-6 bg-slate-800/60 p-6 sm:p-8 rounded-3xl border border-slate-700/80 backdrop-blur-sm">
+            <div className="lg:col-span-6 bg-white/90 dark:bg-slate-800/60 p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-lg dark:shadow-none backdrop-blur-sm">
               <form onSubmit={calculateBMI} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                       {t.hero.heightLabel}
                     </label>
                     <input
@@ -303,11 +303,11 @@ export const HomePage = () => {
                       max="240"
                       value={height}
                       onChange={(e) => setHeight(Number(e.target.value))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                       {t.hero.weightLabel}
                     </label>
                     <input
@@ -316,29 +316,29 @@ export const HomePage = () => {
                       max="250"
                       value={weight}
                       onChange={(e) => setWeight(Number(e.target.value))}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 font-bold text-sm text-white shadow-lg shadow-emerald-500/25 transition"
+                  className="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 font-bold text-sm text-white shadow-lg shadow-emerald-500/25 transition active:scale-[0.99]"
                 >
                   {t.hero.calculateBtn}
                 </button>
               </form>
 
               {bmiResult && (
-                <div className="mt-5 p-4 rounded-2xl bg-slate-900 border border-slate-700 animate-in fade-in duration-300">
+                <div className="mt-5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 animate-in fade-in duration-300">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-400 font-medium">Sizning BMI ko'rsatkichingiz:</span>
-                    <span className="text-2xl font-black text-white">{bmiResult.val}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Sizning BMI ko'rsatkichingiz:</span>
+                    <span className="text-2xl font-black text-slate-900 dark:text-white">{bmiResult.val}</span>
                   </div>
                   <div className={`text-sm font-bold ${bmiResult.color} mb-1.5`}>
                     {bmiResult.status}
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                     {bmiResult.advice}
                   </p>
                 </div>
