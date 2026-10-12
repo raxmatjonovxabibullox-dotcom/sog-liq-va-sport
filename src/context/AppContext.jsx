@@ -282,12 +282,12 @@ export const AppProvider = ({ children }) => {
       const adminUser = {
         id: "admin-1",
         username: "admin",
-        name: "Bosh Administrator",
+        name: "Xabibullo Raxmatjonov",
         phone: "+998901234567",
         role: "admin",
       };
       setUser(adminUser);
-      showToast("Xush kelibsiz, Administrator!");
+      showToast("Xush kelibsiz, Xabibullo!");
       return { success: true, user: adminUser };
     }
 
@@ -343,7 +343,7 @@ export const AppProvider = ({ children }) => {
     return [
       {
         id: "ORD-9481",
-        customerName: "Khabibullo Raxmatjonov",
+        customerName: "Xabibullo Raxmatjonov",
         phone: "+998 90 987 65 43",
         address: "Toshkent sh., Yunusobod 14-mavze, 22-uy",
         items: [

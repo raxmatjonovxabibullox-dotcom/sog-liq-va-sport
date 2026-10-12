@@ -445,7 +445,7 @@ export const AdminPage = () => {
     playSound("click", soundEnabled);
     const randomProduct = products[Math.floor(Math.random() * products.length)] || products[0];
     const testOrder = {
-      customerName: "Khabibullo Raxmatjonov (Test Buyurtma)",
+      customerName: "Xabibullo Raxmatjonov (Test Buyurtma)",
       phone: "+998 90 987 65 43",
       address: "Toshkent sh., Yunusobod 14, 22-uy",
       items: [
@@ -941,7 +941,7 @@ export const AdminPage = () => {
 
                 <button
                   onClick={() => {
-                    showToast(`Admin: ${user?.name || "Khabibullo"} (${user?.username || "admin"})`);
+                    showToast(`Admin: ${user?.name || "Xabibullo"} (${user?.username || "admin"})`);
                     playSound("click", soundEnabled);
                   }}
                   className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
@@ -1118,15 +1118,15 @@ export const AdminPage = () => {
               <div className="relative">
                 <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/30 bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
                   <img
-                    src="/team/khabibullo.jpg"
-                    alt="Khabibullo Raxmatjonov"
+                    src="/team/xabibullo.jpg"
+                    alt="Xabibullo Raxmatjonov"
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = "/products/prod_1_on_whey.jpg";
                     }}
                   />
-                  <span>K</span>
+                  <span>X</span>
                 </div>
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#111625]"></span>
               </div>
@@ -1252,7 +1252,7 @@ export const AdminPage = () => {
                 <div className="sm:col-span-2 lg:col-span-2 p-5 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex items-center justify-between relative overflow-hidden group hover:border-[#2d3a5a] transition">
                   <div className="space-y-1 z-10 max-w-[65%]">
                     <h3 className="font-bold text-white text-sm sm:text-base flex items-center gap-1.5">
-                      <span>Congratulations Khabibullo</span>
+                      <span>Congratulations Xabibullo</span>
                       <span>🎉</span>
                     </h3>
                     <p className="text-[11px] text-slate-400 leading-snug">

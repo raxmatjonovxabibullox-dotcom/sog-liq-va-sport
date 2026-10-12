@@ -129,8 +129,8 @@ export const AboutPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm text-center space-y-3 group hover:border-emerald-500/40 hover:shadow-xl transition">
             <img
-              src="/team/khabibullo.jpg"
-              alt="Khabibullo Raxmatjonov"
+              src="/team/xabibullo.jpg"
+              alt="Xabibullo Raxmatjonov"
               className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-emerald-500/20 group-hover:border-emerald-500 transition shadow-lg"
               onError={(e) => {
                 e.currentTarget.onerror = null;
@@ -139,7 +139,7 @@ export const AboutPage = () => {
             />
             <div>
               <h4 className="font-black text-base text-slate-900 dark:text-white">
-                Khabibullo Raxmatjonov
+                Xabibullo Raxmatjonov
               </h4>
               <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                 {language === "ru" ? "Основатель и Руководитель Платформы" : language === "en" ? "Founder & Executive Director" : "Platforma Asoschisi & Bosh Rahbari"}
