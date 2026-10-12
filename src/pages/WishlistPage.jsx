@@ -44,9 +44,9 @@ export const WishlistPage = () => {
           </p>
           <Link
             to="/shop"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-500/25"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition active:scale-95"
           >
-            <span>Mahsulotlarni ko'rish</span>
+            <span>{t.cart?.continueShopping || "Xaridni boshlash"}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

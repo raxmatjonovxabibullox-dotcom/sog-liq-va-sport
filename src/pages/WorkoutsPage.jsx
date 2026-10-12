@@ -29,23 +29,26 @@ export const WorkoutsPage = () => {
   const recommendedWater = (personWeight * 0.035).toFixed(1);
 
   useEffect(() => {
-    let interval = null;
-    if (isActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    } else if (isActive && timeLeft === 0) {
-      if (currentMode === "work") {
-        setCurrentMode("rest");
-        setTimeLeft(restSec);
-      } else {
-        setCurrentMode("work");
-        setTimeLeft(workSec);
-        setRoundsCompleted((r) => r + 1);
-      }
-    }
+    if (!isActive) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (currentMode === "work") {
+            setCurrentMode("rest");
+            return restSec;
+          } else {
+            setCurrentMode("work");
+            setRoundsCompleted((r) => r + 1);
+            return workSec;
+          }
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [isActive, timeLeft, currentMode, workSec, restSec]);
+  }, [isActive, currentMode, workSec, restSec]);
 
   const toggleTimer = () => {
     setIsActive(!isActive);
@@ -244,6 +247,10 @@ export const WorkoutsPage = () => {
                     src={plan.image}
                     alt={planTitle}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "/team/tashkent_gym.jpg";
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
                   <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs text-white font-bold">

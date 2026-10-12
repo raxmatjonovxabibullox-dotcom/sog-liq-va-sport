@@ -173,9 +173,13 @@ export const HomePage = () => {
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-md lg:max-w-none rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-slate-800 group">
                 <img
-                  src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1000&q=80"
-                  alt="Fitness & Healthy Lifestyle"
+                  src="/team/tashkent_gym.jpg"
+                  alt="Fitness & Healthy Lifestyle Tashkent Gym"
                   className="w-full h-[450px] object-cover group-hover:scale-105 transition-transform duration-700"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
 
@@ -412,6 +416,10 @@ export const HomePage = () => {
                 src="/athletes/bahodir.jpg"
                 alt="Bahodir Jalolov"
                 className="w-14 h-14 rounded-full object-cover border-2 border-emerald-500 shadow-md"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+                }}
               />
               <div>
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white">
@@ -437,6 +445,10 @@ export const HomePage = () => {
                 src="/athletes/diyora.jpg"
                 alt="Diyora Keldiyorova"
                 className="w-14 h-14 rounded-full object-cover border-2 border-emerald-500 shadow-md"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+                }}
               />
               <div>
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white">
@@ -462,6 +474,10 @@ export const HomePage = () => {
                 src="/athletes/ulugbek.jpg"
                 alt="Ulug'bek Rashitov"
                 className="w-14 h-14 rounded-full object-cover border-2 border-emerald-500 shadow-md"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+                }}
               />
               <div>
                 <h4 className="font-bold text-sm text-slate-900 dark:text-white">

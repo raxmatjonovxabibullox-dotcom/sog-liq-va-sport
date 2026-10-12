@@ -19,33 +19,24 @@ import {
   Save,
   ArrowLeft,
   Search,
-  Tag,
   Download,
   Upload,
   Printer,
-  Volume2,
-  VolumeX,
-  Maximize2,
-  Minimize2,
   LogOut,
   Eye,
   EyeOff,
   Copy,
   Terminal,
   Crown,
-  Globe,
   Bell,
   Menu,
   ChevronDown,
   ChevronRight,
   Settings,
   MoreVertical,
-  Activity,
   FileText,
   CheckCircle2,
   ShoppingCart,
-  ShieldCheck,
-  Sparkles,
   TrendingDown,
   Grid,
   Lock,
@@ -53,7 +44,6 @@ import {
   CreditCard,
   Sliders,
   BarChart2,
-  Gift,
   Home
 } from "lucide-react";
 
@@ -127,14 +117,12 @@ export const AdminPage = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(() => localStorage.getItem("sport_admin_sound") !== "false");
-  const [accentColor, setAccentColor] = useState(() => localStorage.getItem("sport_admin_accent") || "emerald"); // emerald, cyan, violet, amber, rose
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Maxton Dashboard UI States
   const [dashboardSubmenuOpen, setDashboardSubmenuOpen] = useState(true);
   const [activeSubmenu, setActiveSubmenu] = useState("eCommerce");
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [cartDropdownOpen, setCartDropdownOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [hoveredMonth, setHoveredMonth] = useState(null);
 
@@ -150,68 +138,12 @@ export const AdminPage = () => {
     { month: "Sep", sales: 35, views: 48 },
   ], []);
 
-  // Real-time clock
+  // Real-time live clock
   const [currentTime, setCurrentTime] = useState(() => new Date());
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-
-  // Theme Accent Maps
-  const accentStyles = {
-    emerald: {
-      primary: "from-emerald-500 to-teal-600",
-      text: "text-emerald-400",
-      bgGlow: "bg-emerald-500/10",
-      borderGlow: "border-emerald-500/30",
-      activeTab: "bg-[#182638] text-emerald-400 border border-emerald-500/40 shadow-emerald-500/10 shadow-sm",
-      badge: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-      hex: "#10b981"
-    },
-    cyan: {
-      primary: "from-cyan-500 to-blue-600",
-      text: "text-cyan-400",
-      bgGlow: "bg-cyan-500/10",
-      borderGlow: "border-cyan-500/30",
-      activeTab: "bg-[#182638] text-cyan-400 border border-cyan-500/40 shadow-cyan-500/10 shadow-sm",
-      badge: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
-      hex: "#00d2ff"
-    },
-    violet: {
-      primary: "from-purple-500 to-indigo-600",
-      text: "text-purple-400",
-      bgGlow: "bg-purple-500/10",
-      borderGlow: "border-purple-500/30",
-      activeTab: "bg-[#182638] text-purple-400 border border-purple-500/40 shadow-purple-500/10 shadow-sm",
-      badge: "bg-purple-500/20 text-purple-300 border-purple-500/30",
-      hex: "#a855f7"
-    },
-    amber: {
-      primary: "from-amber-500 to-orange-600",
-      text: "text-amber-400",
-      bgGlow: "bg-amber-500/10",
-      borderGlow: "border-amber-500/30",
-      activeTab: "bg-[#182638] text-amber-400 border border-amber-500/40 shadow-amber-500/10 shadow-sm",
-      badge: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-      hex: "#f59e0b"
-    },
-    rose: {
-      primary: "from-rose-500 to-pink-600",
-      text: "text-rose-400",
-      bgGlow: "bg-rose-500/10",
-      borderGlow: "border-rose-500/30",
-      activeTab: "bg-[#182638] text-rose-400 border border-rose-500/40 shadow-rose-500/10 shadow-sm",
-      badge: "bg-rose-500/20 text-rose-300 border-rose-500/30",
-      hex: "#f43f5e"
-    }
-  };
-  const activeAccent = accentStyles[accentColor] || accentStyles.emerald;
-
-  const handleAccentChange = (col) => {
-    setAccentColor(col);
-    localStorage.setItem("sport_admin_accent", col);
-    playSound("click", soundEnabled);
-  };
 
   const handleToggleSound = () => {
     const next = !soundEnabled;
@@ -267,24 +199,18 @@ export const AdminPage = () => {
   const isValidNumericId = (id) => id && /^-?\d{5,}$/.test(String(id).trim()) && String(id).trim() !== "8823235791";
 
   const [botToken, setBotToken] = useState("8823235791:AAEOLjLhNRfFw9xp7quwlfucSXEpL8fCtc8");
-  const [chatId, setChatId] = useState(
-    isValidNumericId(telegramConfig?.chatId)
-      ? String(telegramConfig.chatId).trim()
-      : "8170197389"
-  );
-  const [isDetectingId, setIsDetectingId] = useState(false);
-  const [showToken, setShowToken] = useState(false);
-  const [isTestingBot, setIsTestingBot] = useState(false);
-  const [broadcastMessage, setBroadcastMessage] = useState("");
-  const [isBroadcasting, setIsBroadcasting] = useState(false);
+  const configuredChatId = isValidNumericId(telegramConfig?.chatId)
+    ? String(telegramConfig.chatId).trim()
+    : "8170197389";
+  const [chatId, setChatId] = useState(configuredChatId);
+  const prevConfigIdRef = useRef(configuredChatId);
 
   useEffect(() => {
-    if (isValidNumericId(telegramConfig?.chatId)) {
-      setChatId(String(telegramConfig.chatId).trim());
-    } else {
-      setChatId("8170197389");
+    if (prevConfigIdRef.current !== configuredChatId) {
+      prevConfigIdRef.current = configuredChatId;
+      setChatId(configuredChatId);
     }
-  }, [telegramConfig]);
+  }, [configuredChatId]);
 
   // System & Terminal State
   const [serverPing, setServerPing] = useState(19);
@@ -312,14 +238,6 @@ export const AdminPage = () => {
     }, 2500);
     return () => clearInterval(interval);
   }, []);
-
-  // Total Metrics Calculations
-  const totalRevenue = useMemo(() => {
-    return orders.reduce((sum, o) => sum + (o.total || 0), 0);
-  }, [orders]);
-
-  const totalOrdersCount = orders.length;
-  const pendingOrdersCount = orders.filter((o) => o.status === "pending").length;
 
   // Filtered Products
   const filteredProducts = useMemo(() => {
@@ -1189,19 +1107,26 @@ export const AdminPage = () => {
               </Link>
             </div>
 
+            {/* Live Real-time Clock */}
+            <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#182035] border border-[#232c45] text-[11px] font-mono text-emerald-400 font-bold shadow-sm">
+              <Clock className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+              <span>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+            </div>
+
             {/* User Avatar with Green Active Dot */}
             <div className="flex items-center gap-2 pl-2 border-l border-[#1c2438]">
               <div className="relative">
-                <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/30 bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs">
+                <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/30 bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
                   <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-                    alt="Admin Avatar"
+                    src="/team/khabibullo.jpg"
+                    alt="Khabibullo Raxmatjonov"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      e.target.style.display = "none";
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "/products/prod_1_on_whey.jpg";
                     }}
                   />
-                  <span>A</span>
+                  <span>K</span>
                 </div>
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#111625]"></span>
               </div>
@@ -1939,7 +1864,11 @@ export const AdminPage = () => {
                             <img
                               src={p.image}
                               alt={p.name}
-                              className="w-12 h-12 rounded-xl object-cover bg-slate-800 flex-shrink-0"
+                              className="w-12 h-12 rounded-xl object-cover bg-slate-800 flex-shrink-0 border border-slate-700/50"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+                              }}
                             />
                             <div className="max-w-xs">
                               <div className="font-bold text-white truncate">{p.name}</div>
@@ -1955,17 +1884,43 @@ export const AdminPage = () => {
                             {p.price.toLocaleString()} {t.cart?.currency || "so'm"}
                           </td>
                           <td className="p-4">
-                            <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                p.stock > 5
-                                  ? "bg-emerald-500/10 text-emerald-400"
-                                  : p.stock > 0
-                                  ? "bg-amber-500/10 text-amber-400"
-                                  : "bg-rose-500/10 text-rose-400"
-                              }`}
-                            >
-                              {p.stock} {language === "ru" ? "шт." : language === "en" ? "pcs" : "ta"}
-                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newStock = Math.max(0, (p.stock || 0) - 1);
+                                  updateProduct(p.id, { ...p, stock: newStock });
+                                  playSound("click", soundEnabled);
+                                }}
+                                className="w-5 h-5 rounded-md bg-[#182238] hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center transition border border-slate-700 active:scale-95"
+                                title="Zaxirani kamaytirish (-1)"
+                              >
+                                -
+                              </button>
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                  p.stock > 5
+                                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                    : p.stock > 0
+                                    ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                                    : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                                }`}
+                              >
+                                {p.stock} {language === "ru" ? "шт." : language === "en" ? "pcs" : "ta"}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newStock = (p.stock || 0) + 1;
+                                  updateProduct(p.id, { ...p, stock: newStock });
+                                  playSound("click", soundEnabled);
+                                }}
+                                className="w-5 h-5 rounded-md bg-[#182238] hover:bg-slate-700 text-emerald-400 font-bold flex items-center justify-center transition border border-slate-700 active:scale-95"
+                                title="Zaxirani oshirish (+1)"
+                              >
+                                +
+                              </button>
+                            </div>
                           </td>
                           <td className="p-4 text-right">
                             <div className="flex items-center justify-end gap-1.5">

@@ -5,6 +5,8 @@ import confetti from "canvas-confetti";
 
 const AppContext = createContext();
 
+const generateUniqueId = (prefix = "id-") => `${prefix}${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+
 export const AppProvider = ({ children }) => {
   // 1. Language: uz | ru | en
   const [language, setLanguage] = useState(() => {
@@ -75,7 +77,7 @@ export const AppProvider = ({ children }) => {
   const addProduct = (newProd) => {
     const item = {
       ...newProd,
-      id: "prod-" + Date.now(),
+      id: generateUniqueId("prod-"),
       rating: newProd.rating || 5.0,
       reviewsCount: newProd.reviewsCount || 0,
       stock: Number(newProd.stock) || 10,
@@ -292,7 +294,7 @@ export const AppProvider = ({ children }) => {
     // Regular user
     if (password.length >= 4) {
       const regularUser = {
-        id: "usr-" + Date.now(),
+        id: generateUniqueId("usr-"),
         username: identifier.includes("+") ? identifier : identifier.toLowerCase(),
         name: identifier.split("@")[0] || "Sportchi",
         phone: identifier.includes("+") ? identifier : "+998900000000",
@@ -311,7 +313,7 @@ export const AppProvider = ({ children }) => {
       return { success: false, error: "Parol kamida 4 belgidan iborat bo'lishi kerak!" };
     }
     const newUser = {
-      id: "usr-" + Date.now(),
+      id: generateUniqueId("usr-"),
       username: identifier.toLowerCase(),
       name: name || "Foydalanuvchi",
       phone: identifier.includes("+") ? identifier : "+998900000000",
@@ -407,50 +409,27 @@ export const AppProvider = ({ children }) => {
   // 9. Telegram Bot Config
   const [telegramConfig, setTelegramConfig] = useState(() => {
     const saved = localStorage.getItem("sport_telegram_config");
+    let validChat = DEFAULT_CHAT_ID;
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        const validChat = isNumericChatId(parsed.chatId) ? String(parsed.chatId).trim() : DEFAULT_CHAT_ID;
-        return {
-          botToken: DEFAULT_BOT_TOKEN,
-          chatId: validChat,
-          botUsername: "@Kitobchalar_bot",
-        };
+        if (isNumericChatId(parsed.chatId)) {
+          validChat = String(parsed.chatId).trim();
+        }
       } catch (e) {
         console.error(e);
       }
     }
-    return {
+    const cleanConfig = {
       botToken: DEFAULT_BOT_TOKEN,
-      chatId: DEFAULT_CHAT_ID,
+      chatId: validChat,
       botUsername: "@Kitobchalar_bot",
     };
+    try {
+      localStorage.setItem("sport_telegram_config", JSON.stringify(cleanConfig));
+    } catch {}
+    return cleanConfig;
   });
-
-  // Automatically sanitize existing localStorage if it contains non-numeric chatId
-  useEffect(() => {
-    const saved = localStorage.getItem("sport_telegram_config");
-    let needsReset = false;
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (!isNumericChatId(parsed.chatId)) {
-          needsReset = true;
-        }
-      } catch {
-        needsReset = true;
-      }
-    }
-    if (needsReset || !saved) {
-      const clean = {
-        botToken: DEFAULT_BOT_TOKEN,
-        chatId: DEFAULT_CHAT_ID,
-        botUsername: "@Kitobchalar_bot",
-      };
-      localStorage.setItem("sport_telegram_config", JSON.stringify(clean));
-      setTelegramConfig(clean);
-    }
-  }, []);
 
   useEffect(() => {
     const safeChat = isNumericChatId(telegramConfig.chatId) ? String(telegramConfig.chatId).trim() : DEFAULT_CHAT_ID;
@@ -662,4 +641,5 @@ export const AppProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useApp = () => useContext(AppContext);

@@ -38,12 +38,21 @@ export const QuickViewModal = () => {
               src={quickViewProduct.image}
               alt={quickViewProduct.name}
               className="h-full w-full object-cover object-center"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+              }}
             />
-            {quickViewProduct.featured && (
-              <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-md">
-                {t.shop?.topProduct || "Top"}
+            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-600/90 text-white backdrop-blur-md shadow-sm">
+                100% Original
               </span>
-            )}
+              {quickViewProduct.featured && (
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-md">
+                  {t.shop?.topProduct || "Top"}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Details */}

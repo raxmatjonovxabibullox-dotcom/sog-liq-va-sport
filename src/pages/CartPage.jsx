@@ -91,7 +91,7 @@ export const CartPage = () => {
 
   // If order successfully placed
   if (completedOrder) {
-    const handleOpenBot = (e) => {
+    const handleOpenBot = () => {
       const tgAppUrl = "tg://resolve?domain=Kitobchalar_bot";
       const tgWebUrl = "https://t.me/Kitobchalar_bot";
       window.open(tgWebUrl, "_blank", "noopener,noreferrer");
@@ -233,6 +233,10 @@ export const CartPage = () => {
                 src={item.product.image}
                 alt={item.product.name}
                 className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover bg-slate-100 dark:bg-slate-800 flex-shrink-0"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+                }}
               />
 
               <div className="flex-1 text-center sm:text-left space-y-1">

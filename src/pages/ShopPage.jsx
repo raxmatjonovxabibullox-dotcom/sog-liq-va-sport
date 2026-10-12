@@ -18,17 +18,29 @@ export const ShopPage = () => {
   const urlCategory = searchParams.get("cat") || "all";
   const urlSearch = searchParams.get("search") || "";
 
+  const maxCatalogPrice = useMemo(() => {
+    if (!products || products.length === 0) return 2500000;
+    return Math.max(...products.map((p) => p.price || 0), 2500000);
+  }, [products]);
+
   const [selectedCategory, setSelectedCategory] = useState(urlCategory);
   const [searchTerm, setSearchTerm] = useState(urlSearch);
   const [sortBy, setSortBy] = useState("default");
-  const [priceMax, setPriceMax] = useState(1200000);
+  const [priceMax, setPriceMax] = useState(2500000);
   const [onlyInStock, setOnlyInStock] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Sync state if URL search query changes
+  // Sync state if URL query changes
+  const prevUrlRef = React.useRef({ cat: urlCategory, search: urlSearch });
   React.useEffect(() => {
-    if (urlCategory) setSelectedCategory(urlCategory);
-    if (urlSearch) setSearchTerm(urlSearch);
+    if (prevUrlRef.current.cat !== urlCategory) {
+      prevUrlRef.current.cat = urlCategory;
+      setSelectedCategory(urlCategory || "all");
+    }
+    if (prevUrlRef.current.search !== urlSearch) {
+      prevUrlRef.current.search = urlSearch;
+      setSearchTerm(urlSearch || "");
+    }
   }, [urlCategory, urlSearch]);
 
   const filteredProducts = useMemo(() => {
@@ -68,7 +80,7 @@ export const ShopPage = () => {
   const resetAllFilters = () => {
     setSelectedCategory("all");
     setSearchTerm("");
-    setPriceMax(1200000);
+    setPriceMax(maxCatalogPrice);
     setOnlyInStock(false);
     setSortBy("default");
     setSearchParams({});
@@ -197,7 +209,7 @@ export const ShopPage = () => {
             <input
               type="range"
               min="100000"
-              max="1200000"
+              max={maxCatalogPrice}
               step="50000"
               value={priceMax}
               onChange={(e) => setPriceMax(Number(e.target.value))}
@@ -205,7 +217,7 @@ export const ShopPage = () => {
             />
             <div className="flex justify-between text-[11px] text-slate-400">
               <span>100 000 {t.cart.currency}</span>
-              <span>1 200 000 {t.cart.currency}</span>
+              <span>{maxCatalogPrice.toLocaleString()} {t.cart.currency}</span>
             </div>
           </div>
 
@@ -227,6 +239,27 @@ export const ShopPage = () => {
 
         {/* Product Catalog Display */}
         <main className="lg:col-span-3 space-y-6">
+          {/* Quick Category Pills Bar */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {productCategories.map((cat) => {
+              const isSelected = selectedCategory === cat.id;
+              const catLabel = getCategoryLabel(cat.id, language);
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                    isSelected
+                      ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/25 scale-105"
+                      : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-emerald-500/50"
+                  }`}
+                >
+                  {catLabel}
+                </button>
+              );
+            })}
+          </div>
+
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
             <span>
               {language === "ru" ? (
@@ -236,6 +269,9 @@ export const ShopPage = () => {
               ) : (
                 <>Jami <b className="text-slate-900 dark:text-white">{filteredProducts.length}</b> ta mahsulot topildi</>
               )}
+            </span>
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              ✓ 100% Original Sifat Kafolati
             </span>
           </div>
 

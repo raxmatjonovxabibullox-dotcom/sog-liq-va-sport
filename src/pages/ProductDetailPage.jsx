@@ -69,12 +69,21 @@ export const ProductDetailPage = () => {
             src={product.image}
             alt={product.name}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+            }}
           />
-          {product.featured && (
-            <span className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full text-xs font-black bg-amber-500 text-white shadow-md">
-              {t.shop?.topProduct || "Top"}
+          <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-600/90 text-white backdrop-blur-md shadow-md">
+              100% Original
             </span>
-          )}
+            {product.featured && (
+              <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-amber-500 text-white shadow-md">
+                {t.shop?.topProduct || "Top"}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Right: Info & Purchase */}

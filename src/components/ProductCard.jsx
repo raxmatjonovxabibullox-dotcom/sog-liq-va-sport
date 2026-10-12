@@ -25,10 +25,17 @@ export const ProductCard = ({ product }) => {
           alt={product.name}
           className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+          }}
         />
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600/90 text-white backdrop-blur-md shadow-sm">
+            100% Original
+          </span>
           {discountPercent && (
             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-extrabold bg-rose-500 text-white shadow-md">
               -{discountPercent}%

@@ -132,6 +132,10 @@ export const AboutPage = () => {
               src="/team/khabibullo.jpg"
               alt="Khabibullo Raxmatjonov"
               className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-emerald-500/20 group-hover:border-emerald-500 transition shadow-lg"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+              }}
             />
             <div>
               <h4 className="font-black text-base text-slate-900 dark:text-white">
@@ -155,6 +159,10 @@ export const AboutPage = () => {
               src="/team/jahongir.jpg"
               alt="Jahongir To'xtayev"
               className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-emerald-500/20 group-hover:border-emerald-500 transition shadow-lg"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+              }}
             />
             <div>
               <h4 className="font-black text-base text-slate-900 dark:text-white">
@@ -178,6 +186,10 @@ export const AboutPage = () => {
               src="/team/nargiza.jpg"
               alt="Nargiza Karimova"
               className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-emerald-500/20 group-hover:border-emerald-500 transition shadow-lg"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+              }}
             />
             <div>
               <h4 className="font-black text-base text-slate-900 dark:text-white">
