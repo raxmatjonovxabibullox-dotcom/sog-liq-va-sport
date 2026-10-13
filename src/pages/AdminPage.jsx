@@ -227,20 +227,30 @@ export const AdminPage = () => {
   const [dashboardSubmenuOpen, setDashboardSubmenuOpen] = useState(true);
   const [activeSubmenu, setActiveSubmenu] = useState("eCommerce");
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [hoveredMonth, setHoveredMonth] = useState(null);
 
-  const salesViewsData = useMemo(() => [
-    { month: "Jan", sales: 20, views: 18 },
-    { month: "Feb", sales: 6, views: 12 },
-    { month: "Mar", sales: 62, views: 44 },
-    { month: "Apr", sales: 14, views: 20 },
-    { month: "May", sales: 32, views: 25 },
-    { month: "Jun", sales: 20, views: 18 },
-    { month: "Jul", sales: 25, views: 40 },
-    { month: "Aug", sales: 16, views: 12 },
-    { month: "Sep", sales: 35, views: 48 },
-  ], []);
+  const salesViewsData = useMemo(() => {
+    const months =
+      language === "ru"
+        ? ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен"]
+        : language === "en"
+        ? ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"]
+        : ["Yan", "Fev", "Mar", "Apr", "May", "Iyun", "Iyul", "Avg", "Sen"];
+
+    return [
+      { month: months[0], sales: 20, views: 18 },
+      { month: months[1], sales: 6, views: 12 },
+      { month: months[2], sales: 62, views: 44 },
+      { month: months[3], sales: 14, views: 20 },
+      { month: months[4], sales: 32, views: 25 },
+      { month: months[5], sales: 20, views: 18 },
+      { month: months[6], sales: 25, views: 40 },
+      { month: months[7], sales: 16, views: 12 },
+      { month: months[8], sales: 35, views: 48 },
+    ];
+  }, [language]);
 
   // Real-time live clock
   const [currentTime, setCurrentTime] = useState(() => new Date());
@@ -808,7 +818,11 @@ export const AdminPage = () => {
               >
                 <div className="flex items-center gap-3">
                   <LayoutDashboard className="w-4 h-4 text-blue-400" />
-                  {!isSidebarCollapsed && <span className="font-semibold text-white">Dashboard</span>}
+                  {!isSidebarCollapsed && (
+                    <span className="font-semibold text-white">
+                      {language === "ru" ? "Дашборд" : language === "en" ? "Dashboard" : "Boshqaruv"}
+                    </span>
+                  )}
                 </div>
                 {!isSidebarCollapsed && (
                   <ChevronDown
@@ -835,7 +849,7 @@ export const AdminPage = () => {
                     }`}
                   >
                     <span className="text-[10px]">›</span>
-                    <span>Analysis</span>
+                    <span>{language === "ru" ? "Аналитика" : language === "en" ? "Analysis" : "Tahlil & Statistika"}</span>
                   </button>
                   <button
                     onClick={() => {
@@ -850,7 +864,7 @@ export const AdminPage = () => {
                     }`}
                   >
                     <span className="text-[10px]">›</span>
-                    <span>eCommerce</span>
+                    <span>{language === "ru" ? "Э-Коммерция" : language === "en" ? "eCommerce" : "Elektron Tijorat"}</span>
                   </button>
                 </div>
               )}
@@ -869,7 +883,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Grid className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>Widgets</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Виджеты & Мониторинг" : language === "en" ? "Widgets" : "Vidjetlar & Tizim"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -886,7 +902,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Layers className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>Apps</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Telegram Бот" : language === "en" ? "Apps" : "Telegram Ilova"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -897,7 +915,7 @@ export const AdminPage = () => {
             <div>
               {!isSidebarCollapsed && (
                 <div className="px-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
-                  UI ELEMENTS
+                  {language === "ru" ? "УПРАВЛЕНИЕ МАГАЗИНОМ" : language === "en" ? "STORE MANAGEMENT" : "DO'KON BOSHQARUVI"}
                 </div>
               )}
               <div className="space-y-1">
@@ -914,7 +932,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <CreditCard className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>Cards</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Промокоды & Скидки" : language === "en" ? "Promo Codes" : "Promokodlar & Chegirmalar"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -932,7 +952,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <ShoppingBag className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>eCommerce</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Товары (Каталог)" : language === "en" ? "Products Catalog" : "Mahsulotlar (Katalog)"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -950,7 +972,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Package className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>Components</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Заказы клиентов" : language === "en" ? "Customer Orders" : "Mijozlar Buyurtmalari"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -968,7 +992,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Users className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>Icons</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "База клиентов (CRM)" : language === "en" ? "Customers CRM" : "Mijozlar Bazasi (CRM)"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -979,7 +1005,7 @@ export const AdminPage = () => {
             <div>
               {!isSidebarCollapsed && (
                 <div className="px-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
-                  FORMS & TABLES
+                  {language === "ru" ? "СЕРВЕР И СИСТЕМА" : language === "en" ? "SYSTEM & DATA" : "TIZIM VA MA'LUMOTLAR"}
                 </div>
               )}
               <div className="space-y-1">
@@ -996,7 +1022,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <FileText className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>Forms</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Telegram Бот" : language === "en" ? "Telegram Bot" : "Telegram Bot"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -1014,7 +1042,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Terminal className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>Tables</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Терминал & Логи" : language === "en" ? "Terminal & Logs" : "Terminal & Jurnallar"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -1025,7 +1055,7 @@ export const AdminPage = () => {
             <div>
               {!isSidebarCollapsed && (
                 <div className="px-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
-                  PAGES
+                  {language === "ru" ? "ПРОФИЛЬ И СЕССИЯ" : language === "en" ? "PROFILE & SESSION" : "PROFIL VA SESSIYA"}
                 </div>
               )}
               <div className="space-y-1">
@@ -1043,7 +1073,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Lock className={`w-4 h-4 ${activeTab === "profile" ? "text-blue-400" : "text-slate-400"}`} />
-                    {!isSidebarCollapsed && <span>Authentication</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Авторизация & Сессия" : language === "en" ? "Authentication" : "Autentifikatsiya"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
                 </button>
@@ -1062,7 +1094,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <User className={`w-4 h-4 ${activeTab === "profile" ? "text-blue-400" : "text-slate-400"}`} />
-                    {!isSidebarCollapsed && <span>User Profile</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Профиль пользователя" : language === "en" ? "User Profile" : "Foydalanuvchi Profili"}</span>
+                    )}
                   </div>
                   {!isSidebarCollapsed && (
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -1073,12 +1107,15 @@ export const AdminPage = () => {
                   onClick={() => {
                     setActiveTab("system");
                     playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
                   }}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition`}
                 >
                   <div className="flex items-center gap-3">
                     <Clock className="w-4 h-4 text-slate-400" />
-                    {!isSidebarCollapsed && <span>Timeline</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "История & Бэкап" : language === "en" ? "Timeline & Backup" : "Tarix & Zaxira"}</span>
+                    )}
                   </div>
                 </button>
 
@@ -1089,7 +1126,9 @@ export const AdminPage = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Home className="w-4 h-4 text-blue-400" />
-                    {!isSidebarCollapsed && <span>Pages (Store)</span>}
+                    {!isSidebarCollapsed && (
+                      <span>{language === "ru" ? "Главная (Магазин)" : language === "en" ? "Store Front" : "Do'kon sahifasi"}</span>
+                    )}
                   </div>
                 </Link>
               </div>
@@ -1106,7 +1145,7 @@ export const AdminPage = () => {
           >
             <ArrowLeft className="w-3.5 h-3.5 text-blue-400" />
             {!isSidebarCollapsed && (
-              <span>{language === "ru" ? "В магазин" : language === "en" ? "Back to shop" : "Do'konga qaytish"}</span>
+              <span>{language === "ru" ? "Вернуться в магазин" : language === "en" ? "Back to shop" : "Do'konga qaytish"}</span>
             )}
           </Link>
         </div>
@@ -1132,7 +1171,13 @@ export const AdminPage = () => {
             <div className="relative w-full max-w-xs sm:max-w-sm">
               <input
                 type="text"
-                placeholder="Search"
+                placeholder={
+                  language === "ru"
+                    ? "Поиск по каталогу..."
+                    : language === "en"
+                    ? "Search catalog..."
+                    : "Katalogda qidirish..."
+                }
                 value={productSearch}
                 onChange={(e) => {
                   setProductSearch(e.target.value);
@@ -1146,22 +1191,61 @@ export const AdminPage = () => {
 
           {/* Right Header Utilities: Flags, Check, Bell, Cart, Profile */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Country Flags & Language Selector */}
+            {/* Country Flags & Language Selector Dropdown */}
             <div className="relative">
               <button
                 onClick={() => {
-                  const nextLang = language === "uz" ? "ru" : language === "ru" ? "en" : "uz";
-                  setLanguage(nextLang);
+                  setLangDropdownOpen(!langDropdownOpen);
                   playSound("click", soundEnabled);
                 }}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#182035] border border-[#232c45] text-xs font-bold hover:border-slate-600 transition"
-                title="Tilni o'zgartirish"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#182035] border border-[#232c45] text-xs font-bold hover:border-slate-500 transition shadow-sm"
+                title={language === "ru" ? "Выбрать язык" : language === "en" ? "Select Language" : "Tilni tanlash"}
               >
                 <span className="text-base leading-none">
                   {language === "ru" ? "🇷🇺" : language === "en" ? "🇬🇧" : "🇺🇿"}
                 </span>
-                <span className="text-[11px] font-bold uppercase text-slate-300 hidden sm:inline">{language}</span>
+                <span className="text-[11px] font-bold uppercase text-slate-300 hidden sm:inline">
+                  {language === "ru" ? "Рус" : language === "en" ? "Eng" : "O'zb"}
+                </span>
+                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${langDropdownOpen ? "rotate-180" : ""}`} />
               </button>
+
+              {langDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 rounded-2xl bg-[#141b2e] border border-[#242e47] shadow-2xl p-1.5 z-50 space-y-1 text-xs animate-in fade-in">
+                  {[
+                    { code: "uz", flag: "🇺🇿", label: "O'zbekcha" },
+                    { code: "ru", flag: "🇷🇺", label: "Русский" },
+                    { code: "en", flag: "🇬🇧", label: "English" },
+                  ].map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        setLanguage(l.code);
+                        setLangDropdownOpen(false);
+                        playSound("success", soundEnabled);
+                        showToast(
+                          l.code === "ru"
+                            ? "Язык изменен на Русский!"
+                            : l.code === "en"
+                            ? "Language changed to English!"
+                            : "Til O'zbekchaga o'zgartirildi!"
+                        );
+                      }}
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                        language === l.code
+                          ? "bg-blue-600 text-white font-bold shadow-md shadow-blue-500/20"
+                          : "text-slate-300 hover:text-white hover:bg-[#1a233a]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span>{l.flag}</span>
+                        <span>{l.label}</span>
+                      </div>
+                      {language === l.code && <CheckCircle2 className="w-3.5 h-3.5" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Checkmark Icon */}
@@ -1177,7 +1261,7 @@ export const AdminPage = () => {
                   playSound("click", soundEnabled);
                 }}
                 className="p-2 rounded-xl bg-[#182035] border border-[#232c45] text-slate-300 hover:text-white transition relative"
-                title="Bildirishnomalar"
+                title={language === "ru" ? "Уведомления" : language === "en" ? "Notifications" : "Bildirishnomalar"}
               >
                 <Bell className="w-4 h-4" />
                 <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#ef4444] text-white text-[10px] font-extrabold flex items-center justify-center shadow-md">
@@ -1188,21 +1272,37 @@ export const AdminPage = () => {
               {notificationsOpen && (
                 <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-[#151c2e] border border-[#242e47] shadow-2xl p-3 z-50 space-y-2 text-xs animate-in fade-in">
                   <div className="font-bold text-white pb-2 border-b border-[#242e47] flex justify-between items-center">
-                    <span>Bildirishnomalar</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400">5 yangi</span>
+                    <span>{language === "ru" ? "Уведомления" : language === "en" ? "Notifications" : "Bildirishnomalar"}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400">
+                      {language === "ru" ? "5 новых" : language === "en" ? "5 new" : "5 yangi"}
+                    </span>
                   </div>
                   <div className="space-y-1.5 max-h-56 overflow-y-auto">
                     <div className="p-2 rounded-xl bg-[#1a233a] text-slate-300">
-                      <div className="font-bold text-emerald-400 text-[11px]">Yangi buyurtma #{orders[0]?.id || "2026"}</div>
-                      <div className="text-[10px] text-slate-400">{orders[0]?.customerName || "Javohir"} buyurtma berdi</div>
+                      <div className="font-bold text-emerald-400 text-[11px]">
+                        {language === "ru" ? `Новый заказ #${orders[0]?.id || "2026"}` : language === "en" ? `New order #${orders[0]?.id || "2026"}` : `Yangi buyurtma #${orders[0]?.id || "2026"}`}
+                      </div>
+                      <div className="text-[10px] text-slate-400">
+                        {language === "ru"
+                          ? `${orders[0]?.customerName || "Жавохир"} оформил заказ`
+                          : language === "en"
+                          ? `${orders[0]?.customerName || "Javohir"} placed an order`
+                          : `${orders[0]?.customerName || "Javohir"} buyurtma berdi`}
+                      </div>
                     </div>
                     <div className="p-2 rounded-xl bg-[#1a233a] text-slate-300">
-                      <div className="font-bold text-amber-400 text-[11px]">Zaxira ogohlantirishi</div>
-                      <div className="text-[10px] text-slate-400">Optimum Nutrition zaxirasi oz qoldi (3 dona)</div>
+                      <div className="font-bold text-amber-400 text-[11px]">
+                        {language === "ru" ? "Предупреждение о запасах" : language === "en" ? "Stock Alert" : "Zaxira ogohlantirishi"}
+                      </div>
+                      <div className="text-[10px] text-slate-400">
+                        {language === "ru" ? "Optimum Nutrition заканчивается (3 шт)" : language === "en" ? "Optimum Nutrition low stock (3 pcs)" : "Optimum Nutrition zaxirasi oz qoldi (3 dona)"}
+                      </div>
                     </div>
                     <div className="p-2 rounded-xl bg-[#1a233a] text-slate-300">
                       <div className="font-bold text-blue-400 text-[11px]">Telegram Bot</div>
-                      <div className="text-[10px] text-slate-400">Bot 100% faol holatda ishlamoqda</div>
+                      <div className="text-[10px] text-slate-400">
+                        {language === "ru" ? "Бот активен на 100% и работает" : language === "en" ? "Bot is 100% active and running" : "Bot 100% faol holatda ishlamoqda"}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1316,7 +1416,7 @@ export const AdminPage = () => {
               className="px-4 py-2 rounded-xl bg-[#0d6efd] hover:bg-[#0b5ed7] text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-95"
             >
               <Settings className="w-4 h-4" />
-              <span>Settings</span>
+              <span>{language === "ru" ? "Настройки" : language === "en" ? "Settings" : "Sozlamalar"}</span>
             </button>
           </div>
         </div>
@@ -1328,7 +1428,7 @@ export const AdminPage = () => {
               <div className="flex items-center justify-between pb-3 border-b border-[#232d46]">
                 <h3 className="font-bold text-white text-base flex items-center gap-2">
                   <Sliders className="w-4 h-4 text-blue-400" />
-                  <span>Dashboard Sozlamalari</span>
+                  <span>{language === "ru" ? "Настройки панели" : language === "en" ? "Dashboard Settings" : "Dashboard Sozlamalari"}</span>
                 </h3>
                 <button onClick={() => setIsSettingsOpen(false)} className="text-slate-400 hover:text-white">
                   <X className="w-5 h-5" />
@@ -1338,44 +1438,58 @@ export const AdminPage = () => {
               <div className="space-y-4 text-xs">
                 {/* Sound */}
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-300 font-semibold">Taktil Ovoz Effekti (SFX):</span>
+                  <span className="text-slate-300 font-semibold">
+                    {language === "ru" ? "Звуковые эффекты (SFX):" : language === "en" ? "Sound Effects (SFX):" : "Taktil Ovoz Effekti (SFX):"}
+                  </span>
                   <button
                     onClick={handleToggleSound}
                     className={`px-3 py-1.5 rounded-xl font-bold transition ${
                       soundEnabled ? "bg-emerald-500 text-white" : "bg-slate-800 text-slate-400"
                     }`}
                   >
-                    {soundEnabled ? "Yoniq" : "O'chiq"}
+                    {soundEnabled
+                      ? (language === "ru" ? "Вкл" : language === "en" ? "On" : "Yoniq")
+                      : (language === "ru" ? "Выкл" : language === "en" ? "Off" : "O'chiq")}
                   </button>
                 </div>
 
                 {/* Fullscreen */}
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-300 font-semibold">To'liq Ekran:</span>
+                  <span className="text-slate-300 font-semibold">
+                    {language === "ru" ? "Полноэкранный режим:" : language === "en" ? "Fullscreen Mode:" : "To'liq Ekran:"}
+                  </span>
                   <button
                     onClick={handleToggleFullscreen}
                     className="px-3 py-1.5 rounded-xl bg-[#1b243b] text-white font-bold hover:bg-[#232e4b]"
                   >
-                    {isFullscreen ? "Kichraytirish" : "Kengaytirish"}
+                    {isFullscreen
+                      ? (language === "ru" ? "Свернуть" : language === "en" ? "Exit Fullscreen" : "Kichraytirish")
+                      : (language === "ru" ? "Развернуть" : language === "en" ? "Fullscreen" : "Kengaytirish")}
                   </button>
                 </div>
 
                 {/* Language */}
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-300 font-semibold">Tizim Tili:</span>
+                  <span className="text-slate-300 font-semibold">
+                    {language === "ru" ? "Язык интерфейса:" : language === "en" ? "Interface Language:" : "Tizim Tili:"}
+                  </span>
                   <div className="flex gap-1">
-                    {["uz", "ru", "en"].map((lng) => (
+                    {[
+                      { code: "uz", label: "O'zb" },
+                      { code: "ru", label: "Рус" },
+                      { code: "en", label: "Eng" },
+                    ].map((item) => (
                       <button
-                        key={lng}
+                        key={item.code}
                         onClick={() => {
-                          setLanguage(lng);
+                          setLanguage(item.code);
                           playSound("click", soundEnabled);
                         }}
                         className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase ${
-                          language === lng ? "bg-blue-500 text-white" : "bg-slate-800 text-slate-400"
+                          language === item.code ? "bg-blue-500 text-white shadow-md shadow-blue-500/20" : "bg-slate-800 text-slate-400"
                         }`}
                       >
-                        {lng}
+                        {item.label}
                       </button>
                     ))}
                   </div>
@@ -1386,7 +1500,7 @@ export const AdminPage = () => {
                 onClick={() => setIsSettingsOpen(false)}
                 className="w-full py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs"
               >
-                Yopish
+                {language === "ru" ? "Закрыть" : language === "en" ? "Close" : "Yopish"}
               </button>
             </div>
           </div>
@@ -1399,22 +1513,36 @@ export const AdminPage = () => {
             <div className="space-y-6 animate-in fade-in duration-200">
               {/* TOP ROW: 5 METRIC CARDS (Congratulations + 4 Sparkline cards) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-                {/* CARD 1: Congratulations Jhon (2 cols on desktop) */}
+                {/* CARD 1: Congratulations Xabibullo (2 cols on desktop) */}
                 <div className="sm:col-span-2 lg:col-span-2 p-5 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex items-center justify-between relative overflow-hidden group hover:border-[#2d3a5a] transition">
                   <div className="space-y-1 z-10 max-w-[65%]">
                     <h3 className="font-bold text-white text-sm sm:text-base flex items-center gap-1.5">
-                      <span>Congratulations Xabibullo</span>
+                      <span>
+                        {language === "ru"
+                          ? "Поздравляем, Хабибулло"
+                          : language === "en"
+                          ? "Congratulations Xabibullo"
+                          : "Tabriklaymiz, Xabibullo"}
+                      </span>
                       <span>🎉</span>
                     </h3>
                     <p className="text-[11px] text-slate-400 leading-snug">
-                      You are the best seller of this month
+                      {language === "ru"
+                        ? "Вы лучший продавец этого месяца"
+                        : language === "en"
+                        ? "You are the best seller of this month"
+                        : "Joriy oyning eng yaxshi sotuvchisi bo'ldingiz"}
                     </p>
                     <div className="pt-2">
                       <div className="text-2xl font-black text-white tracking-tight">
                         $168.5K
                       </div>
                       <div className="text-[11px] text-slate-400 font-medium">
-                        58% of sales target
+                        {language === "ru"
+                          ? "58% от целевых продаж"
+                          : language === "en"
+                          ? "58% of sales target"
+                          : "Oylik rejaning 58% bajarildi"}
                       </div>
                     </div>
                     <div className="pt-3">
@@ -1425,7 +1553,7 @@ export const AdminPage = () => {
                         }}
                         className="px-4 py-2 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 text-white font-bold text-[11px] shadow-lg shadow-pink-500/25 transition active:scale-95"
                       >
-                        View Details
+                        {language === "ru" ? "Смотреть детали" : language === "en" ? "View Details" : "Batafsil ko'rish"}
                       </button>
                     </div>
                   </div>
@@ -1469,7 +1597,9 @@ export const AdminPage = () => {
                   </div>
                   <div className="my-2">
                     <div className="text-xl font-black text-white">248k</div>
-                    <div className="text-[11px] text-slate-400 font-medium">Total Orders</div>
+                    <div className="text-[11px] text-slate-400 font-medium">
+                      {language === "ru" ? "Всего заказов" : language === "en" ? "Total Orders" : "Jami buyurtmalar"}
+                    </div>
                   </div>
                   {/* Blue Smooth Sparkline */}
                   <div className="h-9 w-full pt-1">
@@ -1499,7 +1629,9 @@ export const AdminPage = () => {
                   </div>
                   <div className="my-2">
                     <div className="text-xl font-black text-white">$47.6k</div>
-                    <div className="text-[11px] text-slate-400 font-medium">Total Sales</div>
+                    <div className="text-[11px] text-slate-400 font-medium">
+                      {language === "ru" ? "Общие продажи" : language === "en" ? "Total Sales" : "Umumiy sotuvlar"}
+                    </div>
                   </div>
                   {/* Green Smooth Sparkline */}
                   <div className="h-9 w-full pt-1">
@@ -1529,7 +1661,9 @@ export const AdminPage = () => {
                   </div>
                   <div className="my-2">
                     <div className="text-xl font-black text-white">189K</div>
-                    <div className="text-[11px] text-slate-400 font-medium">Total Visits</div>
+                    <div className="text-[11px] text-slate-400 font-medium">
+                      {language === "ru" ? "Посещения сайта" : language === "en" ? "Total Visits" : "Tashriflar soni"}
+                    </div>
                   </div>
                   {/* Cyan Smooth Sparkline */}
                   <div className="h-9 w-full pt-1">
@@ -1559,7 +1693,9 @@ export const AdminPage = () => {
                   </div>
                   <div className="my-2">
                     <div className="text-xl font-black text-white">24.6%</div>
-                    <div className="text-[11px] text-slate-400 font-medium">Bounce Rate</div>
+                    <div className="text-[11px] text-slate-400 font-medium">
+                      {language === "ru" ? "Отказы (Bounce Rate)" : language === "en" ? "Bounce Rate" : "Chiqib ketish darajasi"}
+                    </div>
                   </div>
                   {/* Amber Mini Vertical Columns */}
                   <div className="flex items-end justify-between h-9 gap-1 pt-1">
@@ -1579,7 +1715,9 @@ export const AdminPage = () => {
                 {/* 1. ORDER STATUS (DONUT CHART) - spans 5 cols */}
                 <div className="lg:col-span-5 p-6 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex flex-col justify-between space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-white text-base">Order Status</h3>
+                    <h3 className="font-bold text-white text-base">
+                      {language === "ru" ? "Статус заказов" : language === "en" ? "Order Status" : "Buyurtmalar holati"}
+                    </h3>
                     <button className="text-slate-400 hover:text-white p-1">
                       <MoreVertical className="w-4 h-4" />
                     </button>
@@ -1656,7 +1794,9 @@ export const AdminPage = () => {
                     {/* Center Text */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                       <span className="text-3xl font-black text-white tracking-tight">68%</span>
-                      <span className="text-xs text-slate-400 font-medium">Total Sales</span>
+                      <span className="text-xs text-slate-400 font-medium">
+                        {language === "ru" ? "Всего продаж" : language === "en" ? "Total Sales" : "Jami sotuv"}
+                      </span>
                     </div>
                   </div>
 
@@ -1665,21 +1805,27 @@ export const AdminPage = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                        <span className="text-slate-300">Sales</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Продажи" : language === "en" ? "Sales" : "Sotuvlar"}
+                        </span>
                       </div>
                       <span className="font-bold text-white">68%</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-                        <span className="text-slate-300">Product</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Товары" : language === "en" ? "Product" : "Mahsulotlar"}
+                        </span>
                       </div>
                       <span className="font-bold text-white">25%</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                        <span className="text-slate-300">Income</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Доход" : language === "en" ? "Income" : "Sof daromad"}
+                        </span>
                       </div>
                       <span className="font-bold text-white">14%</span>
                     </div>
@@ -1689,7 +1835,9 @@ export const AdminPage = () => {
                 {/* 2. SALES & VIEWS (DUAL BAR CHART) - spans 7 cols */}
                 <div className="lg:col-span-7 p-6 rounded-2xl bg-[#151c2e] border border-[#1f283e] flex flex-col justify-between space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-white text-base">Sales & Views</h3>
+                    <h3 className="font-bold text-white text-base">
+                      {language === "ru" ? "Продажи и Просмотры" : language === "en" ? "Sales & Views" : "Sotuvlar va Ko'rishlar"}
+                    </h3>
                     <button className="text-slate-400 hover:text-white p-1">
                       <MoreVertical className="w-4 h-4" />
                     </button>
@@ -1717,7 +1865,11 @@ export const AdminPage = () => {
                           {/* Tooltip on hover */}
                           {hoveredMonth === d.month && (
                             <div className="absolute -top-7 px-2 py-0.5 rounded-md bg-[#0a0e1a] border border-[#222c44] text-[10px] font-bold text-white shadow-lg pointer-events-none z-20">
-                              Sales: {d.sales} | Views: {d.views}
+                              {language === "ru"
+                                ? `Продажи: ${d.sales} | Просмотры: ${d.views}`
+                                : language === "en"
+                                ? `Sales: ${d.sales} | Views: ${d.views}`
+                                : `Sotuv: ${d.sales} | Ko'rish: ${d.views}`}
                             </div>
                           )}
 
@@ -1747,11 +1899,15 @@ export const AdminPage = () => {
                     <div className="flex items-center justify-center gap-6 pt-3 text-xs">
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-sm bg-amber-400"></span>
-                        <span className="text-slate-300">Sales</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Продажи" : language === "en" ? "Sales" : "Sotuvlar"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-sm bg-cyan-400"></span>
-                        <span className="text-slate-300">Views</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Просмотры" : language === "en" ? "Views" : "Ko'rishlar"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -1777,7 +1933,9 @@ export const AdminPage = () => {
                         </svg>
                       </div>
                       <div>
-                        <div className="text-[11px] text-slate-400">Monthly</div>
+                        <div className="text-[11px] text-slate-400">
+                          {language === "ru" ? "За месяц" : language === "en" ? "Monthly" : "Oylik"}
+                        </div>
                         <div className="text-lg font-black text-white">65,127</div>
                         <div className="text-[10px] font-bold text-emerald-400">
                           16.5% <span className="text-slate-400 font-normal">55.21 USD</span>
@@ -1804,7 +1962,9 @@ export const AdminPage = () => {
                         </svg>
                       </div>
                       <div>
-                        <div className="text-[11px] text-slate-400">Yearly</div>
+                        <div className="text-[11px] text-slate-400">
+                          {language === "ru" ? "За год" : language === "en" ? "Yearly" : "Yillik"}
+                        </div>
                         <div className="text-lg font-black text-white">984,246</div>
                         <div className="text-[10px] font-bold text-emerald-400">
                           24.9% <span className="text-slate-400 font-normal">267.35 USD</span>
@@ -2397,7 +2557,11 @@ export const AdminPage = () => {
                   <div>
                     <h3 className="text-xl font-black text-white">Telegram Bot & Broadcast</h3>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      Buyurtmalar to'g'ridan-to'g'ri Telegram kanal/guruhga kelib tushadi
+                      {language === "ru"
+                        ? "Заказы мгновенно поступают в ваш Telegram канал или группу"
+                        : language === "en"
+                        ? "Orders arrive directly to your Telegram channel/group"
+                        : "Buyurtmalar to'g'ridan-to'g'ri Telegram kanal/guruhga kelib tushadi"}
                     </p>
                   </div>
                 </div>
@@ -2405,7 +2569,7 @@ export const AdminPage = () => {
                 <form onSubmit={handleSaveTelegram} className="space-y-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                      Telegram Bot Token
+                      {language === "ru" ? "Токен Telegram Бота" : language === "en" ? "Telegram Bot Token" : "Telegram Bot Tokeni"}
                     </label>
                     <div className="relative">
                       <input
