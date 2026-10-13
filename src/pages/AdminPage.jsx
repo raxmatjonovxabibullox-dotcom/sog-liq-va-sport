@@ -740,10 +740,21 @@ export const AdminPage = () => {
 
   return (
     <div className="min-h-screen bg-[#0f1422] text-slate-100 flex font-sans antialiased relative selection:bg-blue-500 selection:text-white">
+      {/* Mobile Backdrop Overlay */}
+      {isMobileSidebarOpen && (
+        <div
+          onClick={() => {
+            setIsMobileSidebarOpen(false);
+            playSound("click", soundEnabled);
+          }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 md:hidden animate-in fade-in"
+        />
+      )}
+
       {/* 1. LEFT MAXTON SIDEBAR */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 bg-[#111625] border-r border-[#1a2035] transition-all duration-300 md:sticky md:top-0 md:h-screen shrink-0 overflow-y-auto flex flex-col justify-between ${
-          isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          isMobileSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0"
         } ${isSidebarCollapsed ? "w-20" : "w-64"}`}
       >
         <div className="p-4 space-y-5">
@@ -751,7 +762,10 @@ export const AdminPage = () => {
           <div className="flex items-center justify-between px-2 pt-1 pb-2 border-b border-[#1c2438]">
             <Link
               to="/admin"
-              onClick={() => playSound("click", soundEnabled)}
+              onClick={() => {
+                playSound("click", soundEnabled);
+                setIsMobileSidebarOpen(false);
+              }}
               className="flex items-center gap-3 group"
             >
               {/* Maxton Multi-Gradient Shape Logo */}
@@ -788,6 +802,7 @@ export const AdminPage = () => {
               )}
             </Link>
 
+            {/* Desktop collapse toggle */}
             <button
               onClick={() => {
                 setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -797,6 +812,18 @@ export const AdminPage = () => {
               title="Sidebar"
             >
               <Menu className="w-4 h-4" />
+            </button>
+
+            {/* Mobile close button */}
+            <button
+              onClick={() => {
+                setIsMobileSidebarOpen(false);
+                playSound("click", soundEnabled);
+              }}
+              className="flex md:hidden text-slate-400 hover:text-white p-1.5 rounded-xl hover:bg-[#1a2238] transition"
+              title="Yopish"
+            >
+              <X className="w-5 h-5" />
             </button>
           </div>
 
@@ -840,6 +867,7 @@ export const AdminPage = () => {
                     onClick={() => {
                       setActiveSubmenu("analysis");
                       setActiveTab("dashboard");
+                      setIsMobileSidebarOpen(false);
                       playSound("click", soundEnabled);
                     }}
                     className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-2 ${
@@ -855,6 +883,7 @@ export const AdminPage = () => {
                     onClick={() => {
                       setActiveSubmenu("eCommerce");
                       setActiveTab("dashboard");
+                      setIsMobileSidebarOpen(false);
                       playSound("click", soundEnabled);
                     }}
                     className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-2 ${
@@ -878,7 +907,7 @@ export const AdminPage = () => {
                     setIsMobileSidebarOpen(false);
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
-                    activeTab === "system" ? "bg-[#182238] text-white font-semibold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                    activeTab === "system" ? "bg-[#182238] text-blue-400 font-bold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -897,13 +926,13 @@ export const AdminPage = () => {
                     setIsMobileSidebarOpen(false);
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
-                    activeTab === "telegram" ? "bg-[#182238] text-white font-semibold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                    activeTab === "telegram" ? "bg-[#182238] text-blue-400 font-bold" : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <Layers className="w-4 h-4 text-slate-400" />
                     {!isSidebarCollapsed && (
-                      <span>{language === "ru" ? "Telegram Бот" : language === "en" ? "Telegram Bot" : "Telegram Ilova"}</span>
+                      <span>{language === "ru" ? "Telegram Приложение" : language === "en" ? "Telegram App" : "Telegram Ilova"}</span>
                     )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
@@ -1121,7 +1150,10 @@ export const AdminPage = () => {
 
                 <Link
                   to="/"
-                  onClick={() => playSound("click", soundEnabled)}
+                  onClick={() => {
+                    playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
+                  }}
                   className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
                 >
                   <div className="flex items-center gap-3">
@@ -1140,7 +1172,10 @@ export const AdminPage = () => {
         <div className="p-4 border-t border-[#1a2035]">
           <Link
             to="/"
-            onClick={() => playSound("click", soundEnabled)}
+            onClick={() => {
+              playSound("click", soundEnabled);
+              setIsMobileSidebarOpen(false);
+            }}
             className="w-full py-2.5 px-3 rounded-xl bg-[#161d31] hover:bg-[#1d2742] text-white font-bold text-xs flex items-center justify-center gap-2 transition"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-blue-400" />
@@ -2780,17 +2815,158 @@ export const AdminPage = () => {
                     let response = null;
 
                     if (cmd === "status") {
-                      response = { id: Date.now() + 1, time: now, level: "SUCCESS", msg: `STATUS: 100% Barqaror | CPU: ${cpuUsage}% | Tovarlar: ${products.length} ta` };
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg:
+                          language === "ru"
+                            ? `СТАТУС: 100% Стабилен | CPU: ${cpuUsage}% | RAM: ${ramUsage}% | Товары: ${products.length} шт | Заказы: ${orders.length} шт`
+                            : language === "en"
+                            ? `STATUS: 100% Stable | CPU: ${cpuUsage}% | RAM: ${ramUsage}% | Products: ${products.length} | Orders: ${orders.length}`
+                            : `STATUS: 100% Barqaror | CPU: ${cpuUsage}% | RAM: ${ramUsage}% | Tovarlar: ${products.length} ta | Buyurtmalar: ${orders.length} ta`,
+                      };
                     } else if (cmd === "ping") {
-                      response = { id: Date.now() + 1, time: now, level: "SUCCESS", msg: `PONG: Server ${serverPing}ms | Telegram: ${telegramPing}ms` };
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg: `PONG: Server ${serverPing}ms | Telegram: ${telegramPing}ms`,
+                      };
+                    } else if (cmd === "products" || cmd === "tovarlar" || cmd === "tovar" || cmd === "product") {
+                      const inStock = products.filter((p) => p.stock > 0).length;
+                      const lowStock = products.filter((p) => p.stock <= 5 && p.stock > 0).length;
+                      const outOfStock = products.filter((p) => p.stock === 0).length;
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg:
+                          language === "ru"
+                            ? `КАТАЛОГ ТОВАРОВ: Всего: ${products.length} шт | В наличии: ${inStock} | Мало: ${lowStock} | Закончилось: ${outOfStock}. Переход в раздел товаров...`
+                            : language === "en"
+                            ? `PRODUCTS CATALOG: Total: ${products.length} | In Stock: ${inStock} | Low Stock: ${lowStock} | Out: ${outOfStock}. Opening Products tab...`
+                            : `TOVARLAR KATALOGI: Jami: ${products.length} ta | Mavjud: ${inStock} | Kam qolgan: ${lowStock} | Tugagan: ${outOfStock}. Mahsulotlar bo'limi ochilmoqda...`,
+                      };
+                      setActiveTab("products");
+                      playSound("success", soundEnabled);
+                    } else if (
+                      cmd === "telegram" ||
+                      cmd === "telegram ilova" ||
+                      cmd === "ilova" ||
+                      cmd === "telefon" ||
+                      cmd === "telefon ilova" ||
+                      cmd === "bot" ||
+                      cmd === "apps"
+                    ) {
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg:
+                          language === "ru"
+                            ? `TELEGRAM БОТ & ПРИЛОЖЕНИЕ: Статус: 100% Активен (@Kitobchalar_bot) | Admin Chat ID: ${chatId || "8170197389"} | Пинг: ${telegramPing}ms. Переход в раздел Telegram...`
+                            : language === "en"
+                            ? `TELEGRAM BOT & APP: Status: 100% Active (@Kitobchalar_bot) | Admin Chat ID: ${chatId || "8170197389"} | Ping: ${telegramPing}ms. Opening Telegram tab...`
+                            : `TELEGRAM BOT & ILOVA: Holati: 100% Faol (@Kitobchalar_bot) | Admin Chat ID: ${chatId || "8170197389"} | Aloqa: ${telegramPing}ms. Telegram bo'limi ochilmoqda...`,
+                      };
+                      setActiveTab("telegram");
+                      playSound("success", soundEnabled);
+                    } else if (cmd === "orders" || cmd === "buyurtmalar" || cmd === "buyurtma") {
+                      const pending = orders.filter((o) => o.status === "pending").length;
+                      const delivering = orders.filter((o) => o.status === "delivering").length;
+                      const completed = orders.filter((o) => o.status === "completed").length;
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg:
+                          language === "ru"
+                            ? `ЗАКАЗЫ: Всего: ${orders.length} | В ожидании: ${pending} | Доставляется: ${delivering} | Выполнено: ${completed}. Переход в заказы...`
+                            : language === "en"
+                            ? `ORDERS: Total: ${orders.length} | Pending: ${pending} | Delivering: ${delivering} | Completed: ${completed}. Opening Orders tab...`
+                            : `BUYURTMALAR: Jami: ${orders.length} ta | Kutilmoqda: ${pending} | Yetkazilmoqda: ${delivering} | Yakunlandi: ${completed}. Buyurtmalar bo'limi ochilmoqda...`,
+                      };
+                      setActiveTab("orders");
+                      playSound("success", soundEnabled);
+                    } else if (cmd === "promos" || cmd === "promocodes" || cmd === "promokodlar" || cmd === "promokod") {
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg:
+                          language === "ru"
+                            ? `ПРОМОКОДЫ: Всего ${promoCodesList.length} купонов (${promoCodesList.map((p) => p.code).join(", ")}). Переход в промокоды...`
+                            : language === "en"
+                            ? `PROMOCODES: Total ${promoCodesList.length} coupons (${promoCodesList.map((p) => p.code).join(", ")}). Opening Promocodes tab...`
+                            : `PROMOKODLAR: Jami ${promoCodesList.length} ta kupon (${promoCodesList.map((p) => p.code).join(", ")}). Promokodlar bo'limi ochilmoqda...`,
+                      };
+                      setActiveTab("promos");
+                      playSound("success", soundEnabled);
+                    } else if (cmd === "customers" || cmd === "mijozlar" || cmd === "crm") {
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg:
+                          language === "ru"
+                            ? `КЛИЕНТЫ CRM: В базе ${customersList.length} покупателей. Переход в CRM...`
+                            : language === "en"
+                            ? `CUSTOMERS CRM: Total ${customersList.length} customers in CRM. Opening Customers tab...`
+                            : `MIJOZLAR CRM: Bazada ${customersList.length} ta mijoz mavjud. Mijozlar bo'limi ochilmoqda...`,
+                      };
+                      setActiveTab("customers");
+                      playSound("success", soundEnabled);
+                    } else if (cmd === "profile" || cmd === "admin" || cmd === "user") {
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg: `ADMIN: ${profileName} (@${profileUsername}) | Tel: ${profilePhone}. Profil bo'limi ochilmoqda...`,
+                      };
+                      setActiveTab("profile");
+                      playSound("success", soundEnabled);
+                    } else if (cmd === "backup" || cmd === "zaxira" || cmd === "export") {
+                      handleExportDatabase();
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "SUCCESS",
+                        msg:
+                          language === "ru"
+                            ? `БЭКАП: База данных успешно экспортирована и скачана в JSON!`
+                            : language === "en"
+                            ? `BACKUP: Database exported and downloaded in JSON!`
+                            : `ZAXIRA: Ma'lumotlar bazasi JSON faylda muvaffaqiyatli yuklab olindi!`,
+                      };
                     } else if (cmd === "clear" || cmd === "cls") {
                       setSystemLogs([]);
                       setTerminalInput("");
                       return;
-                    } else if (cmd === "help") {
-                      response = { id: Date.now() + 1, time: now, level: "INFO", msg: "BUYRUQLAR: status, ping, clear, help, backup, products" };
+                    } else if (cmd === "help" || cmd === "yordam" || cmd === "?") {
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "INFO",
+                        msg:
+                          language === "ru"
+                            ? "КОМАНДЫ: products, telegram, orders, promos, customers, profile, backup, status, ping, clear, help"
+                            : language === "en"
+                            ? "COMMANDS: products, telegram, orders, promos, customers, profile, backup, status, ping, clear, help"
+                            : "BUYRUQLAR: products, telegram, orders, promos, customers, profile, backup, status, ping, clear, help",
+                      };
                     } else {
-                      response = { id: Date.now() + 1, time: now, level: "INFO", msg: `Noma'lum buyruq: "${cmd}". Yordam uchun 'help' yozing.` };
+                      response = {
+                        id: Date.now() + 1,
+                        time: now,
+                        level: "INFO",
+                        msg:
+                          language === "ru"
+                            ? `Неизвестная команда: "${cmd}". Введите 'help' для списка доступных команд.`
+                            : language === "en"
+                            ? `Unknown command: "${cmd}". Type 'help' for available commands.`
+                            : `Noma'lum buyruq: "${cmd}". Yordam uchun 'help' yozing.`,
+                      };
                     }
 
                     setSystemLogs((prev) => [...prev, echo, response]);
