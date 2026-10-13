@@ -44,7 +44,11 @@ import {
   CreditCard,
   Sliders,
   BarChart2,
-  Home
+  Home,
+  Shield,
+  Mail,
+  Phone,
+  MapPin
 } from "lucide-react";
 
 // Synthesized Web Audio SFX for high-tech tactile response
@@ -91,6 +95,7 @@ const playSound = (type = "click", enabled = true) => {
 export const AdminPage = () => {
   const {
     user,
+    setUser,
     loginUser,
     logoutUser,
     products,
@@ -113,11 +118,110 @@ export const AdminPage = () => {
   } = useApp();
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState("dashboard"); // 'dashboard' | 'products' | 'orders' | 'promos' | 'customers' | 'telegram' | 'system'
+  const [activeTab, setActiveTab] = useState("dashboard"); // 'dashboard' | 'products' | 'orders' | 'promos' | 'customers' | 'telegram' | 'system' | 'profile'
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(() => localStorage.getItem("sport_admin_sound") !== "false");
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // User Profile States & Handlers
+  const [profileName, setProfileName] = useState(() => user?.name || "Xabibullo Raxmatjonov");
+  const [profileUsername, setProfileUsername] = useState(() => user?.username || "admin");
+  const [profilePhone, setProfilePhone] = useState(() => user?.phone || "+998 90 123 45 67");
+  const [profileEmail, setProfileEmail] = useState(() => user?.email || "xabibullo@sport.uz");
+  const [profileBio, setProfileBio] = useState(() => user?.bio || "Sog'liq va Sport platformasi asoschisi & Bosh administratori.");
+  const [profileLocation, setProfileLocation] = useState(() => user?.location || "Toshkent, O'zbekiston");
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+
+
+  const handleSaveProfile = (e) => {
+    e?.preventDefault();
+    setIsSavingProfile(true);
+    playSound("click", soundEnabled);
+
+    const updatedUser = {
+      ...(user || {}),
+      id: user?.id || "admin-1",
+      name: profileName.trim() || "Xabibullo Raxmatjonov",
+      username: profileUsername.trim() || "admin",
+      phone: profilePhone.trim() || "+998 90 123 45 67",
+      email: profileEmail.trim() || "xabibullo@sport.uz",
+      bio: profileBio.trim(),
+      location: profileLocation.trim() || "Toshkent, O'zbekiston",
+      role: "admin",
+    };
+
+    if (setUser) {
+      setUser(updatedUser);
+    }
+    localStorage.setItem("sport_user", JSON.stringify(updatedUser));
+
+    setTimeout(() => {
+      setIsSavingProfile(false);
+      playSound("success", soundEnabled);
+      showToast(
+        language === "ru"
+          ? "Профиль успешно обновлен!"
+          : language === "en"
+          ? "Profile updated successfully!"
+          : "Profil ma'lumotlari muvaffaqiyatli saqlandi!"
+      );
+    }, 250);
+  };
+
+  const handleUpdatePassword = (e) => {
+    e?.preventDefault();
+    playSound("click", soundEnabled);
+
+    if (!currentPassword) {
+      showToast(
+        language === "ru"
+          ? "Введите текущий пароль!"
+          : language === "en"
+          ? "Enter current password!"
+          : "Joriy parolni kiriting!"
+      );
+      return;
+    }
+    if (newPassword.length < 6) {
+      showToast(
+        language === "ru"
+          ? "Новый пароль должен содержать не менее 6 символов!"
+          : language === "en"
+          ? "New password must be at least 6 characters!"
+          : "Yangi parol kamida 6 ta belgidan iborat bo'lishi kerak!"
+      );
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      showToast(
+        language === "ru"
+          ? "Пароли не совпадают!"
+          : language === "en"
+          ? "Passwords do not match!"
+          : "Yangi parollar bir-biriga mos kelmadi!"
+      );
+      return;
+    }
+
+    localStorage.setItem("sport_admin_custom_pwd", newPassword);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    playSound("success", soundEnabled);
+    showToast(
+      language === "ru"
+        ? "Пароль успешно изменен!"
+        : language === "en"
+        ? "Password changed successfully!"
+        : "Parol muvaffaqiyatli yangilandi!"
+    );
+  };
 
   // Maxton Dashboard UI States
   const [dashboardSubmenuOpen, setDashboardSubmenuOpen] = useState(true);
@@ -927,13 +1031,18 @@ export const AdminPage = () => {
               <div className="space-y-1">
                 <button
                   onClick={() => {
-                    showToast("Admin session: Active & Protected");
+                    setActiveTab("profile");
                     playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
                   }}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "profile"
+                      ? "bg-[#182238] text-blue-400 font-bold shadow-sm"
+                      : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Lock className="w-4 h-4 text-slate-400" />
+                    <Lock className={`w-4 h-4 ${activeTab === "profile" ? "text-blue-400" : "text-slate-400"}`} />
                     {!isSidebarCollapsed && <span>Authentication</span>}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
@@ -941,15 +1050,23 @@ export const AdminPage = () => {
 
                 <button
                   onClick={() => {
-                    showToast(`Admin: ${user?.name || "Xabibullo"} (${user?.username || "admin"})`);
+                    setActiveTab("profile");
                     playSound("click", soundEnabled);
+                    setIsMobileSidebarOpen(false);
                   }}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#141b2e] transition"
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition ${
+                    activeTab === "profile"
+                      ? "bg-[#182238] text-blue-400 font-bold shadow-sm"
+                      : "text-slate-400 hover:text-white hover:bg-[#141b2e]"
+                  }`}
                 >
                   <div className="flex items-center gap-3">
-                    <User className="w-4 h-4 text-slate-400" />
+                    <User className={`w-4 h-4 ${activeTab === "profile" ? "text-blue-400" : "text-slate-400"}`} />
                     {!isSidebarCollapsed && <span>User Profile</span>}
                   </div>
+                  {!isSidebarCollapsed && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  )}
                 </button>
 
                 <button
@@ -1115,8 +1232,22 @@ export const AdminPage = () => {
 
             {/* User Avatar with Green Active Dot */}
             <div className="flex items-center gap-2 pl-2 border-l border-[#1c2438]">
-              <div className="relative">
-                <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-blue-500/30 bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("profile");
+                  playSound("click", soundEnabled);
+                }}
+                title="Foydalanuvchi Profili (Xabibullo Raxmatjonov)"
+                className="relative group focus:outline-none transition-transform active:scale-95"
+              >
+                <div
+                  className={`w-9 h-9 rounded-full overflow-hidden ring-2 ${
+                    activeTab === "profile"
+                      ? "ring-blue-400 ring-offset-2 ring-offset-[#0b101d]"
+                      : "ring-blue-500/30 group-hover:ring-blue-400"
+                  } bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-md transition`}
+                >
                   <img
                     src="/team/xabibullo.jpg"
                     alt="Xabibullo Raxmatjonov"
@@ -1129,7 +1260,7 @@ export const AdminPage = () => {
                   <span>X</span>
                 </div>
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#111625]"></span>
-              </div>
+              </button>
 
               <button
                 onClick={() => {
@@ -1148,10 +1279,30 @@ export const AdminPage = () => {
         {/* BREADCRUMBS & ACTION HEADER */}
         <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-black text-white tracking-tight">Dashboard</h1>
+            <h1 className="text-2xl font-black text-white tracking-tight">
+              {activeTab === "profile"
+                ? (language === "ru" ? "Профиль администратора" : language === "en" ? "User Profile" : "Foydalanuvchi Profili")
+                : activeTab === "products"
+                ? (language === "ru" ? "Товары" : language === "en" ? "Products" : "Mahsulotlar")
+                : activeTab === "orders"
+                ? (language === "ru" ? "Заказы" : language === "en" ? "Orders" : "Buyurtmalar")
+                : activeTab === "promos"
+                ? (language === "ru" ? "Промокоды" : language === "en" ? "Promo Codes" : "Promokodlar")
+                : activeTab === "customers"
+                ? (language === "ru" ? "Клиенты" : language === "en" ? "Customers" : "Mijozlar")
+                : activeTab === "telegram"
+                ? "Telegram Bot"
+                : activeTab === "system"
+                ? (language === "ru" ? "Система" : language === "en" ? "System" : "Tizim")
+                : "Dashboard"}
+            </h1>
             <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium pl-3 border-l border-[#1f283e]">
               <Home className="w-3.5 h-3.5 text-slate-400" />
-              <span>eCommerce</span>
+              <span>
+                {activeTab === "profile"
+                  ? (language === "ru" ? "Пользователь" : language === "en" ? "User Profile" : "Profil")
+                  : "eCommerce"}
+              </span>
             </div>
           </div>
 
@@ -2531,6 +2682,342 @@ export const AdminPage = () => {
                     <Upload className="w-3.5 h-3.5" />
                     <span>{language === "ru" ? "Восстановить (JSON)" : language === "en" ? "Restore (JSON)" : "Tiklash (JSON)"}</span>
                   </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 8. USER PROFILE TAB */}
+          {activeTab === "profile" && (
+            <div className="space-y-6 animate-in fade-in duration-200">
+              {/* TOP HERO PROFILE CARD */}
+              <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#141b2e] via-[#101726] to-[#0d1322] border border-[#232d46] shadow-2xl relative overflow-hidden">
+                {/* Ambient backdrop glow */}
+                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                  {/* Avatar + Main Details */}
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+                    <div className="relative group">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden ring-4 ring-blue-500/30 shadow-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-3xl font-black">
+                        <img
+                          src="/team/xabibullo.jpg"
+                          alt={profileName}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "/products/prod_1_on_whey.jpg";
+                          }}
+                        />
+                      </div>
+                      <span className="absolute -bottom-1.5 -right-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-extrabold text-[10px] ring-2 ring-[#141b2e] flex items-center gap-1 shadow-md">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        ONLINE
+                      </span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+                        <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                          {profileName}
+                        </h2>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-bold shadow-sm">
+                          <Crown className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Super Administrator</span>
+                        </span>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
+                        {profileBio}
+                      </p>
+
+                      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 pt-1 text-xs text-slate-400 font-medium">
+                        <div className="flex items-center gap-1.5">
+                          <Mail className="w-3.5 h-3.5 text-blue-400" />
+                          <span>{profileEmail}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>{profilePhone}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                          <span>{profileLocation}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Admin Metrics */}
+                  <div className="w-full md:w-auto grid grid-cols-3 md:flex md:flex-col gap-2.5 bg-[#0b101d]/60 border border-[#1d273e] p-3.5 rounded-2xl">
+                    <div className="text-center md:text-left">
+                      <div className="text-[10px] uppercase font-bold text-slate-400">Ruxsat darajasi</div>
+                      <div className="text-xs sm:text-sm font-black text-blue-400 flex items-center justify-center md:justify-start gap-1">
+                        <Shield className="w-3.5 h-3.5" />
+                        <span>Root / 100%</span>
+                      </div>
+                    </div>
+                    <div className="text-center md:text-left">
+                      <div className="text-[10px] uppercase font-bold text-slate-400">Tovarlar</div>
+                      <div className="text-xs sm:text-sm font-black text-white">{products.length} ta faol</div>
+                    </div>
+                    <div className="text-center md:text-left">
+                      <div className="text-[10px] uppercase font-bold text-slate-400">Buyurtmalar</div>
+                      <div className="text-xs sm:text-sm font-black text-emerald-400">{orders.length} ta jami</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* TWO COLUMN GRID: EDIT INFORMATION & SECURITY */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* 1. PERSONAL INFORMATION FORM (2 Cols) */}
+                <div className="lg:col-span-2 p-6 rounded-3xl bg-[#141b2e] border border-[#232d46] space-y-5 shadow-xl">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#232d46]">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                        <User className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-white text-sm">
+                          {language === "ru" ? "Личные данные администратора" : language === "en" ? "Personal Details" : "Administrator Shaxsiy Ma'lumotlari"}
+                        </h3>
+                        <p className="text-[11px] text-slate-400">
+                          {language === "ru" ? "Управление профилем и контактной информацией" : language === "en" ? "Manage profile and contact information" : "Profil va aloqa ma'lumotlarini tahrirlash"}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-[11px] px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 font-bold border border-blue-500/20">
+                      ID: {user?.id || "admin-1"}
+                    </span>
+                  </div>
+
+                  <form onSubmit={handleSaveProfile} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                          {language === "ru" ? "Полное имя" : language === "en" ? "Full Name" : "To'liq Ism-Familiya"}
+                        </label>
+                        <input
+                          type="text"
+                          value={profileName}
+                          onChange={(e) => setProfileName(e.target.value)}
+                          required
+                          className="w-full px-4 py-2.5 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                          placeholder="Xabibullo Raxmatjonov"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                          {language === "ru" ? "Логин (Username)" : language === "en" ? "Username" : "Foydalanuvchi Nomi (Username)"}
+                        </label>
+                        <input
+                          type="text"
+                          value={profileUsername}
+                          onChange={(e) => setProfileUsername(e.target.value)}
+                          required
+                          className="w-full px-4 py-2.5 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                          placeholder="admin"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                          {language === "ru" ? "Электронная почта" : language === "en" ? "Email Address" : "Elektron Pochta (Email)"}
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="email"
+                            value={profileEmail}
+                            onChange={(e) => setProfileEmail(e.target.value)}
+                            required
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                            placeholder="xabibullo@sport.uz"
+                          />
+                          <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                          {language === "ru" ? "Номер телефона" : language === "en" ? "Phone Number" : "Telefon Raqam"}
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="tel"
+                            value={profilePhone}
+                            onChange={(e) => setProfilePhone(e.target.value)}
+                            required
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                            placeholder="+998 90 123 45 67"
+                          />
+                          <Phone className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                        {language === "ru" ? "Город / Локация" : language === "en" ? "Location / City" : "Manzil / Shahar"}
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={profileLocation}
+                          onChange={(e) => setProfileLocation(e.target.value)}
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                          placeholder="Toshkent, O'zbekiston"
+                        />
+                        <MapPin className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                        {language === "ru" ? "Краткая информация (Bio)" : language === "en" ? "Bio / About" : "Administrator Haqida (Bio)"}
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={profileBio}
+                        onChange={(e) => setProfileBio(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-normal focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none leading-relaxed"
+                        placeholder="Platforma faoliyati va maqsadlari haqida..."
+                      ></textarea>
+                    </div>
+
+                    <div className="flex items-center justify-end pt-3 border-t border-[#232d46]">
+                      <button
+                        type="submit"
+                        disabled={isSavingProfile}
+                        className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25 transition active:scale-95 disabled:opacity-50"
+                      >
+                        <Save className="w-4 h-4" />
+                        <span>
+                          {isSavingProfile
+                            ? (language === "ru" ? "Сохранение..." : language === "en" ? "Saving..." : "Saqlanmoqda...")
+                            : (language === "ru" ? "Сохранить изменения" : language === "en" ? "Save Changes" : "O'zgarishlarni Saqlash")}
+                        </span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                {/* 2. SECURITY & PASSWORD UPDATE CARD (1 Col) */}
+                <div className="space-y-6">
+                  <div className="p-6 rounded-3xl bg-[#141b2e] border border-[#232d46] space-y-5 shadow-xl">
+                    <div className="flex items-center justify-between pb-3 border-b border-[#232d46]">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-white text-sm">
+                            {language === "ru" ? "Безопасность" : language === "en" ? "Security" : "Xavfsizlik & Parol"}
+                          </h3>
+                          <p className="text-[11px] text-slate-400">
+                            {language === "ru" ? "Смена пароля администратора" : language === "en" ? "Change admin password" : "Admin parolini yangilash"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <form onSubmit={handleUpdatePassword} className="space-y-3.5">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1">
+                          {language === "ru" ? "Текущий пароль" : language === "en" ? "Current Password" : "Joriy Parol"}
+                        </label>
+                        <div className="relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            className="w-full px-4 py-2 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                            placeholder="admin123"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-2.5 text-slate-400 hover:text-white"
+                          >
+                            {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1">
+                          {language === "ru" ? "Новый пароль" : language === "en" ? "New Password" : "Yangi Parol"}
+                        </label>
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          className="w-full px-4 py-2 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          placeholder="••••••••"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-300 mb-1">
+                          {language === "ru" ? "Подтвердите пароль" : language === "en" ? "Confirm Password" : "Yangi Parolni Tasdiqlang"}
+                        </label>
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="w-full px-4 py-2 rounded-xl bg-[#0b101d] border border-[#222d44] text-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          placeholder="••••••••"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 transition active:scale-95"
+                      >
+                        <Lock className="w-3.5 h-3.5" />
+                        <span>
+                          {language === "ru" ? "Обновить пароль" : language === "en" ? "Update Password" : "Parolni Yangilash"}
+                        </span>
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* 3. PERMISSIONS & ROLES BADGES CARD */}
+                  <div className="p-6 rounded-3xl bg-[#141b2e] border border-[#232d46] space-y-4 shadow-xl">
+                    <div className="flex items-center gap-2 pb-2 border-b border-[#232d46]">
+                      <Shield className="w-4 h-4 text-amber-400" />
+                      <h4 className="font-bold text-white text-xs uppercase tracking-wider">
+                        {language === "ru" ? "Системные привилегии" : language === "en" ? "System Permissions" : "Tizim Huquqlari & Ruxsatlar"}
+                      </h4>
+                    </div>
+
+                    <div className="space-y-2.5 text-xs">
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
+                        <span className="text-slate-300">Mahsulotlar boshqaruvi (CRUD)</span>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      </div>
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
+                        <span className="text-slate-300">Buyurtmalar monitoringi</span>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      </div>
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
+                        <span className="text-slate-300">Telegram Bot xabarnomalari</span>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      </div>
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
+                        <span className="text-slate-300">Promokodlar boshqaruvi</span>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      </div>
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
+                        <span className="text-slate-300">Ma'lumotlar bazasi zaxirasi</span>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

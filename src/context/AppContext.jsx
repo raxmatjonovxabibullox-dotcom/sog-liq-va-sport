@@ -619,6 +619,7 @@ export const AppProvider = ({ children }) => {
         isInWishlist,
         clearWishlist,
         user,
+        setUser,
         loginUser,
         registerUser,
         logoutUser,
