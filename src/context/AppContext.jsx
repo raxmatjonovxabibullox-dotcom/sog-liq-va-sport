@@ -205,7 +205,13 @@ export const AppProvider = ({ children }) => {
         found.percent > 0
           ? `${found.percent}%`
           : `${(found.fixed || 0).toLocaleString()} so'm`;
-      showToast(`${found.code}: ${discountText} chegirma muvaffaqiyatli qo'llandi!`);
+      showToast(
+        language === "ru"
+          ? `${found.code}: скидка ${discountText} успешно применена!`
+          : language === "en"
+          ? `${found.code}: ${discountText} discount successfully applied!`
+          : `${found.code}: ${discountText} chegirma muvaffaqiyatli qo'llandi!`
+      );
       return true;
     }
     return false;

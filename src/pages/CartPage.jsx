@@ -31,6 +31,7 @@ export const CartPage = () => {
     createOrder,
     user,
     t,
+    language,
   } = useApp();
 
   const [promoInput, setPromoInput] = useState("");
@@ -60,7 +61,13 @@ export const CartPage = () => {
   const handleCheckout = async (e) => {
     e.preventDefault();
     if (!customerName.trim() || !customerPhone.trim() || !address.trim()) {
-      alert("Iltimos, ism, telefon va manzilni to'ldiring!");
+      alert(
+        language === "ru"
+          ? "Пожалуйста, заполните имя, номер телефона и адрес!"
+          : language === "en"
+          ? "Please fill in your name, phone number and address!"
+          : "Iltimos, ism, telefon va manzilni to'ldiring!"
+      );
       return;
     }
 
@@ -298,7 +305,7 @@ export const CartPage = () => {
             {promo ? (
               <div className="flex items-center justify-between p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
                 <span>
-                  {t.cart.activePromo}: <b>{promo.code}</b> ({promo.percent ? `-${promo.percent}%` : `-${promo.fixed.toLocaleString()} ${t.cart.currency}`})
+                  {t.cart.activePromo || "Faol promokod"}: <b>{promo.code}</b> ({promo.percent > 0 ? `-${promo.percent}%` : `-${(promo.fixed || 0).toLocaleString()} ${t.cart.currency}`})
                 </span>
                 <button
                   onClick={removePromo}

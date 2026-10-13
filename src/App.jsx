@@ -8,6 +8,7 @@ import { Footer } from "./components/Footer";
 import { Toast } from "./components/Toast";
 import { AuthModal } from "./components/AuthModal";
 import { QuickViewModal } from "./components/QuickViewModal";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 // Pages
 import { HomePage } from "./pages/HomePage";
@@ -63,10 +64,12 @@ export function AppContent() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </AppProvider>
+    </ErrorBoundary>
   );
 }
