@@ -903,7 +903,7 @@ export const AdminPage = () => {
                   <div className="flex items-center gap-3">
                     <Layers className="w-4 h-4 text-slate-400" />
                     {!isSidebarCollapsed && (
-                      <span>{language === "ru" ? "Telegram Бот" : language === "en" ? "Apps" : "Telegram Ilova"}</span>
+                      <span>{language === "ru" ? "Telegram Бот" : language === "en" ? "Telegram Bot" : "Telegram Ilova"}</span>
                     )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
@@ -919,7 +919,7 @@ export const AdminPage = () => {
                 </div>
               )}
               <div className="space-y-1">
-                {/* Cards (Promocodes) */}
+                {/* Promocodes */}
                 <button
                   onClick={() => {
                     setActiveTab("promos");
@@ -933,7 +933,7 @@ export const AdminPage = () => {
                   <div className="flex items-center gap-3">
                     <CreditCard className="w-4 h-4 text-slate-400" />
                     {!isSidebarCollapsed && (
-                      <span>{language === "ru" ? "Промокоды & Скидки" : language === "en" ? "Promo Codes" : "Promokodlar & Chegirmalar"}</span>
+                      <span>{language === "ru" ? "Промокоды & Скидки" : language === "en" ? "Promocodes" : "Promokodlar & Chegirmalar"}</span>
                     )}
                   </div>
                   {!isSidebarCollapsed && <ChevronRight className="w-3.5 h-3.5 text-slate-500" />}
@@ -1387,7 +1387,7 @@ export const AdminPage = () => {
                 : activeTab === "orders"
                 ? (language === "ru" ? "Заказы" : language === "en" ? "Orders" : "Buyurtmalar")
                 : activeTab === "promos"
-                ? (language === "ru" ? "Промокоды" : language === "en" ? "Promo Codes" : "Promokodlar")
+                ? (language === "ru" ? "Промокоды" : language === "en" ? "Promocodes" : "Promokodlar")
                 : activeTab === "customers"
                 ? (language === "ru" ? "Клиенты" : language === "en" ? "Customers" : "Mijozlar")
                 : activeTab === "telegram"
@@ -1473,11 +1473,11 @@ export const AdminPage = () => {
                   <span className="text-slate-300 font-semibold">
                     {language === "ru" ? "Язык интерфейса:" : language === "en" ? "Interface Language:" : "Tizim Tili:"}
                   </span>
-                  <div className="flex gap-1">
+                  <div className="flex gap-1.5">
                     {[
-                      { code: "uz", label: "O'zb" },
-                      { code: "ru", label: "Рус" },
-                      { code: "en", label: "Eng" },
+                      { code: "uz", label: "UZ" },
+                      { code: "ru", label: "RU" },
+                      { code: "en", label: "EN" },
                     ].map((item) => (
                       <button
                         key={item.code}
@@ -1485,8 +1485,10 @@ export const AdminPage = () => {
                           setLanguage(item.code);
                           playSound("click", soundEnabled);
                         }}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase ${
-                          language === item.code ? "bg-blue-500 text-white shadow-md shadow-blue-500/20" : "bg-slate-800 text-slate-400"
+                        className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
+                          language === item.code
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105"
+                            : "bg-[#1b243b] text-slate-400 hover:text-white hover:bg-[#242f4c]"
                         }`}
                       >
                         {item.label}
@@ -2420,10 +2422,10 @@ export const AdminPage = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h2 className="text-xl font-black text-white">
-                    {language === "ru" ? "Управление промокодами" : language === "en" ? "Promo Code Management" : "Promokodlar Boshqaruvi"}
+                    {language === "ru" ? "Управление промокодами" : language === "en" ? "Promocodes Management" : "Promokodlar Boshqaruvi"}
                   </h2>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    {language === "ru" ? "Настройка скидочных купонов для клиентов" : language === "en" ? "Configure discount codes for customers" : "Mijozlar uchun chegirma kodlarini sozlash"}
+                    {language === "ru" ? "Настройка скидочных купонов для клиентов" : language === "en" ? "Configure promo codes and discounts for customers" : "Mijozlar uchun chegirma kodlarini sozlash"}
                   </p>
                 </div>
               </div>
@@ -2431,7 +2433,7 @@ export const AdminPage = () => {
               {/* Add New Promo Code */}
               <div className="p-6 rounded-3xl bg-[#0e1626] border border-slate-800 space-y-4">
                 <h3 className="text-sm font-bold text-white">
-                  {language === "ru" ? "Добавить новый промокод" : language === "en" ? "Add New Promo Code" : "Yangi Promokod Qo'shish"}
+                  {language === "ru" ? "Добавить новый промокод" : language === "en" ? "Add New Promocode" : "Yangi Promokod Qo'shish"}
                 </h3>
                 <form onSubmit={handleCreatePromo} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <input
@@ -2456,7 +2458,7 @@ export const AdminPage = () => {
                     type="submit"
                     className="py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-500/20"
                   >
-                    {language === "ru" ? "Создать промокод" : language === "en" ? "Create Promo Code" : "Promokod Yaratish"}
+                    {language === "ru" ? "Создать промокод" : language === "en" ? "Create Promocode" : "Promokod Yaratish"}
                   </button>
                 </form>
               </div>
@@ -2480,7 +2482,13 @@ export const AdminPage = () => {
                         onClick={() => {
                           navigator.clipboard.writeText(pr.code);
                           playSound("click", soundEnabled);
-                          showToast(`"${pr.code}" nusxalandi!`);
+                          showToast(
+                            language === "ru"
+                              ? `"${pr.code}" скопирован в буфер!`
+                              : language === "en"
+                              ? `"${pr.code}" copied to clipboard!`
+                              : `"${pr.code}" nusxalandi!`
+                          );
                         }}
                         className="text-[11px] font-semibold text-slate-400 hover:text-white flex items-center gap-1"
                       >
@@ -3161,23 +3169,33 @@ export const AdminPage = () => {
 
                     <div className="space-y-2.5 text-xs">
                       <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
-                        <span className="text-slate-300">Mahsulotlar boshqaruvi (CRUD)</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Управление товарами (CRUD)" : language === "en" ? "Product Management (CRUD)" : "Mahsulotlar boshqaruvi (CRUD)"}
+                        </span>
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                       </div>
                       <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
-                        <span className="text-slate-300">Buyurtmalar monitoringi</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Мониторинг заказов" : language === "en" ? "Order Monitoring" : "Buyurtmalar monitoringi"}
+                        </span>
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                       </div>
                       <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
-                        <span className="text-slate-300">Telegram Bot xabarnomalari</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Уведомления Telegram Бота" : language === "en" ? "Telegram Bot Notifications" : "Telegram Bot xabarnomalari"}
+                        </span>
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                       </div>
                       <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
-                        <span className="text-slate-300">Promokodlar boshqaruvi</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Управление промокодами" : language === "en" ? "Promocodes Management" : "Promokodlar boshqaruvi"}
+                        </span>
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                       </div>
                       <div className="flex items-center justify-between p-2 rounded-xl bg-[#0b101d] border border-[#1b2338]">
-                        <span className="text-slate-300">Ma'lumotlar bazasi zaxirasi</span>
+                        <span className="text-slate-300">
+                          {language === "ru" ? "Резервное копирование базы данных" : language === "en" ? "Database Backup & Restore" : "Ma'lumotlar bazasi zaxirasi"}
+                        </span>
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                       </div>
                     </div>

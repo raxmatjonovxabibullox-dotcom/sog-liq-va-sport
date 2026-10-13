@@ -677,7 +677,7 @@ export const translations = {
       tabDashboard: "Dashboard & Analytics",
       tabProducts: "Products (CRUD)",
       tabOrders: "Orders",
-      tabPromos: "Promo Codes",
+      tabPromos: "Promocodes",
       tabCustomers: "Customers (CRM)",
       tabTelegram: "Telegram Bot",
       tabSystem: "System & Server",
